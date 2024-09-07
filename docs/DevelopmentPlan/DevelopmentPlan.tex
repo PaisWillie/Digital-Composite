@@ -1,0 +1,75 @@
+\documentclass{article}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+\title{Development Plan\\\progname}
+
+\author{\authname}
+
+\date{}
+
+\input{../Comments}
+\input{../Common}
+
+\begin{document}
+
+\maketitle
+
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
+\midrule
+Date1 & Name(s) & Description of changes\\
+Date2 & Name(s) & Description of changes\\
+... & ... & ...\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\wss{Put your introductory blurb here.}
+
+\section{Team Meeting Plan}
+
+\section{Team Communication Plan}
+
+\section{Team Member Roles}
+
+\section{Workflow Plan}
+
+\begin{itemize}
+	\item How will you be using git, including branches, pull request, etc.?
+	\item How will you be managing issues, including template issues, issue
+	classificaiton, etc.?
+\end{itemize}
+
+\section{Proof of Concept Demonstration Plan}
+
+What is the main risk, or risks, for the success of your project?  What will you
+demonstrate during your proof of concept demonstration to convince yourself that
+you will be able to overcome this risk?
+
+\section{Technology}
+
+\begin{itemize}
+\item Specific programming language
+\item Specific linter tool (if appropriate)
+\item Specific unit testing framework
+\item Investigation of code coverage measuring tools
+\item Specific plans for Continuous Integration (CI), or an explanation that CI
+  is not being done
+\item Specific performance measuring tools (like Valgrind), if
+  appropriate
+\item Libraries you will likely be using?
+\item Tools you will likely be using?
+\end{itemize}
+
+\section{Coding Standard}
+
+\section{Project Scheduling}
+
+\wss{How will the project be scheduled?}
+
+\end{document}
