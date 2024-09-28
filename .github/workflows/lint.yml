@@ -26,12 +26,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
 
       - name: 📥 Download deps
         run: pnpm install --frozen-lockfile
 
-      - name: 🔬 Lint 
+      - name: 🔬 Lint
         run: pnpm run lint
 
       - name: 🔎 Type check
