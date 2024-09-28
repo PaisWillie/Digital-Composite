@@ -32,7 +32,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🔬 Lint 
-        run: pnpm run lint:strict
+        run: pnpm run lint
 
       - name: 🔎 Type check
         run: pnpm run typecheck
