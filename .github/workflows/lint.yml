@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: "./client"
 
       - name: 📥 Download deps
         run: pnpm install --frozen-lockfile
