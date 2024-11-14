@@ -26,19 +26,24 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
+          cache-dependency-path: "./client"
 
       - name: 📥 Download deps
         run: pnpm install --frozen-lockfile
-
+        working-directory: ./client
       - name: 🔬 Lint
         run: pnpm run lint
+        working-directory: ./client
 
       - name: 🔎 Type check
         run: pnpm run typecheck
+        working-directory: ./client
 
       - name: 💅 Prettier check
         run: pnpm run format:check
+        working-directory: ./client
 
       - name: 🃏 Run Vitest
         run: pnpm run test
+        working-directory: ./client
