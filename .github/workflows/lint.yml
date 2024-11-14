@@ -26,12 +26,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
+          cache-dependency-path: "**/package-lock.json"
 
       - name: 📥 Download deps
         run: pnpm install --frozen-lockfile
         working-directory: ./client
-
       - name: 🔬 Lint
         run: pnpm run lint
         working-directory: ./client
