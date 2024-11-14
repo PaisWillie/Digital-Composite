@@ -30,15 +30,20 @@ jobs:
 
       - name: 📥 Download deps
         run: pnpm install --frozen-lockfile
+        working-directory: ./client
 
       - name: 🔬 Lint
         run: pnpm run lint
+        working-directory: ./client
 
       - name: 🔎 Type check
         run: pnpm run typecheck
+        working-directory: ./client
 
       - name: 💅 Prettier check
         run: pnpm run format:check
+        working-directory: ./client
 
       - name: 🃏 Run Vitest
         run: pnpm run test
+        working-directory: ./client
