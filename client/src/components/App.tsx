@@ -216,6 +216,7 @@ function App() {
           <Select
             defaultValue="All"
             // style={{ width: 120 }}
+            value={filterProgram}
             onChange={(value) => {
               setFilterProgram(value)
             }}
@@ -232,6 +233,7 @@ function App() {
           <p>Year</p>
           <Select
             defaultValue="All"
+            value={filterYear}
             // style={{ width: 120 }}
             onChange={(value) => {
               setFilterYear(value)
