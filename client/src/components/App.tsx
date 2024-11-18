@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { Carousel, Input, Modal } from 'antd'
-import { useEffect, useState } from 'react'
+import { Button, Carousel, Input, Modal, Select } from 'antd'
 import Fuse from 'fuse.js'
+import { useEffect, useState } from 'react'
 
 type Composite = {
   src: string
@@ -12,18 +12,18 @@ type Composite = {
 const composites: Composite[] = [
   {
     src: '/images/composites/MATERIALS 2024 Final.jpg',
-    program: 'Materials',
+    program: 'Materials Science',
     year: 2024
   },
-  { src: '/images/composites/B_Tech_2020.png', program: 'B Tech', year: 2020 },
+  { src: '/images/composites/B_Tech_2020.png', program: 'B. Tech', year: 2020 },
   {
     src: '/images/composites/B-Tech 2024 Final.jpg',
-    program: 'B Tech',
+    program: 'B. Tech',
     year: 2024
   },
-  { src: '/images/composites/BTech_2021.png', program: 'B Tech', year: 2021 },
-  { src: '/images/composites/BTech_2022.jpg', program: 'B Tech', year: 2022 },
-  { src: '/images/composites/BTech_2023.jpg', program: 'B Tech', year: 2023 },
+  { src: '/images/composites/BTech_2021.png', program: 'B. Tech', year: 2021 },
+  { src: '/images/composites/BTech_2022.jpg', program: 'B. Tech', year: 2022 },
+  { src: '/images/composites/BTech_2023.jpg', program: 'B. Tech', year: 2023 },
   {
     src: '/images/composites/Chem Eng 2024.jpg',
     program: 'Chemical Engineering',
@@ -39,16 +39,16 @@ const composites: Composite[] = [
     program: 'Civil Engineering',
     year: 2023
   },
-  {
-    src: '/images/composites/Class_of_2020.png',
-    program: 'Class of 2020',
-    year: 2020
-  },
-  {
-    src: '/images/composites/Class-of-2022.jpg',
-    program: 'Class of 2022',
-    year: 2022
-  },
+  // {
+  //   src: '/images/composites/Class_of_2020.png',
+  //   program: 'Class of 2020',
+  //   year: 2020
+  // },
+  // {
+  //   src: '/images/composites/Class-of-2022.jpg',
+  //   program: 'Class of 2022',
+  //   year: 2022
+  // },
   {
     src: '/images/composites/Computer Science 2024 Final.jpg',
     program: 'Computer Science',
@@ -99,14 +99,14 @@ const composites: Composite[] = [
     program: 'Engineering Physics',
     year: 2024
   },
-  {
-    src: '/images/composites/Engineering_Class_2021.jpg',
-    program: 'Engineering',
-    year: 2021
-  },
+  // {
+  //   src: '/images/composites/Engineering_Class_2021.jpg',
+  //   program: 'Engineering',
+  //   year: 2021
+  // },
   {
     src: '/images/composites/IBEHS 2024 Final.jpg',
-    program: 'IBEHS',
+    program: 'iBioMed',
     year: 2024
   },
   {
@@ -126,12 +126,12 @@ const composites: Composite[] = [
   },
   {
     src: '/images/composites/MATERIALS 2024 Final.jpg',
-    program: 'Materials',
+    program: 'Materials Science',
     year: 2024
   },
   {
     src: '/images/composites/Materials_2023.jpg',
-    program: 'Materials',
+    program: 'Materials Science',
     year: 2023
   },
   {
@@ -146,7 +146,7 @@ const composites: Composite[] = [
   },
   {
     src: '/images/composites/Mechatronics_2023.jpg',
-    program: 'Mechatronics',
+    program: 'Mechatronics Engineering',
     year: 2023
   },
   {
@@ -167,6 +167,9 @@ function App() {
   const [viewingComposite, setViewingComposite] = useState<Composite | null>(
     null
   )
+
+  const [filterProgram, setFilterProgram] = useState('All')
+  const [filterYear, setFilterYear] = useState('All')
 
   const [results, setResults] = useState<Composite[]>([])
 
@@ -197,14 +200,84 @@ function App() {
 
   return (
     <div className="flex h-screen flex-col overflow-y-hidden overflow-x-scroll">
-      {/* Search bar */}
-      <div className="p-3">
-        <div
-          onClick={showSearchModal}
-          className="w-full cursor-text rounded-full border-2 border-slate-200 bg-slate-100 p-3"
-        >
-          Search bar
+      <div className="flex w-full flex-row items-center gap-x-4 px-4">
+        {/* Search bar */}
+        <div className="flex-[3] p-3">
+          <div
+            onClick={showSearchModal}
+            className="w-full cursor-text rounded-full border-2 border-slate-200 bg-slate-100 p-3"
+          >
+            Search bar
+          </div>
         </div>
+        {/* filter by program */}
+        <div className="flex flex-[2] flex-col gap-y-1">
+          <p>Program</p>
+          <Select
+            defaultValue="All"
+            // style={{ width: 120 }}
+            onChange={(value) => {
+              setFilterProgram(value)
+            }}
+            options={Array.from(
+              new Set(composites.map((composite) => composite.program))
+            ).map((program) => ({
+              value: program,
+              label: program
+            }))}
+          />
+        </div>
+        {/* filter by year */}
+        <div className="flex flex-[1] flex-col gap-y-1">
+          <p>Year</p>
+          <Select
+            defaultValue="All"
+            // style={{ width: 120 }}
+            onChange={(value) => {
+              setFilterYear(value)
+            }}
+            options={[
+              {
+                value: 'All',
+                label: 'All'
+              },
+              {
+                value: '2020',
+                label: '2020'
+              },
+              {
+                value: '2021',
+                label: '2021'
+              },
+              {
+                value: '2022',
+                label: '2022'
+              },
+              {
+                value: '2023',
+                label: '2023'
+              },
+              {
+                value: '2024',
+                label: '2024'
+              }
+            ]}
+          />
+        </div>
+        {/* reset button */}
+        <Button
+          type="primary"
+          danger
+          onClick={() => {
+            setSearchInputValue('')
+            setResults([])
+            setViewingComposite(null)
+            setFilterProgram('All')
+            setFilterYear('All')
+          }}
+        >
+          Reset
+        </Button>
       </div>
 
       <Modal
@@ -256,6 +329,26 @@ function App() {
           <div className="text-2xl font-bold">
             {viewingComposite.program} - {viewingComposite.year}
           </div>
+        </div>
+      ) : filterProgram !== 'All' || filterYear !== 'All' ? (
+        // Display grid list of composites (their images) based on filter
+        // If any composite image is clicked, set the viewingComposite to that composite
+        <div className="grid grid-cols-3 gap-4 p-4">
+          {composites
+            .filter(
+              (composite) =>
+                (filterProgram === 'All' ||
+                  composite.program === filterProgram) &&
+                (filterYear === 'All' || composite.year === +filterYear)
+            )
+            .map((composite, index) => (
+              <img
+                key={index}
+                src={composite.src}
+                className="size-full object-contain"
+                onClick={() => setViewingComposite(composite)}
+              />
+            ))}
         </div>
       ) : (
         <Carousel
