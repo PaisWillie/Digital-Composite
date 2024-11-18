@@ -334,21 +334,32 @@ function App() {
         // Display grid list of composites (their images) based on filter
         // If any composite image is clicked, set the viewingComposite to that composite
         <div className="grid grid-cols-3 gap-4 p-4">
-          {composites
-            .filter(
-              (composite) =>
-                (filterProgram === 'All' ||
-                  composite.program === filterProgram) &&
-                (filterYear === 'All' || composite.year === +filterYear)
-            )
-            .map((composite, index) => (
-              <img
-                key={index}
-                src={composite.src}
-                className="size-full object-contain"
-                onClick={() => setViewingComposite(composite)}
-              />
-            ))}
+          {composites.filter(
+            (composite) =>
+              (filterProgram === 'All' ||
+                composite.program === filterProgram) &&
+              (filterYear === 'All' || composite.year === +filterYear)
+          ).length === 0 ? (
+            <div className="col-span-3 text-center text-gray-500">
+              No composites found.
+            </div>
+          ) : (
+            composites
+              .filter(
+                (composite) =>
+                  (filterProgram === 'All' ||
+                    composite.program === filterProgram) &&
+                  (filterYear === 'All' || composite.year === +filterYear)
+              )
+              .map((composite, index) => (
+                <img
+                  key={index}
+                  src={composite.src}
+                  className="size-full object-contain"
+                  onClick={() => setViewingComposite(composite)}
+                />
+              ))
+          )}
         </div>
       ) : (
         <Carousel
