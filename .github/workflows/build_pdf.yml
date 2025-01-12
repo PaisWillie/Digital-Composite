@@ -2,7 +2,8 @@ name: "Compile LaTeX Document"
 
 on:
   push:
-    branches: [test-build-pdf]
+    branches: 
+      - test-build-pdf
     paths:
       - "docs/**/*.tex"
 
