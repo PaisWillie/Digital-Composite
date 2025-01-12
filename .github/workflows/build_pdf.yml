@@ -41,6 +41,8 @@ jobs:
       # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       # Get changed .tex files
       - name: Get changed .tex files
