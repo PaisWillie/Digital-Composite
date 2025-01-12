@@ -2,7 +2,7 @@ name: "Compile LaTeX Document"
 
 on:
   push:
-    branches: [hammadpathan-patch-1]
+    branches: [hammadpathan-patch-2]
     paths:
       - "docs/**/*.tex"
 
