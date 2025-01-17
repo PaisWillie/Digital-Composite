@@ -16,7 +16,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            /usr/local/texlive
+            /usr/local/texlive # Adjust to where TeX Live is installed
             /usr/share/texlive
             ~/.texlive
           key: texlive-2024-${{ runner.os }}-latexmk
@@ -30,9 +30,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install texlive-latex-extra texlive-science latexmk
 
-      # Checkout repository (using default GitHub token)
+      # Setup GitHub App
+      #- name: Setup GitHub App
+      #  uses: actions/create-github-app-token@v1
+      #  id: app-token
+      #  with:
+      #    app-id: ${{ vars.APP_ID }}
+      #    private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
+        #with:
+        #  token: ${{ steps.app-token.outputs.token }}
 
       # Get changed .tex files
       - name: Get changed .tex files
@@ -41,7 +51,7 @@ jobs:
         with:
           files: |
             **/*.tex
-          diff_relative: true
+          diff_relative: true # Get the list of files relative to the repo root
           files_ignore: |
             docs/Comments.tex
             docs/Common.tex
@@ -54,21 +64,23 @@ jobs:
           ALL_CHANGED_FILES: ${{ steps.changed-tex-files.outputs.all_changed_files }}
         run: |
           for file in ${ALL_CHANGED_FILES}; do
-            folder=$(dirname "$file")
-            filename=$(basename "$file")
-            echo "Building $filename in $folder"
-            cd "$folder"
-            latexmk -pdf -interaction=nonstopmode "$filename" || echo "Failed to build $filename" >&2
-            latexmk -c || echo "Failed to clean up auxiliary files for $filename" >&2
-            cd -
+            filename=$(basename -- "$file")
+            folder=$(dirname "$file")  # Get the folder of the file
+            echo "Building $filename"
+            cd "$folder"  # Change to the folder where the tex file is located
+            make 
+            make clean
+            cd -  # Go back to root folder
           done
+          git status
 
       # Commit the generated PDF back to the repository
       - name: Commit & Push changes
-        if: steps.changed-tex-files.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-tex-files.outputs.all_changed_files }}
         uses: EndBug/add-and-commit@v9
         with:
           add: --force docs/**/*.pdf
-          author_name: "GitHub Action"
+          author_name: "Github Action"
           author_email: "action@github.com"
           message: "Add compiled PDF"
