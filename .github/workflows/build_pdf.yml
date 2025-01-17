@@ -64,13 +64,13 @@ jobs:
           ALL_CHANGED_FILES: ${{ steps.changed-tex-files.outputs.all_changed_files }}
         run: |
           for file in ${ALL_CHANGED_FILES}; do
-            filename=$(basename -- "$file")
-            folder=$(dirname "$file")  # Get the folder of the file
-            echo "Building $filename"
-            cd "$folder"  # Change to the folder where the tex file is located
-            make 
-            make clean
-            cd -  # Go back to root folder
+            folder=$(dirname "$file")
+            filename=$(basename "$file")
+            echo "Building $filename in $folder"
+            cd "$folder"
+            latexmk -pdf -interaction=nonstopmode "$filename" || echo "Failed to build $filename" >&2
+            latexmk -c || echo "Failed to clean up auxiliary files for $filename" >&2
+            cd -
           done
           git status
 
