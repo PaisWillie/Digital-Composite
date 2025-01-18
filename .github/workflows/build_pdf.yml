@@ -30,19 +30,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install texlive-latex-extra texlive-science latexmk
 
-      # Setup GitHub App
-      #- name: Setup GitHub App
-      #  uses: actions/create-github-app-token@v1
-      #  id: app-token
-      #  with:
-      #    app-id: ${{ vars.APP_ID }}
-      #    private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
       # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
-        #with:
-        #  token: ${{ steps.app-token.outputs.token }}
 
       # Get changed .tex files
       - name: Get changed .tex files
