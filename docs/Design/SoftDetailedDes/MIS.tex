@@ -156,23 +156,24 @@ The following table is taken directly from the Module Guide document for this pr
 \newpage
 ~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Cloud Module} \label{Module}
 
 \subsection{Module}
 
-\wss{Short name for the module}
-
 \subsection{Uses}
 
+\begin{itemize}
+  \item Cloud Module
+  \item Data Upload Module
+  \item Output Storage Module
+  \item OCR Processing Module
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+
+None
 
 \subsubsection{Exported Access Programs}
 
@@ -181,7 +182,7 @@ The following table is taken directly from the Module Guide document for this pr
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+manageCloud & Image & Success/Fail Call & InvalidImageFileServerIsDown \\
 \hline
 \end{tabular}
 \end{center}
@@ -190,42 +191,478 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsubsection{State Variables}
 
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+None
 
 \subsubsection{Environment Variables}
 
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\begin{itemize}
+  \item Input data is provided in a client-approved format
+  \item AWS is running, cloud services are up
+\end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent manageCloud():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: Takes a valid image from input format and processes in cloud.
+\item output: Returns a success or failure call based on the image processing, s3, and lambda function.
+\item exception: Throws InvalidImageException for non-compliant input data or ServerIsDown is the cloud is not running.
 \end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+None
+
+\newpage
+
+% MIS of Input Module
+
+\section{MIS of Input Module} \label{Module}
+
+\subsection{Module}
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item Input module
+  \item UI parsing module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+convertInput & Image & Metadata Formatted in JSON & InvalidImageFile \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Input data is provided in a client-approved format
+  \item Metadata keys and structure adhere to predefined standards
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent convertInput():
+\begin{itemize}
+\item transition: Validates and transforms the input data into the required format.
+\item output: Returns the formatted data suitable for S3 upload and Lambda processing.
+\item exception: Throws InvalidFormatException for non-compliant input data.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+% MIS of Data Upload Module
+
+\section{MIS of Data Upload Module} \label{Module}
+
+\subsection{Module}
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item Data Upload Module
+  \item User Interface Parsing Module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+uploadData & Formatted Image & SuccessResponse & S3Exception, AccessDeniedException, TimeoutException \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item Network connection with HTTPS support
+  \item Access to AWS S3 endpoints and SDK
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item AWS S3 credentials and configurations are valid and available.
+  \item The network connection is stable during the upload process.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent uploadData():
+\begin{itemize}
+\item transition: Sends formatted data to AWS S3 using SDK.
+\item output: Returns the status of the upload operation.
+\item exception: Throws exception for failed uploads or timeouts. specific exceptions mentioned above.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+% MIS of OCR Processing Module
+
+\section{MIS of OCR Processing Module} \label{Module}
+
+\subsection{Module}
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item OCR Processing Module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+parseImage & Image from S3 & Metadata formatted in JSON & AccessDeniedException, DependencyException, ImageNotFoundException \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item Access to AWS Lambda runtime environment
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item The uploaded image is of sufficient quality for OCR processing.
+  \item OCR tools and libraries (e.g., Tesseract) are correctly configured.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent parseImage():
+\begin{itemize}
+\item transition: Analyzes the image to detect text and center points, invalid areas are skipped.
+\item output: Returns metadata (names and center points) extracted from the image.
+\item exception: Throws ProcessingException for unsupported image formats or errors during processing.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+% MIS of Output Storage Module
+
+\section{MIS of Output Storage Module} \label{Module}
+
+\subsection{Module}
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item Output Storage Module
+  \item OCR Processing Module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+storeData & Extracted metadata, Name and center point & Success/failure response & AccessDeniedException, ValidationException, RetrievalException \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item Connection to dynamoDB (connection URI)
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item DynamoDB schema is correctly configured.
+  \item Data types and indexes align with the system’s query requirements.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent storeData():
+\begin{itemize}
+\item transition: Writes extracted data and metadata into DynamoDB.
+\item output: Returns the status of the storage operation.
+\item exception: Throws StorageException for failed write operations.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+% MIS of UI Parsing Module
+
+\section{MIS of UI Parsing Module} \label{Module}
+
+\subsection{Module}
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item Back-End Logic
+  \item AWS Lambda
+  \item Database Module (if applicable for data storage or retrieval)
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{itemize}
+  \item MAX_FILE_SIZE: Maximum allowable file size for uploads (integer, in MB)
+  \item SUPPORTED_FORMATS: List of supported file formats (e.g., .png, .jpg, .jpeg)
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+uploadImage & imageFile (file) & uploadStatus (boolean) & FileSizeExceededError, InvalidFormatError \\
+\hline
+processImage & imageData (binary) & processedData (JSON) & ProcessingError \\
+\hline
+validateInput & imageFile (file) & isValid (boolean) & ValidationError \\
+\hline
+getFallbackData & errorContext (object) & fallbackResponse (JSON) & DataUnavailableError \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item uploadedImages: Stores metadata of images uploaded by users
+  \item processingQueue: Tracks images currently in processing
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item File System: Used for temporary storage of uploaded files
+  \item Internet Connection: For AWS Lambda calls, if required
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Input files are uploaded through a user interface that pre-validates file formats
+  \item AWS Lambda functions are available and operational during runtime
+  \item The file system can handle temporary file storage without interruptions
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent uploadImage():
+\begin{itemize}
+\item transition: Moves the file to a secure temporary storage location.
+\item output: Returns true if the upload succeeds, otherwise raises an exception.
+\item exception: Throws FileSizeExceededError if the file size exceeds the limit. Throws InvalidFormatError if the file format is unsupported.
+\end{itemize}
+
+\noindent processImage():
+\begin{itemize}
+\item transition: Sends the image data for processing and updates the processedData variable.
+\item output: Returns structured JSON data containing extracted composite metadata.
+\item exception: Throws ProcessingError if the image cannot be processed
+\end{itemize}
+
+\noindent validateInput():
+\begin{itemize}
+\item transition: Performs checks on the input file (size, format).
+\item output: Returns true if the file is valid; otherwise, false.
+\item exception: Throws ValidationError if validation fails.
+\end{itemize}
+
+\noindent getFallbackData():
+\begin{itemize}
+\item transition: Generates or retrieves fallback data for a failed process.
+\item output: Returns a pre-defined or dynamically generated fallback JSON.
+\item exception: Throws DataUnavailableError if fallback data cannot be provided.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{itemize}
+  \item logError: Logs details about errors during upload or processing for debugging and auditing purposes
+  \item generateFallbackResponse: Creates a generic fallback response for failed processes
+\end{itemize}
+
+\newpage
+
+% MIS of Graphical User Interface Module
+
+\section{MIS of Graphical User Interface Module} \label{Module}
+
+\subsection{Module}
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item React Front-End
+  \item Input Processing Module (M12)
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+nONE
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+initializeUI & configurationSettings (object) & successMessage (string) & InvalidConfigurationError \\
+\hline
+handleUserInput & userInput (string) & processedData (object) & InputValidationError \\
+\hline
+renderUI & UIState (object) & renderStatus (boolean) & RenderFailureError \\
+\hline
+updateStyle & styleParameters (object) & updateConfirmation (string) & InvalidStyleParameterError \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item currentView: String - Tracks the current page/view displayed to the user.
+  \item userSessionData: Object - Stores temporary session data for the active user.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item Screen: Used to render the graphical interface.
+  \item Input Devices: Handles mouse, keyboard, and touchscreen inputs.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item React is functional and integrated with the back-end API.
+  \item User devices support modern browsers with JavaScript enabled.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent renderInterface():
+\begin{itemize}
+\item transition: Loads and displays the user interface components.
+\item output: None
+\item exception: Raises RenderingError for issues with loading components.
+\end{itemize}
+
+\noindent handleUserInput():
+\begin{itemize}
+\item transition: Processes the user event and triggers the appropriate action.
+\item output: Returns true if the event is processed successfully; false otherwise.
+\item exception: Raises InputError for invalid or unsupported inputs.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{itemize}
+  \item initializeReactComponents(): Sets up and initializes React components.
+  \item updateView(currentView): Updates the GUI view based on user interaction.
+\end{itemize}
 
 \newpage
 
@@ -238,14 +675,26 @@ The following table is taken directly from the Module Guide document for this pr
 
 \wss{Extra information if required}
 
-\section{Reflection}
+\newpage{}
+
+\section*{Appendix --- Reflection}
 
 \wss{Not required for CAS 741 projects}
 
 The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.  Please answer the following questions:
+graduate attribute of Problem Analysis and Design.
+
+\input{../../Reflection.tex}
 
 \begin{enumerate}
+  \item What went well while writing this deliverable? 
+  \item What pain points did you experience during this deliverable, and how
+    did you resolve them?
+  \item Which of your design decisions stemmed from speaking to your client(s)
+  or a proxy (e.g. your peers, stakeholders, potential users)? For those that
+  were not, why, and where did they come from?
+  \item While creating the design doc, what parts of your other documents (e.g.
+  requirements, hazard analysis, etc), it any, needed to be changed, and why?
   \item What are the limitations of your solution?  Put another way, given
   unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
   \item Give a brief overview of other design solutions you considered.  What
