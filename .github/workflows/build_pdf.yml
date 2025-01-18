@@ -3,7 +3,7 @@ name: "Compile LaTeX Document"
 on:
   push:
     branches:
-      - final_yaml
+      - main
     paths:
       - "docs/**/*.tex"
 
