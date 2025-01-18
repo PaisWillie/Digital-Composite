@@ -46,8 +46,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 13, 2025 & 1.0 & Initial Revision\\
+January 17, 2025 & 1.1 & Final changes made according to rubric\\
 \bottomrule
 \end{tabularx}
 
@@ -157,11 +157,16 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{ac1}:] Supporting additional hardware, such as new touchscreen displays or tablets, to ensure compatibility with future device upgrades and varying specifications.
+\item[\refstepcounter{acnum} \actheacnum \label{ac2}:] Modifying input data formats to align with updated composite structures or metadata provided by Lifetouch.
+\item [\refstepcounter{acnum} \actheacnum \label{ac3}:] Enhancing data processing workflows to adapt to different composite formats and improve OCR preprocessing accuracy.
+  \item [\refstepcounter{acnum} \actheacnum \label{ac4}:] Scaling the system to include graduation composites from additional faculties or departments across the university.
+  \item [\refstepcounter{acnum} \actheacnum \label{ac5}:] Updating the OCR model to accommodate higher-resolution composites or address accuracy improvements in text extraction.
+  \item [\refstepcounter{acnum} \actheacnum \label{ac6}:] Adding new user roles, such as external recruiters or event organizers, to expand the system's usability and access controls.
+  \item [\refstepcounter{acnum} \actheacnum \label{ac7}:] Redesigning the user interface to meet evolving accessibility standards and usability feedback for a better experience.
+  \item [\refstepcounter{acnum} \actheacnum \label{ac8}:] Extending the database schema to store new metadata, such as additional student achievements or career milestones.
+  \item [\refstepcounter{acnum} \actheacnum \label{ac9}:] Integrating the system with McMaster’s existing alumni and event management platforms to streamline user engagement.
+  \item [\refstepcounter{acnum} \actheacnum \label{ac10}:] Adjusting backend processes to comply with updates to privacy policies, legal regulations, or internal university standards.
 \end{description}
 
 \wss{Anticipated changes relate to changes that would be made in requirements,
@@ -178,9 +183,14 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The source of the input data will always be from predefined repositories, such as LifeTouch or McMaster databases.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The system will always display graduation composites on touchscreen interfaces and other devices as defined during development.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The primary goal of the system will remain focused on facilitating the browsing and searching of graduation composites for students, alumni, and staff.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The search functionality will always rely on a combination of Optical Character Recognition (OCR) data and metadata stored within the system.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The backend database architecture will remain relational (or NoSQL, as selected initially) to meet system scalability and storage requirements.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The system will only support English as the primary language for search and display functionalities.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The project will be exclusively deployed on McMaster’s internal infrastructure, adhering to university IT policies and avoiding external hosting solutions.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The privacy and security protocols implemented will always follow GDPR and university policies, ensuring compliance with data handling standards.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -191,8 +201,13 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Cloud
+\item [\refstepcounter{mnum} \mthemnum \label{mIF}:] Input Format
+\item [\refstepcounter{mnum} \mthemnum \label{mDU}:] Data Upload
+\item [\refstepcounter{mnum} \mthemnum \label{mOCRP}:] OCR Processing
+\item [\refstepcounter{mnum} \mthemnum \label{mOS}:] Output Storage
+\item [\refstepcounter{mnum} \mthemnum \label{mUIP}:] UI Parsing
+\item [\refstepcounter{mnum} \mthemnum \label{mGUI}:] Graphical User Interface
 \end{description}
 
 
@@ -203,22 +218,17 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & Cloud \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Input Format\\
+& Data Upload\\
+& OCR Processing\\
+& Output Storage\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & {UI Parsing}\\
+& Graphical User Interface\\
 \bottomrule
 
 \end{tabular}
@@ -255,7 +265,7 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Modules}
 
 \begin{description}
 \item[Secrets:]The data structure and algorithm used to implement the virtual
@@ -264,6 +274,15 @@ to be implemented.
   system. This module provides the interface between the hardware and the
   software. So, the system can use it to display outputs or to accept inputs.
 \item[Implemented By:] OS
+\end{description}
+
+\subsubsection{Cloud Module (\mref{mHH})}
+
+\begin{description}
+\item[Secrets:]The SDKs, APIs, and configurations used to interact with AWS (S3, Lambda, and DynamoDB), including details of network protocols, security settings, and hardware infrastructure.
+\item[Services:]Provides a virtual hardware layer by abstracting cloud storage (Amazon S3), serverless compute (AWS Lambda), and database operations (Amazon DynamoDB). Allows the system to upload and retrieve data, execute image processing logic, and store processed metadata seamlessly without exposing hardware details.
+\item[Implemented By:] AWS Services and SDKs
+\item[Type of Module:] Abstract Object
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
@@ -278,19 +297,41 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{Input Module (\mref{mIF})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The structure of the image and metadata provided by the client (admin). Includes details such as accepted file formats, metadata keys, and expected payload structure.
+\item[Services:]Converts client-provided data (composite image) into a format suitable for uploading to S3 and processing by Lambda. Ensures compliance with predefined input standards.
+\item[Implemented By:] Back-End Entity
+\item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Data Upload Module (\mref{mDU})}
 
+\begin{description}
+\item[Secrets:]The configuration of API endpoints, security mechanisms (e.g., HTTPS, authentication), and retry logic for uploads.
+\item[Services:]Handles the transfer of input data (image) to Amazon S3. Encapsulates the logic for SDK interactions, upload retries, and error handling.
+\item[Implemented By:] Back-End Entity and AWS S3 Entity
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{OCR Processing Module (\mref{mOCRP})}
+
+\begin{description}
+\item[Secrets:]The OCR algorithm and processing logic for extracting names and center points of individuals from composite images.
+\item[Services:]Processes the uploaded images to extract required metadata (e.g., individual names and center points). Transforms the processed data into a format ready for storage in DynamoDB.
+\item[Implemented By:] AWS Lambda
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Output Storage Module (\mref{mOS})}
+
+\begin{description}
+\item[Secrets:]The schema for DynamoDB, including primary keys, data types, and indexing strategies.
+\item[Services:]Stores extracted data and metadata in DynamoDB for later retrieval. Abstracts database operations such as creating, reading, updating, and deleting records.
+\item[Implemented By:] DynamoDB Entity
+\item[Type of Module:] Abstract Data Type
+\end{description}
 
 \subsection{Software Decision Module}
 
@@ -305,7 +346,24 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{UI Parsing Module (\mref{mUIP})}
+
+\begin{description}
+\item[Secrets:]The implementation logic for uploading images and viewing composite images through user interface and interactions.
+\item[Services:]Implements rules for managing workflows, such as fallback mechanisms for failed uploads or processing. Encodes data transformation rules for formatting outputs.
+\item[Implemented By:] Back-End Logic and AWS Lambda
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Graphical User Interface Module (\mref{mGUI})}
+
+\begin{description}
+\item[Secrets:]User interaction event handling, user input controls, states, The methods to imple- ment data formats (such as text-boxes, buttons, file dialogs), visual layout and styling (eg. colours or sizing) for user interaction.
+\item[Services:]Provides methods for building a visual interface for the user to see and interact with.
+\item[Implemented By:] React
+\item[Type of Module:] Library
+\end{description}
+
 
 \section{Traceability Matrix} \label{SecTM}
 
@@ -320,17 +378,13 @@ requirements and between the modules and the anticipated changes.
 \toprule
 \textbf{Req.} & \textbf{Modules}\\
 \midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+R1 & \mref{mIF}, \mref{mDU}, \mref{mUIP}, \mref{mGUI}\\
+R2 & \mref{mHH}, \mref{mIF}, \mref{mDU}, \mref{mOCRP}, \mref{mOS}, \mref{mUIP}\\
+R3 & \mref{mIF}, \mref{mGUI}\\
+R4 & \mref{mOS}, \mref{mGUI}\\
+R5 & \mref{mHH}, \mref{mOS}, \mref{mGUI}\\
+R6 & \mref{mHH}, \mref{mIF}\\
+
 \bottomrule
 \end{tabular}
 \caption{Trace Between Requirements and Modules}
@@ -343,18 +397,16 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{ac1} & \mref{mGUI}\\
+\acref{ac2} & \mref{mIF}\\
+\acref{ac3} & \mref{mOCRP}\\
+\acref{ac4} & \mref{mHH}, \mref{mOS}\\
+\acref{ac5} & \mref{mOCRP}\\
+\acref{ac6} & \mref{mIF}, \mref{mGUI}\\
+\acref{ac7} & \mref{mGUI}\\
+\acref{ac8} & \mref{mOS}\\
+\acref{ac9} & \mref{mHH}\\
+\acref{ac10} & \mref{mHH}, \mref{mIF}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -385,7 +437,7 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \begin{figure}[H]
 \centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\includegraphics[width=0.7\textwidth]{image.png}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
@@ -397,15 +449,121 @@ arrows in the diagram typically correspond to the presence of import statement.}
 \wss{Design of user interface for software and hardware.  Attach an appendix if
 needed. Drawings, Sketches, Figma}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{IMG_0067.png}
+\caption{User Interface Design}
+\label{FigUH}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{IMG_0069.png}
+\caption{User Interface Design}
+\label{FigUH}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{IMG_0070.png}
+\caption{User Interface Design}
+\label{FigUH}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{IMG_0071.png}
+\caption{User Interface Design}
+\label{FigUH}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{ocr-arch_1.png}
+\caption{Interface Software Architecture Design}
+\label{FigUH}
+\end{figure}
+
 \section{Design of Communication Protocols}
 
-\wss{If appropriate}
+\wss{NA}
 
 \section{Timeline}
 
 \wss{Schedule of tasks and who is responsible}
-
 \wss{You can point to GitHub if this information is included there}
+
+\subsection{Phase: Requirements Gathering and System Design}
+\textbf{Dates:} Sept 23 – Oct 9 \\
+\textbf{Tasks:}
+\begin{itemize}
+  \item Define functional and nonfunctional requirements
+  \item Create high-level system architecture
+\end{itemize}
+\textbf{Responsible:}
+\begin{itemize}
+  \item All team members collaboratively
+  \item Project Lead oversees progress
+\end{itemize}
+
+
+\subsection{Phase: Front-End and Back-End Development}
+\textbf{Dates:} Oct 9 – Nov 22 \\
+\textbf{Tasks:}
+\begin{itemize}
+  \item Develop front-end interface using React
+  \item Implement back-end logic for data processing and storage
+  \item Integrate APIs for OCR and composite data retrieval
+\end{itemize}
+\textbf{Responsible:}
+\begin{itemize}
+  \item Front-End: Willie, Henushan
+  \item Back-End: Zahin, Wajdan, Henushan, Hammad
+\end{itemize}
+
+\subsection{Phase: Proof of Concept and Testing}
+\textbf{Dates:} Nov 22 – Feb 3 \\
+\textbf{Tasks:}
+\begin{itemize}
+  \item Deploy proof-of-concept prototype
+  \item Perform unit, integration, and usability testing
+  \item Address security and privacy compliance
+\end{itemize}
+\textbf{Responsible:}
+\begin{itemize}
+  \item Testing Lead: Hammad
+  \item All members participate in debugging and verification
+\end{itemize}
+
+\subsection{Phase: Final Deployment and Demonstrations}
+\textbf{Dates:} Feb 3 – Mar 30 \\
+\textbf{Tasks:}
+\begin{itemize}
+  \item Complete final system deployment on McMaster servers
+  \item Conduct usability testing and refine interface
+  \item Prepare for final demonstration and Expo presentation
+\end{itemize}
+\textbf{Responsible:}
+\begin{itemize}
+  \item All members
+  \item Final Presentation Lead: Willie
+\end{itemize}
+
+\subsection{Phase: Post-Deployment Support and Documentation}
+\textbf{Dates:} Mar 30 – Apr 2 \\
+\textbf{Tasks:}
+\begin{itemize}
+  \item Ensure system maintenance procedures are documented
+  \item Provide user and administrator guides
+\end{itemize}
+\textbf{Responsible:}
+\begin{itemize}
+  \item Zahin, Hammad
+\end{itemize}
+
+\subsection{Task Tracking}
+\textbf{Description:} Real-time task management and updates \\
+\textbf{GitHub Repository:} \url{https://github.com/PaisWillie/Digital-Composite}
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
