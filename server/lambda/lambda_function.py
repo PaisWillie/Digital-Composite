@@ -1,15 +1,17 @@
 import cv2
 import easyocr
-import os
+import boto3
 import numpy as np
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Initialize EasyOCR Reader
 reader = easyocr.Reader(['en'], gpu=False)
 
-# Paths     
-image_path = "../test/test.jpg"
-output_folder = "output"
-os.makedirs(output_folder, exist_ok=True)
+s3 = boto3.client('s3')
+dynamodb = boto3.resource('dynamodb')
 
 # Allowed characters
 allowed_chars = set(
@@ -108,6 +110,7 @@ def is_valid_name(text):
 def process_ovals(image, student_regions):
     final_image = image.copy()
     mapped_ovals = []
+    metadata_list = []
     for idx, student in enumerate(student_regions):
         center, axes, angle = student
         roi, roi_left, roi_top, roi_right, roi_bottom = extract_text_roi(image, center, axes)
@@ -128,13 +131,14 @@ def process_ovals(image, student_regions):
             name_text = " ".join(valid_lines)
             cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+            metadata_list.append({"Name": name_text, "Center": center})
             print(f"Name: {name_text}, Center: {center}")
         else:
             print(f"Invalid name detected for oval {idx + 1}, skipping...")
-    return final_image
+    return metadata_list
 
 # Main function to execute the steps
-def main():
+def main(image_path):
     image = load_image(image_path)
     contrast = adjust_contrast(image)
     edges = detect_edges(contrast)
@@ -142,10 +146,41 @@ def main():
     contours = find_contours(dilated_edges)
     temp_student_regions, areas = filter_contours(contours)
     student_regions = filter_by_area(temp_student_regions, areas)
-    final_image = process_ovals(image, student_regions)
-    output_image_path = os.path.join(output_folder, "result_with_rois.jpg")
-    cv2.imwrite(output_image_path, final_image)
-    print(f"Final result saved in '{output_folder}/result_with_rois.jpg'")
+    metadata = process_ovals(image, student_regions)
+    return metadata
+
+def lambda_handler(event, context):
+    """
+    Lambda function handler. Triggered by an S3 upload.
+    """
+    # Extract bucket and file information from the S3 event
+    bucket_name = event['Records'][0]['s3']['bucket']['name']
+    object_key = event['Records'][0]['s3']['object']['key']
+    
+    # Download the file locally
+    local_file_path = f"/tmp/{os.path.basename(object_key)}"
+    s3.download_file(bucket_name, object_key, local_file_path)
+    
+    # Perform OCR and metadata extraction
+    metadata = main(local_file_path)
+    
+    # Prepare metadata for DynamoDB
+    item = {
+        'ImageID': object_key,
+        'Metadata': metadata
+    }
+    
+    # Save metadata to DynamoDB
+    table = dynamodb.Table("composite-metadata")
+    table.put_item(Item=item)
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'message': 'Metadata extracted and saved to DynamoDB',
+            'metadata': metadata
+        })
+    }
 
 # Entry point of the script
 if __name__ == "__main__":
