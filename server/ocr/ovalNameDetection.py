@@ -7,7 +7,7 @@ import numpy as np
 reader = easyocr.Reader(['en'], gpu=False)
 
 # Paths     
-image_path = "../test/test.jpg"
+image_path = "../test/test3.jpg"
 output_folder = "output"
 os.makedirs(output_folder, exist_ok=True)
 
