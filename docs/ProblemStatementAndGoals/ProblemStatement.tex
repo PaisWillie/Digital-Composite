@@ -15,7 +15,7 @@
 
 \begin{document}
 
-\maketitle
+%\maketitle
 \begin{comment}
 \begin{table}[hp]
 \caption{Revision History} \label{TblRevisionHistory}
@@ -32,36 +32,37 @@ Date2 & Name(s) & Description of changes\\
 \end{comment}
 \section{Problem Statement}
 
-\wss{You should check your problem statement with the
-\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.} 
+%\wss{You should check your problem statement with the
+%\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
+%{problem statement checklist}.} 
 
-\wss{You can change the section headings, as long as you include the required
-information.}
-\newline
+%\wss{You can change the section headings, as long as you include the required
+%information.}
+%\newline
 The Faculty of Engineering at McMaster University lacks a modern and easily accessible way to display past graduating class composites. These composites are traditionally presented in physical form and are difficult to maintain and view efficiently. Our project aims to develop a web-based application that allows students, faculty, and staff to digitally access and explore these composites through a touchscreen interface. Users will be able to search for specific individuals, programs, and graduation years, making the process of finding and viewing composites both simple and interactive.
 
 
 \subsection{Problem}
-\newline
+%\newline
 The Alumni Relations department of the Faculty of Engineering, McMaster University, is looking to upgrade their outdated display of composite images of graduating students. It is not possible for users to search for or interact with past composites. It is requested to develop an interactive application that will allow users to access, browse, and search through these composites on a touchscreen interface, providing a more intuitive and modern experience.
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+%\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
+%Use abstraction so that you can avoid details.}
 \subsection*{High-Level Inputs}
 \begin{itemize}
-    \item Composite images of graduating students provided by the external photo company.
-    \item Search queries from users (e.g., year, program, individual names).
-    \item Uploaded student data and photos from university staff.
+    \item Digital versions of graduating class composites provided by the external photo company.
+    \item Metadata such as names, programs, and graduation years uploaded by university staff.
+    \item Interactions from the touchscreen device or other interfaces (e.g., search queries like year, program, or individual names).
 \end{itemize}
 
 \subsection*{High-Level Outputs}
 \begin{itemize}
-    \item Display of composite images based on user queries (e.g., year, program, or name).
+    \item Digital composite images with searchable data extracted using machine-learning techniques.
+    \item Searchable and browsable displays based on user queries, such as year, program, or name.
     \item Analytics data displayed on a dashboard (e.g., popular search terms, most viewed years and programs).
-    \item Synced updates to touchscreen interfaces when new composite data is uploaded.
+
 \end{itemize}
 
 \subsection{Stakeholders}
@@ -81,12 +82,13 @@ Use abstraction so that you can avoid details.}
     \item \textbf{Cindy Ashford (Lifetouch):}  
     Coordinates composite production and delivery for the university. Lifetouch is reviewing the project to address security and logistics concerns related to using alumni photos.
 
-    \item \textbf{Students and Alumni:}  
+    \item \textbf{Students, Alumni, and any McMaster Visitors:}  
     The end users of the system, whose interactions with the digital composites will shape the project's success.
+
 \end{itemize}
 \subsection{Environment}
 
-\wss{Hardware and software environment}
+%\wss{Hardware and software environment}
 \subsection*{Hardware Environment}
 \begin{itemize}
     \item \textbf{Touchscreen Displays:}  
@@ -102,64 +104,63 @@ Use abstraction so that you can avoid details.}
 \subsection*{Software Environment}
 \begin{itemize}
     \item \textbf{Web Application:}  
-    A responsive user interface that adapts to different screen sizes, from large wall displays to tablets and smartphones, ensuring a consistent user experience across all devices.
+    A responsive user interface that adapts to different screen sizes, from large wall displays to tablets and smartphones, ensuring a consistent user experience across all devices. Developed using React.js.
 
     \item \textbf{Database:}  
-    A secure, encrypted database will store alumni information and composite images, ensuring compliance with privacy standards.
+    A secure, encrypted database will store alumni information and composite images, ensuring compliance with privacy standards. This would be a NoSQL database.
 
     \item \textbf{GitHub:}  
     Used for version control and issue tracking to manage the software development process.
 
     \item \textbf{Operating System:}  
     The mini-PCs will run on a lightweight Linux-based operating system to support the web application and will be compatible with iOS and Android for mobile devices.
-
-    \item \textbf{Security Protocols:}  
-    Encrypted communication and secure login mechanisms will be implemented to protect sensitive data and ensure compliance with university policies.
 \end{itemize}
 
 \section{Goals}
 
- Our project’s primary goal is to develop a scaleable and user-friendly digital composite application that allows alumni, students, and faculty to browse, search, and interact with graduating class composites. By enabling searches by year, program, and individual names, the application will deliver a modern and efficient solution for accessing composite data.
-\newline
-\newline
-Moreover, a critical focus is ensuring the security and privacy of sensitive student and alumni data as we aim to implement privacy as well as security standards. This will protect personal information and ensure the project aligns with university data handling policies.
-\newline
-\newline
-Another important goal is long-term usability as we want the Faculty of Engineering to be able to easily maintain and update the system after our involvement ends. Also, composites will come out every year, so by thinking long-term, we will be able to support future composites as well.
-\newline	
-\newline
-We are also committed to delivering an exceptional user experience as the application will be designed to be intuitive and accessible across devices, from large touchscreen displays to smartphones. 
+ Our project’s primary goal is to deliver a scalable and intuitive digital composite application that enhances alumni engagement by enabling users to browse, search, and interact with graduating class composites. The application will be designed to:
+\begin{itemize}
+    \item \textbf{Support Long-Term Usability:}
+    Ensure the system is easy to maintain and update, allowing new composites to be added seamlessly each year. This ensures the Faculty of Engineering can continue using the system well into the future without requiring extensive redevelopment.
+    \item \textbf{Prioritize Security and Privacy:}
+    Implement robust security protocols to protect sensitive student and alumni data. These protocols will be evaluated against McMaster University's policies to guarantee compliance and safeguard user information.
+    \item \textbf{Deliver an Exceptional User Experience:}
+    Focus on intuitive design principles to make the system accessible and easy to use across all devices, including large touchscreen displays, tablets, and smartphones.
+    \item \textbf{Enable Measurable Outcomes:}
+    Evaluate the system's success by tracking metrics such as search completion rates, system usage statistics, and user satisfaction surveys.
+\end{itemize}
+ 
 
 \section{Stretch Goals}
 \begin{itemize}
-    \item \textbf{Interactive Feature for Networking:}  
-    Allow alumni within the composite pictures to connect with one another using a basic connecting platform. This could involve LinkedIn profiles linked to the picture, or an alum-chosen platform.
+    \item \textbf{Networking Integration:}  
+    Introduce features allowing alumni to connect through composite images, such as linking LinkedIn profiles. This feature promotes professional networking and adds significant value for end users.
 
-    \item \textbf{Analysis of User Interaction:}  
-    Develop back-end functionality to allow administrators to track user activity, search trends within the composites, and identify the most-viewed composites.
+    \item \textbf{Advanced Analytics Dashboard:}  
+    Provide administrators with insights into user behavior, such as popular search terms and most-viewed composites, to inform future updates and engagement strategies.
 
-    \item \textbf{Accessibility Features:}  
-    Incorporate advanced accessibility features into the application, such as screen reader support, color adjustments, and possibly voice navigation. This ensures that the application meets Web Content Accessibility Guidelines (WCAG) standards.
+    \item \textbf{Accessibility Enhancements:}  
+    Implement advanced accessibility options, such as screen readers, customizable color schemes, and voice navigation, to meet WCAG standards and ensure inclusivity for all users.
 \end{itemize}
 
 \section{Challenge Level and Extras}
 
-\wss{State your expected challenge level (advanced, general or basic).  The
-challenge can come through the required domain knowledge, the implementation or
-something else.  Usually the greater the novelty of a project the greater its
-challenge level.  You should include your rationale for the selected level.
-Approval of the level will be part of the discussion with the instructor for
-approving the project.  The challenge level, with the approval (or request) of
-the instructor, can be modified over the course of the term.}
+%\wss{State your expected challenge level (advanced, general or basic).  The
+%challenge can come through the required domain knowledge, the implementation or
+%something else.  Usually the greater the novelty of a project the greater its
+%challenge level.  You should include your rationale for the selected level.
+%Approval of the level will be part of the discussion with the instructor for
+%approving the project.  The challenge level, with the approval (or request) of
+%the instructor, can be modified over the course of the term.}
 
 
-\wss{Teams may wish to include extras as either potential bonus grades, or to
-make up for a less advanced challenge level.  Potential extras include usability
-testing, code walkthroughs, user documentation, formal proof, GenderMag
-personas, Design Thinking, etc.  Normally the maximum number of extras will be
-two.  Approval of the extras will be part of the discussion with the instructor
-for approving the project.  The extras, with the approval (or request) of the
-instructor, can be modified over the course of the term.}
+%\wss{Teams may wish to include extras as either potential bonus grades, or to
+%make up for a less advanced challenge level.  Potential extras include usability
+%testing, code walkthroughs, user documentation, formal proof, GenderMag
+%personas, Design Thinking, etc.  Normally the maximum number of extras will be
+%two.  Approval of the extras will be part of the discussion with the instructor
+%for approving the project.  The extras, with the approval (or request) of the
+%instructor, can be modified over the course of the term.}
 \section*{Challenge Level: General}
 
 \begin{itemize}
@@ -170,22 +171,22 @@ instructor, can be modified over the course of the term.}
 \section*{Extras}
 
 \begin{itemize}
-    \item User persona.
-    \item User documentation.
+    \item User Persona: This deliverable represents a detailed characterization of the target audience based on insights from user surveys or interviews. It identifies key user needs, preferences, and pain points to guide the design process. If desired, we can also conduct a user survey or focus group to better understand the expectations of students, alumni, and staff.
+    \item User Documentation.
 \end{itemize}
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741}
+%\wss{Not required for CAS 741}
 
 \input{../Reflection.tex}
 
   
 
 \section*{1. What went well while writing this deliverable?}
-We were able to all be on the same page in terms of the overall project idea and requirements, especially after discussing the project with our supervisor, who helped communicate the facility’s vision.
+We were able to all be on the same page in terms of the overall project idea and requirements, especially after discussing the project with our supervisor, who helped communicate the faculty’s vision. Her input provided valuable guidance to shape the problem statement and stretch goals effectively. In addition, our team completed early brainstorming sessions which helped identify key project priorities, including the focus on usability, long-term sustainability, and data privacy.
 
 \section*{2. What pain points did you experience during this deliverable, and how did you resolve them?}
 
@@ -206,12 +207,13 @@ One of the main pain points, other than the ones listed by my colleagues, is fin
 \textbf{Hammad:}  
 A pain point that stood out to me was the question around how the digital composites will be displayed in terms of hardware and operating system. If it was an Android-based system, it would drastically change the implementation compared to a Windows system. Additionally, if the screen is not large enough to display the composites properly, the team will need to consider how to adjust the display. To solve this, we asked the supervisor about the hardware we will be receiving to display the composites.
 \newline
+\newline
 \textbf{Zahin:}  
 \newline
 One of the pain points that I experienced was finding a suitable project for our group. We were not sure if our project was suitable enough for capstone requirements, so we were researching other potential projects and held a discussion where we would discuss other projects. Thankfully, this project was approved and we did not have to go into a deep dive into other projects.
 
 \section*{3. How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly ambitious but also of appropriate complexity for a senior design project)?}
-The faculty’s initial MVP for this project application was only to digitize the digital composite images into a basic touch screen interface. To add complexity to the idea, we proposed solutions for including the physical composites, which would require image text processing, as well as additional interface tracking statistics that would allow the facility to view key metrics.
+The faculty’s initial MVP for this project application was only to digitize the digital composite images into a basic touch screen interface. To add complexity to the idea, we proposed solutions for including the physical composites, which would require image text processing, as well as additional interface tracking statistics that would allow the faculty to view key metrics.
 
 
 \end{document}
