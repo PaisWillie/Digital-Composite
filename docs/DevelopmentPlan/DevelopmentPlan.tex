@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{comment}
+\usepackage{hyperref}
 \title{Development Plan\\\progname}
 
 \author{\authname}
@@ -31,40 +32,39 @@ Date2 & Name(s) & Description of changes\\
 \end{comment}
 \newpage{}
 
-\wss{Put your introductory blurb here.  Often the blurb is a brief roadmap of
-what is contained in the report.}
+%\wss{Put your introductory blurb here.  Often the blurb is a brief road-map of what is contained in the report.}
 
-\wss{Additional information on the development plan can be found in the
-\href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/L02b_POCAndDevPlan/POCAndDevPlan.pdf?ref_type=heads}
-{lecture slides}.}
-\newline
+%\wss{Additional information on the development plan can be found in the
+%\href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/L02b_POCAndDevPlan/POCAndDevPlan.pdf?ref_type=heads}
+%{lecture slides}.}
+%\newline
 This document outlines the development plan for the GradSight project, created by Team 5 as part of the Software Engineering program. The goal of this project is to deliver a functional application that modernizes the way graduation composites are displayed and managed within the Faculty of Engineering. The plan includes key details such as meeting schedules, communication strategies, team roles, workflow, project risks, and the expected technology stack. Additionally, we cover intellectual property considerations, coding standards, and our proof-of-concept demonstration plan to mitigate project risks.
 
 \section{Confidential Information?}
 
 
-\wss{State whether your project has confidential information from industry, or
-not.  If there is confidential information, point to the agreement you have in
-place.}
+%\wss{State whether your project has confidential information from industry, or
+%not.  If there is confidential information, point to the agreement you have in
+%place.}
 
 
-\wss{For most teams this section will just state that there is no confidential
-information to protect.}
-\newline
+%\wss{For most teams this section will just state that there is no confidential
+%information to protect.}
+%\newline
 There is no confidential information to protect for our project. 
 
 \section{IP to Protect}
 
-\wss{State whether there is IP to protect.  If there is, point to the agreement.
-All students who are working on a project that requires an IP agreement are also
-required to sign the ``Intellectual Property Guide Acknowledgement.''}
-\newline
+%\wss{State whether there is IP to protect.  If there is, point to the agreement.
+%All students who are working on a project that requires an IP agreement are also
+%required to sign the ``Intellectual Property Guide Acknowledgment.''}
+%\newline
 We will be using digital photos provided to use by an external company LifeTouch, which will hold the intellectual property rights to these images. However, at this stage, we do not have a formal IP agreement in place with LifeTouch regarding the use of the photos. We understand the need and are currently working to secure one before proceeding.
 
 \section{Copyright License}
 
-\wss{What copyright license is your team adopting. Point to the license in your repo.}
-\newline
+%\wss{What copyright license is your team adopting. Point to the license in your repo.}
+%\newline
 Our team is adopting an Apache 2.0 license. We believe out of the options presented to us this suited our project the best. \newline
 \href{https://github.com/WajdanF/team5?tab=Apache-2.0-1-ov-file\#}{https://github.com/WajdanF/team5?tab=Apache-2.0-1-ov-file\#}
 
@@ -72,22 +72,27 @@ Our team is adopting an Apache 2.0 license. We believe out of the options presen
 
 \section{Team Meeting Plan}
 
-\wss{How often will you meet? where?}
+%\wss{How often will you meet? where?}
 
-\wss{If the meeting is a physical location (not virtual), out of an abundance of
-caution for safety reasons you shouldn't put the location online}
+%\wss{If the meeting is a physical location (not virtual), out of an abundance of
+%caution for safety reasons you shouldn't put the location online}
 
-\wss{How often will you meet with your industry advisor?  when?  where?}
+%\wss{How often will you meet with your industry advisor?  when?  where?}
 
-\wss{Will meetings be virtual?  At least some meetings should likely be
-in-person.}
+%\wss{Will meetings be virtual?  At least some meetings should likely be
+%in-person.}
 
-\wss{How will the meetings be structured?  There should be a chair for all meetings.  There should be an agenda for all meetings.}
-\newline
+%\wss{How will the meetings be structured?  There should be a chair for all meetings.  There should be an agenda for all meetings.}
+%\newline
 \textbf{Team Meetings:} We'll meet twice a week to stay on top of things and ensure we're all aligned with a mix of in-person and virtual meetings, depending on what works best for everyone.
 \begin{itemize}
     \item \textbf{Virtual Meetings:} We’ll use Microsoft Teams to make it easy to join from anywhere.
     \item \textbf{In-Person Meetings:} We’ll meet on campus at Thode library.
+    \item \textbf{Meeting Chair Rotation:}
+    To ensure equal participation and leadership development, we will rotate the meeting chair role weekly among all team members. Each team member will take turns leading the meeting, which ensures that everyone has a chance to practice facilitation and leadership skills. The meeting chair is responsible for managing the agenda, guiding the discussions, and making sure the meeting stays on track.
+    \item \textbf{Team Leads and Chair Role Relationship:}
+    The team leads will focus on specific areas of the project, overseeing tasks, assigning responsibilities, and addressing any escalated issues. The rotating chair will organize and run the meetings, ensuring that all updates are shared in a timely manner. While the chair manages the meeting structure and flow, the team leads will present updates on progress, challenges, and next steps for their respective tasks.
+
 \end{itemize}
 
 \textbf{Meetings with our Industry Advisor (Meggie MacDougall):} We’ll meet with Meggie to get feedback and ensure we’re on the right track. The majority of these meetings will be held online over Teams.
@@ -110,7 +115,7 @@ Most meetings will likely be virtual for convenience, but we’ll get together i
 
 \section{Team Communication Plan}
 
-\wss{Issues on GitHub should be part of your communication plan.}
+%\wss{Issues on GitHub should be part of your communication plan.}
 \subsection*{1. Primary Communication Channels}
 \textbf{Microsoft Teams:} Our main platform for day-to-day communication as it is convenient for quick discussions, file sharing, and scheduling meetings.
 
@@ -119,7 +124,7 @@ Most meetings will likely be virtual for convenience, but we’ll get together i
 \subsection*{2. Task Management and Issue Tracking}
 \textbf{GitHub:} We’ll manage tasks and track issues using GitHub. Each feature, bug, or task will be logged as an issue, with clear labels to indicate priority and type (e.g., enhancement, bug, question).
 
-\textbf{Pull Requests (PRs):} All code changes will go through a pull request process, where at least one team member will review the changes before merging. For large PRs, we’ll discuss as a team and ensure everyone is on board before merging it.
+\textbf{Pull Requests (PRs):} All code changes will go through a pull request process, where at least one team member will review the changes before merging. For large Pull Request's, we’ll discuss as a team and ensure everyone is on board before merging it.
 
 \subsection*{3. Meeting Notes and Agendas}
 \textbf{Google Docs:} Agendas for each meeting will be prepared in advance and shared through Google Docs. Meeting notes will be documented in the same document and shared with the team post-meeting to keep everyone informed.
@@ -131,38 +136,44 @@ Most meetings will likely be virtual for convenience, but we’ll get together i
 \textbf{GitHub Wiki:} We’ll maintain a project wiki on GitHub that will include all project-related documentation such as technical specifications, design documents, and user guides.
 
 \subsection*{6. Escalation Process}
-\textbf{Team Leads:} If an issue needs immediate attention, we’ll escalate it to the team lead for that task area (rotating chair). If necessary, it will be brought up during meetings for group resolution.
+\textbf{Team Leads:} If an issue needs immediate attention, we will escalate it to the team lead for that task area (rotating chair). If necessary, it will be brought up during meetings for group resolution.
 
 \section{Team Member Roles}
 
-\wss{You should identify the types of roles you anticipate, like notetaker,
-leader, meeting chair, reviewer.  Assigning specific people to those roles is
-not necessary at this stage.  In a student team the role of the individuals will
-likely change throughout the year.}
+%\wss{You should identify the types of roles you anticipate, like notetaker,
+%leader, meeting chair, reviewer.  Assigning specific people to those roles is
+%not necessary at this stage.  In a student team the role of the individuals will
+%likely change throughout the year.}
+Our team will be flexible with the roles which have (Rotating) beside them. This ensures that everyone gets a chance to lead and that roles can be reassigned as needed to match work intensity. These reassignments will be done in our meetings weekly.
+
 \subsection*{Willie: Communications Lead}
-Manages communication with external stakeholders, ensuring progress updates and feedback are exchanged regularly.
+Responsible for managing communication with external stakeholders and ensuring regular progress updates. Facilitates communication between the team and faculty advisor.
 
-\subsection*{Wajdan: Leader}
-Oversees the overall progress of the project and ensures deadlines are met, while coordinating team efforts.
+\subsection*{Wajdan: Project Lead}
+Oversees the overall progress of the project, ensuring deadlines are met. Coordinates the team's efforts, helps with problem-solving, and provides leadership throughout the project.
 
-\subsection*{Zahin: Meeting Chair}
-Responsible for creating meeting agendas, leading discussions, and ensuring meetings stay focused and productive.
+\subsection*{Zahin: Meeting Chair (Rotating)}
+Responsible for creating meeting agendas, leading discussions, and ensuring
+meetings stay focused and productive. This role will rotate among team members every week to ensure everyone has an opportunity to lead discussions, ensure meetings are efficient, and facilitate decision-making.
 
-\subsection*{Hammad: Reviewer}
-Reviews code and project changes, ensuring they meet quality standards before being merged into the main project.
+\subsection*{Hammad: Code Reviewer (Rotating)}
+Responsible for reviewing code changes, ensuring they meet quality standards, and making sure that best practices are followed.
 
-\subsection*{Henushan: Notetaker}
-Takes detailed notes during meetings, capturing key decisions, action items, and follow-up tasks for the team.
+
+
+\subsection*{Henushan: Meeting Recorder \& Documentation (Rotating)}
+Captures key points, action items, and follow-ups during meetings. This role also includes ensuring all documentation is up to date. Given that meetings are mostly online, this role will also ensure meetings are recorded for reference.
+
 
 
 \section{Workflow Plan}
 
-\begin{itemize}
-	\item How will you be using git, including branches, pull request, etc.?
-	\item How will you be managing issues, including template issues, issue
-	classification, etc.?
-  \item Use of CI/CD
-\end{itemize}
+%\begin{itemize}
+%	\item How will you be using git, including branches, pull request, etc.?
+%	\item How will you be managing issues, including template issues, issue
+%	classification, etc.?
+%  \item Use of CI/CD
+%\end{itemize}
 \subsection*{Git Usage}
 We will be using Git to implement version control for the project. The workflow will involve creating \textbf{feature branches} for specific key components of the project. This approach will significantly reduce merge conflicts when multiple team members are working on different parts of the service.
 
@@ -194,26 +205,28 @@ Automated deployment to the \textbf{master branch} will be configured from the d
 
 Docker will be used to create separate environments (different from develop and production) to run tests in a controlled setup.
 
+GitHub Actions will be used to automatically run tests each time a commit is pushed or a PR is created. GitHub Actions will deploy changes to the staging environment once tests pass successfully.
+
 
 \section{Project Decomposition and Scheduling}
 
-\begin{itemize}
-  \item How will you be using GitHub projects?
-  \item Include a link to your GitHub project: 
-\end{itemize}
+%\begin{itemize}
+%  \item How will you be using GitHub projects?
+%  \item Include a link to your GitHub project: 
+%\end{itemize}
 
-\wss{How will the project be scheduled?  This is the big picture schedule, not
-details. You will need to reproduce information that is in the course outline
-for deadlines.}
+%\wss{How will the project be scheduled?  This is the big picture schedule, not
+%details. You will need to reproduce information that is in the course outline
+%for deadlines.}
 
 
-\subsection*{How will you be using GitHub projects?}
+\subsection*{GitHub Projects Usage}
 \begin{itemize}
     \item We can use GitHub projects to manage planning and tracking work.
     \item Integrate issues and pull requests into the spreadsheet.
     \item Can create filters, views, and groupings to visualize work and allocated tasks.
     \item More information about metadata on the given issues and tasks can be decided later (complexity level, estimated task points, etc).
-    \item \textbf{Include a link to your GitHub project:} \href{https://github.com/WajdanF/team5}{https://github.com/WajdanF/team5}
+    \item \textbf{Include a link to your GitHub project:} \href{https://github.com/users/PaisWillie/projects/5}{https://github.com/users/PaisWillie/projects/5}
 
 \end{itemize}
 
@@ -221,14 +234,14 @@ for deadlines.}
 \begin{itemize}
     \item The project will be scheduled based on a sequential order.
     \item Large sections of the project and deliverables will be done in this order.
-    \item The work within each section can be broken down to allocate to all members of the group.
+    \item The work within each section can be broken down and allocated to all members of the group.
 \end{itemize}
 
 \section{Proof of Concept Demonstration Plan}
 
-What is the main risk, or risks, for the success of your project?  What will you
-demonstrate during your proof of concept demonstration to convince yourself that
-you will be able to overcome this risk?
+%What is the main risk, or risks, for the success of your project?  What will you
+%demonstrate during your proof of concept demonstration to convince yourself that
+%you will be able to overcome this risk?
 
 
 
@@ -236,7 +249,7 @@ The main risks for the success of the project are:
 
 \begin{itemize}
     \item \textbf{Hardware Requirements:}  
-    The app is designed to run on a touchscreen display, which could be a hardware risk. To mitigate this risk, we can do testing on any touchscreen device, such as a smartphone or tablet, to validate the functionality without the need to test it on the final hardware.
+    The app is designed to run on a touchscreen display, which could be a hardware risk. To mitigate this risk, we can test on any touchscreen device, such as a smartphone or tablet, to validate the functionality without the need to test it on the final hardware.
     \begin{itemize}
         \item The consequence of this risk being unmitigated would be the need to arrange earlier access to the final touchscreen display. In this case, we would need to coordinate with the Faculty of Engineering to secure the hardware for testing.
     \end{itemize}
@@ -248,64 +261,66 @@ The main risks for the success of the project are:
         \item This manual approach, while time-consuming, will ensure that the system is fully functional. If it becomes too time-consuming, we will attempt to collaborate further with LifeTouch to get better-quality composites.
     \end{itemize}
     \item \textbf{Demonstration of POC:}  
-    A low-fidelity prototype will be made to showcase the overall structure of the application to showcase how the digital composites will be presented to the user. Additionally, a demonstration will be completed of parsing all students’ names from a physical composite, and having it rendered as a list on an application.
+    A low-fidelity prototype will be made to showcase the overall structure of the application to showcase how the digital composites will be presented to the user. Additionally, a demonstration will be completed, parsing a few students’ names from a digital composite, and having it rendered as a list on an application.
 \end{itemize}
 
 
 \section{Expected Technology}
 
-\wss{What programming language or languages do you expect to use?  What external
-libraries?  What frameworks?  What technologies.  Are there major components of
-the implementation that you expect you will implement, despite the existence of
-libraries that provide the required functionality.  For projects with machine
-learning, will you use pre-trained models, or be training your own model?  }
+%\wss{What programming language or languages do you expect to use?  What external
+%libraries?  What frameworks?  What technologies.  Are there major components of
+%the implementation that you expect you will implement, despite the existence of
+%libraries that provide the required functionality.  For projects with machine
+%learning, will you use pre-trained models, or be training your own model?  }
 
-\wss{The implementation decisions can, and likely will, change over the course
-of the project.  The initial documentation should be written in an abstract way;
-it should be agnostic of the implementation choices, unless the implementation
-choices are project constraints.  However, recording our initial thoughts on
-implementation helps understand the challenge level and feasibility of a
-project.  It may also help with early identification of areas where project
-members will need to augment their training.}
+%\wss{The implementation decisions can, and likely will, change over the course
+%of the project.  The initial documentation should be written in an abstract way;
+%it should be agnostic of the implementation choices, unless the implementation
+%choices are project constraints.  However, recording our initial thoughts on
+%implementation helps understand the challenge level and feasibility of a
+%project.  It may also help with early identification of areas where project
+%members will need to augment their training.}
 
-Topics to discuss include the following:
+%Topics to discuss include the following:
+
+%\begin{itemize}
+%\item Specific programming language
+%\item Specific libraries
+%\item Pre-trained models
+%\item Specific linter tool (if appropriate)
+%\item Specific unit testing framework
+%\item Investigation of code coverage measuring tools
+%\item Specific plans for Continuous Integration (CI), or an explanation that CI
+%  is not being done
+%\item Specific performance measuring tools (like Valgrind), if
+%  appropriate
+%\item Tools you will likely be using?
+%\end{itemize}
+
+%\wss{git, GitHub and GitHub projects should be part of your technology.}
+This list provides a starting point for the expected technology we will be using. As we progress, this list may change.
 
 \begin{itemize}
-\item Specific programming language
-\item Specific libraries
-\item Pre-trained models
-\item Specific linter tool (if appropriate)
-\item Specific unit testing framework
-\item Investigation of code coverage measuring tools
-\item Specific plans for Continuous Integration (CI), or an explanation that CI
-  is not being done
-\item Specific performance measuring tools (like Valgrind), if
-  appropriate
-\item Tools you will likely be using?
-\end{itemize}
-
-\wss{git, GitHub and GitHub projects should be part of your technology.}
-
-
-\begin{itemize}
-    \item \textbf{React.js} → Front-end library
-    \item \textbf{TypeScript} → Language we are using for the front-end
-    \item \textbf{Tailwind CSS} → Layout/formatting/design library
-    \item \textbf{Optical Character Recognition (OCR)} with a pre-trained model → For previous composites
-    \item \textbf{Prettier + ESLint} → Code formatting
-    \item \textbf{Jest} → Testing library
-    \item \textbf{GitHub Actions} → CI/CD
+    \item \textbf{React.js} → A JavaScript library for building dynamic user interfaces.
+    \item \textbf{TypeScript} → A superset of JavaScript adding static typing for better maintainability and tooling.
+    \item \textbf{Tailwind CSS} → A utility-first CSS framework for rapid UI development with customizable styles.
+    \item \textbf{Docker} → A tool for packaging and running applications in containers, ensuring consistency across environments.
+    \item \textbf{OCR (Tesseract/EasyOCR} → Optical Character Recognition tools for extracting text from scanned composites.
+    \item \textbf{OCR Dataset} → A combination of public OCR datasets and custom datasets created from scanned composites for training the OCR models.
+    \item \textbf{Prettier + ESLint} → Tools for automatic code formatting and identifying issues in JavaScript/TypeScript code.
+    \item \textbf{Jest} → A testing framework to write unit tests and ensure code quality.
+    \item \textbf{GitHub Actions} → CI/CD tool for automating testing, builds, and deployment processes.
     \item \textbf{GitHub} → Version control
     \item \textbf{GitHub Projects Kanban Board}
-    \item \textbf{Microprocessor (e.g., Raspberry Pi)}
-    \item \textbf{Chrome}
-    \item \textbf{Visual Studio Code}
+    \item \textbf{Microprocessor (e.g., Raspberry Pi)} → For hosting application
+    \item \textbf{Chrome} → Browser
+    \item \textbf{Visual Studio Code} → IDE
 \end{itemize}
 
 \section{Coding Standard}
 
-\wss{What coding standard will you adopt?}
-\newline
+%\wss{What coding standard will you adopt?}
+%\newline
 The coding standards we will follow are listed below:
 
 \begin{itemize}
@@ -320,7 +335,7 @@ The coding standards we will follow are listed below:
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741}
+%\wss{Not required for CAS 741}
 
 \input{../Reflection.tex}
 
@@ -340,17 +355,17 @@ We did not have any disagreements in this deliverable, as we were all clear abou
 
 \section*{Appendix --- Team Charter}
 
-\wss{borrows from
-\href{https://engineering.up.edu/industry_partnerships/files/team-charter.pdf}
-{University of Portland Team Charter}}
+%\wss{borrows from
+%\href{https://engineering.up.edu/industry_partnerships/files/team-charter.pdf}
+%{University of Portland Team Charter}}
 
 \subsection*{External Goals}
 
-\wss{What are your team's external goals for this project? These are not the
-goals related to the functionality or quality fo the project.  These are the
-goals on what the team wishes to achieve with the project.  Potential goals are
-to win a prize at the Capstone EXPO, or to have something to talk about in
-interviews, or to get an A+, etc.}
+%\wss{What are your team's external goals for this project? These are not the
+%goals related to the functionality or quality fo the project.  These are the
+%goals on what the team wishes to achieve with the project.  Potential goals are
+%to win a prize at the Capstone EXPO, or to have something to talk about in
+%interviews, or to get an A+, etc.}
 \begin{itemize}
     \item \textbf{Provide a solution to the Engineering Faculty:}  
     Our main goal is to deliver a functional digital composite web app that will help the Faculty of Engineering modernize how they display and manage graduation composites. We want this solution to potentially be used long term by the faculty.
@@ -366,34 +381,34 @@ interviews, or to get an A+, etc.}
 
 \subsubsection*{Expectations}
 
-\wss{What are your team's expectations regarding meeting attendance (being on
-time, leaving early, missing meetings, etc.)?}
-\newline
+%\wss{What are your team's expectations regarding meeting attendance (being on
+%time, leaving early, missing meetings, etc.)?}
+%\newline
 Regarding meeting attendance, our team expects everyone to show up on time to all scheduled meetings because punctuality ensures that we make the most of our time. If anyone knows they’re going to be late or need to leave early, we ask that they give advance notice so we can plan around it. In the case of missing meetings, the person should let the team know ahead of time unless it is an urgent issue because decisions are made every meeting and missing one can slow down development.
 
 \subsubsection*{Acceptable Excuse}
 
-\wss{What constitutes an acceptable excuse for missing a meeting or a deadline?
-What types of excuses will not be considered acceptable?}
-\newline
+%\wss{What constitutes an acceptable excuse for missing a meeting or a deadline?
+%What types of excuses will not be considered acceptable?}
+%\newline
 An acceptable excuse for missing a meeting or a deadline is when there is an emergency, but other than that team members should be showing up. In terms of deadline, the only reason that a milestone shouldn’t be handed in is if there is missing content.
 
 
 \subsubsection*{In Case of Emergency}
 
-\wss{What process will team members follow if they have an emergency and cannot
-attend a team meeting or complete their individual work promised for a team
-deliverable?}
-\newline
+%\wss{What process will team members follow if they have an emergency and cannot
+%attend a team meeting or complete their individual work promised for a team
+%deliverable?}
+%\newline
 In case of a personal emergency, the person should let the team know and take leave right away. The work that was expected from the excused member will be divided up among the remainder of the people and finished accordingly. Also, if the milestone is not due for a little longer and their emergency situation comes to a halt, they are expected to go over the work that they were initially assigned and add to the section.
 
 \subsection*{Accountability and Teamwork}
 
 \subsubsection*{Quality} 
 
-\wss{What are your team's expectations regarding the quality
-of team members' preparation for team meetings and the quality of the
-deliverables that members bring to the team?}
+%\wss{What are your team's expectations regarding the quality
+%of team members' preparation for team meetings and the quality of the
+%deliverables that members bring to the team?}
 \begin{itemize}
     \item \textbf{Meeting Preparation:}  
     Everyone is expected to come prepared for meetings by reviewing the agenda and completing their assigned tasks. This ensures we can make the most of our time and keep things moving smoothly.
@@ -407,54 +422,54 @@ deliverables that members bring to the team?}
 
 \subsubsection*{Attitude}
 
-\wss{What are your team's expectations regarding team members' ideas,
-interactions with the team, cooperation, attitudes, and anything else regarding
-team member contributions?  Do you want to introduce a code of conduct?  Do you
-want a conflict resolution plan?  Can adopt existing codes of conduct.}
+%\wss{What are your team's expectations regarding team members' ideas,
+%interactions with the team, cooperation, attitudes, and anything else regarding
+%team member contributions?  Do you want to introduce a code of conduct?  Do you
+%want a conflict resolution plan?  Can adopt existing codes of conduct.}
 \begin{itemize}
     \item All team members’ ideas will be heard and put to a vote when making a decision.
     \item Interactions between the team are expected to be respectful, polite, honest, and with only good intentions.
     \item All team members are expected to come to meetings with a positive attitude.
     \item All team members will contribute an equal amount of work to the best of their ability.
-    \item Should any team members have any issues, they are expected to communicate with the entire team first.
-    \item If issues arise, all team members are expected to support and comply with the majority vote, which should be the best possible solution for everyone.
+    \item Should any of the team members have any issues, they are expected to communicate with the entire team first.
+    \item If problems arise, all team members are expected to support and comply with the majority vote, which should be the best possible solution for everyone.
     \item If a team member does not agree with the majority vote, they must take the next step in contacting a TA or the Professor to escalate the matter.
 \end{itemize}
 
 \subsubsection*{Stay on Track}
 
-\wss{What methods will be used to keep the team on track? How will your team
-ensure that members contribute as expected to the team and that the team
-performs as expected? How will your team reward members who do well and manage
-members whose performance is below expectations?  What are the consequences for
-someone not contributing their fair share?}
+%\wss{What methods will be used to keep the team on track? How will your team
+%ensure that members contribute as expected to the team and that the team
+%performs as expected? How will your team reward members who do well and manage
+%members whose performance is below expectations?  What are the consequences for
+%someone not contributing their fair share?}
 
-\wss{You may wish to use the project management metrics collected for the TA and
-instructor for this.}
+%\wss{You may wish to use the project management metrics collected for the TA and
+%instructor for this.}
 
-\wss{You can set target metrics for attendance, commits, etc.  What are the
-consequences if someone doesn't hit their targets?  Do they need to bring the
-coffee to the next team meeting?  Does the team need to make an appointment with
-their TA, or the instructor?  Are there incentives for reaching targets early?}
+%\wss{You can set target metrics for attendance, commits, etc.  What are the
+%consequences if someone doesn't hit their targets?  Do they need to bring the
+%coffee to the next team meeting?  Does the team need to make an appointment with
+%their TA, or the instructor?  Are there incentives for reaching targets early?}
 \section*{Methods to Keep the Team on Track}
 \begin{itemize}
     \item Regular meetings, at least once a week. In these meetings, we will all give a general update on what we are working on, our plans, and if any support is needed.
-    \item We will use Jira to keep track of tickets to help ensure everyone knows what is being worked on at all times so we can manage deadlines.
-    \item Our team will set up personal deadlines for deliverables, aside from the official due dates, so that we can take time to review our final submissions.
+    \item We will use Jira to keep track of tickets to help ensure that everyone knows what is being worked on at all times so that we can manage deadlines.
+    \item Our team will set personal deadlines for deliverables, aside from the official due dates, so that we can take the time to review our final submissions.
 \end{itemize}
 
 \section*{Team Contribution and Performance}
 
 \begin{itemize}
     \item Attendance at meetings will be tracked to see if anyone is falling behind.
-    \item Tasks will have to be completed by their deadlines.
-    \item If the group feels that work completed is not up to our standards, we will conduct a code review with the author and take note of the review.
+    \item The tasks will have to be completed on time.
+    \item If the group feels that the work completed is not up to our standards, we will conduct a code review with the author and take note of the review.
 \end{itemize}
 
 \section*{Rewards}
 
 \begin{itemize}
-    \item For team members who are consistently completing tasks early and supporting the team, they will have the option to take the lead on tasks they find interesting.
+    \item For team members who consistently complete tasks early and support the team, they will have the option to take the lead on tasks they find interesting.
     \item In addition, they will receive virtual high fives from the rest of the team members.
 \end{itemize}
 
@@ -466,7 +481,7 @@ their TA, or the instructor?  Are there incentives for reaching targets early?}
 \end{itemize}
 \subsubsection*{Team Building}
 
-\wss{How will you build team cohesion (fun time, group rituals, etc.)? }
+%\wss{How will you build team cohesion (fun time, group rituals, etc.)? }
 \subsection*{Team Socials}
 Set aside time for non-work-related activities, like virtual or in-person game nights, trivia quizzes, or even casual meetups at a café. This will help team members connect beyond work.
 
@@ -474,21 +489,21 @@ Set aside time for non-work-related activities, like virtual or in-person game n
 We all have interest in online games such as Valorant and League of Legends. We can use this as a bonding strategy to work as a team, outside of the project!
 
 \subsection*{Weekly Check-ins}
-Start meetings with a short, personal "How’s everyone doing?" check-in. It helps build empathy and understanding among team members.
+Start meetings with a short personal check-in of "How is everyone doing?" It helps build empathy and understanding among team members.
 
 \subsection*{Celebrate Wins}
-At the end of each week, celebrate milestones, both small and big, and acknowledge each other’s contributions. This could be done with fun titles like “MVP of the Week” or “Bug Slayer.”
+At the end of each week, celebrate milestones, small and big, and acknowledge each other’s contributions. This could be done with fun titles like 'MVP of the Week' or 'Bug Slayer.'
 
 
 \subsubsection*{Decision Making} 
 
-\wss{How will you make decisions in your group? Consensus?  Vote? How will you
-handle disagreements? }
-\newline
+%\wss{How will you make decisions in your group? Consensus?  Vote? How will you
+%handle disagreements? }
+%\newline
 We should aim for consensus as the primary decision-making process. In consensus, all team members should have a chance to voice their opinions, and the goal is to reach a solution that everyone can support, even if it’s not their first choice. Inevitably, everyone will feel heard. We can start by presenting the issue at hand. Then discuss all perspectives and approaches. Express and convey thoughts through conversation. Come to a decision as a group.
 \newline
 \newline
-For any disagreements within the group, before anything, everyone should have the chance to speak and everyone should simultaneously give their full attention to the speaker. This encourages open and respectful communication. If we are still unable to come to a consensus, we can bring in a mediator, third party, someone who is neutral to help mediate the issue and come to a resolution. Finally, when consensus isn’t available, we as a team should make compromises from both positions. This may require more responsibilities and testing, but ensures that we are structured as a team.
+For any disagreements within the group, before anything, everyone should have the chance to speak and everyone should simultaneously give their full attention to the speaker. This encourages open and respectful communication. If we are still unable to come to a consensus, we can bring in a mediator, third party, someone who is neutral to help mediate the issue and come to a resolution. Finally, when consensus is not available, we as a team should make compromises from both positions. This may require more responsibilities and testing, but ensures that we are structured as a team.
 
 
 \end{document}
