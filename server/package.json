@@ -3,6 +3,7 @@
     "@aws-sdk/client-s3": "^3.734.0",
     "@aws-sdk/client-sts": "^3.734.0",
     "aws-sdk": "^2.1692.0",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
   }
 }
