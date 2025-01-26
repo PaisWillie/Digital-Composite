@@ -21,6 +21,9 @@ export default {
       colors: {
         bodyText: '#495965', // Light mode text color
         linkText: '#7A003C' // Light mode link color
+      },
+      gridTemplateColumns: {
+        16: 'repeat(16, minmax(0, 1fr));'
       }
     }
   },
