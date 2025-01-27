@@ -1,0 +1,45 @@
+import { cn } from '@udecode/cn'
+
+type IconButtonProps = {
+  onClick: () => void
+  variant?: 'primary' | 'secondary' | 'tertiary'
+  icon: React.ReactNode
+  disabled?: boolean
+  href?: string
+}
+
+const IconButton = ({
+  onClick,
+  variant = 'primary',
+  icon,
+  disabled = false,
+  href
+}: IconButtonProps) => {
+  return (
+    <a href={href}>
+      <button
+        onClick={onClick}
+        className={cn([
+          'font-poppins rounded-[4px] font-semibold p-[12px] text-[20px] leading-[24px] max-w-fit',
+          variant === 'primary' &&
+            (disabled
+              ? 'bg-[#DBDBDD] text-[#4F595F]/50 cursor-not-allowed'
+              : 'bg-[#7A003C] text-white hover:bg-[#FDBF57] hover:text-black active:text-black active:bg-[#FDBF57] active:shadow-[0_0_3px_rgba(122,0,60,0.3)]'),
+          variant === 'secondary' &&
+            (disabled
+              ? 'bg-[#DBDBDD] text-[#4F595F]/50 cursor-not-allowed border-[2px] border-[#4F595F]/50'
+              : 'bg-white text-[#7A003C] border-[2px] border-[#7A003C] hover:bg-[#7A003C] hover:text-white active:text-white active:bg-[#7A003C] active:shadow-[0_0_3px_rgba(122,0,60,0.3)]'),
+          variant === 'tertiary' &&
+            (disabled
+              ? 'text-[#DBDBDD]/50 cursor-not-allowed' // TODO: Change icon color according to branding guidelines
+              : 'text-black hover:text-[#7A003C] active:text-[#7A003C]') // TODO: Change icon color according to branding guidelines
+        ])}
+        disabled={disabled}
+      >
+        {icon}
+      </button>
+    </a>
+  )
+}
+
+export default IconButton
