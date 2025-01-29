@@ -7,6 +7,7 @@ type ButtonProps = {
   leadingIcon?: React.ReactNode
   trailingIcon?: React.ReactNode
   disabled?: boolean
+  isMobile?: boolean
 }
 
 const TextButton = ({
@@ -15,13 +16,17 @@ const TextButton = ({
   children,
   leadingIcon,
   trailingIcon,
-  disabled = false
+  disabled = false,
+  isMobile = false
 }: ButtonProps) => {
   return (
     <button
       onClick={onClick}
       className={cn([
-        'font-poppins rounded-[4px] font-semibold px-[24px] py-[12px] text-[20px] leading-[24px]',
+        'font-poppins rounded-[4px] font-semibold   flex flex-row items-center',
+        isMobile
+          ? 'text-[14px] leading-[18px] px-[16px] py-[8px]'
+          : 'text-[20px] leading-[24px] px-[24px] py-[12px]',
         variant === 'primary' &&
           (disabled
             ? 'bg-[#DBDBDD] text-[#4F595F]/50 cursor-not-allowed'

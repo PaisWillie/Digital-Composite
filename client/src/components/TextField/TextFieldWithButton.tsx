@@ -1,13 +1,13 @@
 import { cn } from '@udecode/cn'
 
 type TextFieldWithButtonProps = {
-  label: string
+  label?: string
   textFieldPlaceholder: string
   errorMessage?: string
   isError?: boolean
   textFieldValue: string
   onTextFieldChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  buttonLabel: string
+  buttonLabel: React.ReactNode
   onButtonClick: () => void
 }
 
