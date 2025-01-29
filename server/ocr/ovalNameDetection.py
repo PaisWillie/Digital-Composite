@@ -7,7 +7,7 @@ import numpy as np
 reader = easyocr.Reader(['en'], gpu=False)
 
 # Paths     
-image_path = "../test/test3.jpg"
+image_path = "../test/test.jpg"
 output_folder = "output"
 os.makedirs(output_folder, exist_ok=True)
 
@@ -119,18 +119,38 @@ def process_ovals(image, student_regions):
         extracted_text = "\n".join(results)
         lines = extracted_text.strip().split("\n")
         valid_lines = [line.strip() for line in lines if line.strip()][:2]
+
+        # Convert major and minor axes to semi-axes
+        a, b = axes[0] / 2, axes[1] / 2
+
+        # Compute extreme points
+        top_left = (int(center[0] - b), int(center[1] - a))
+        top_right = (int(center[0] + b), int(center[1] - a))
+        bottom_left = (int(center[0] - b), int(center[1] + a))
+        bottom_right = (int(center[0] + b), int(center[1] + a))
+        if top_left[0] < 0:
+            top_left = (0, top_left[1])
+        if bottom_left[0] < 0:
+            bottom_left = (0, bottom_left[1])
+
+        height, width = final_image.shape[:2]
+
+
         # Check if the extracted text is a valid name
         if valid_lines and is_valid_name(" ".join(valid_lines)):
-            mapped_ovals.append({"center": center, "name_lines": valid_lines})
+            mapped_ovals.append({"center": center, "name_lines": valid_lines, "top_left": top_left, "top_right": top_right, "bottom_left": bottom_left, "bottom_right": bottom_right})
             # Draw the ellipse and ROI on the final image
             cv2.ellipse(final_image, student, (0, 255, 0), 2)
             cv2.rectangle(final_image, (roi_left, roi_top), (roi_right, roi_bottom), (255, 0, 0), 2)
             name_text = " ".join(valid_lines)
             cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
-            print(f"Name: {name_text}, Center: {center}")
+            print(f"Name: {name_text}, Center: {center}, top_left: {top_left}, top_right: {top_right}, bottom_left: {bottom_left}, bottom_right: {bottom_right}")
         else:
             print(f"Invalid name detected for oval {idx + 1}, skipping...")
+
+    print(f"height: {height}, width: {width}")
+
     return final_image
 
 # Main function to execute the steps
