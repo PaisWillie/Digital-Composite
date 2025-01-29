@@ -11,12 +11,10 @@ app.use(express.urlencoded({ extended: true }));
 // Import routes
 const studentsRoutes = require("./routes/students.routes");
 const compositeRoutes = require("./routes/year.routes");
-const blacklistRoutes = require("./routes/blacklist.routes");
 
 // Use routes
 app.use("/allStudents", studentsRoutes);
 app.use("/composite", compositeRoutes); // for GET /year?program? and PUT /year/program
-app.use("/blacklist", blacklistRoutes);
 
 // Generic error handling (optional advanced structure)
 const { errorHandler } = require("./utils/errorHandler");

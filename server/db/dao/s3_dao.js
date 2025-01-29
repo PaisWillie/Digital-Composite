@@ -1,7 +1,6 @@
 const fs = require("fs");
 const { default: s3_client } = require("../client/s3_client");
 const { PutObjectCommand, GetObjectCommand} = require("@aws-sdk/client-s3");
-require("dotenv").config();
 
 class S3DAO {
     constructor() {

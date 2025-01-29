@@ -29,7 +29,7 @@ exports.addStudentToBlacklist = async (req, res, next) => {
         return res.status(400).json({ message: "Missing required fields" });
       }
   
-      await blacklistService.addToBlacklist({ Year, Program, Name, Id });
+      await studentsService.addToBlacklist({ Year, Program, Name, Id });
       return res.status(200).json({ message: "Blacklisted successfully" });
     } catch (error) {
       next(error);

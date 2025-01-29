@@ -3,15 +3,8 @@ import easyocr
 import boto3
 import numpy as np
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 # Initialize EasyOCR Reader
 reader = easyocr.Reader(['en'], gpu=False)
-
-s3 = boto3.client('s3')
-dynamodb = boto3.resource('dynamodb')
 
 # Allowed characters
 allowed_chars = set(
@@ -150,27 +143,26 @@ def main(image_path):
     return metadata
 
 def lambda_handler(event, context):
-    """
-    Lambda function handler. Triggered by an S3 upload.
-    """
-    # Extract bucket and file information from the S3 event
-    bucket_name = event['Records'][0]['s3']['bucket']['name']
-    object_key = event['Records'][0]['s3']['object']['key']
+
+    key = event.get('Key')
+    bucket = event.get('Bucket')
+
+    s3_client = boto3.client('s3')
+    download_path = f"/tmp/{key.split('/')[-1]}"
+
+    s3_client.download_file(bucket, key, download_path)
     
-    # Download the file locally
-    local_file_path = f"/tmp/{os.path.basename(object_key)}"
-    s3.download_file(bucket_name, object_key, local_file_path)
-    
-    # Perform OCR and metadata extraction
-    metadata = main(local_file_path)
+    finalMetadata = main(download_path)
     
     # Prepare metadata for DynamoDB
     item = {
-        'ImageID': object_key,
-        'Metadata': metadata
+        'ImageID': "TemporaryKey",
+        'Metadata': finalMetadata
     }
     
     # Save metadata to DynamoDB
+    dynamodb = boto3.resource('dynamodb')
+
     table = dynamodb.Table("composite-metadata")
     table.put_item(Item=item)
     
