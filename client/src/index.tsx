@@ -13,6 +13,7 @@ import UploadPage from 'components/UploadPage'
 import ManageCompositesPage from 'components/ManageCompositesPage'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import CompositeViewPage from 'components/CompositeViewPage'
 
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)
@@ -55,6 +56,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <UploadPage />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: '/admin/compositeViewPage',
+    element: (
+      <ProtectedRoute>
+        <CompositeViewPage />
       </ProtectedRoute>
     )
   },

@@ -41,7 +41,7 @@ function UploadPage() {
     )
 
     // Redirect to CompositeViewPage with composite data
-    navigate('/Admin/CompositeViewPage', {
+    navigate('/Admin/compositeViewPage', {
       state: {
         id: uuidv4(), // Generate a unique ID for the composite
         file: renamedFile,

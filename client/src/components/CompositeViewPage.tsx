@@ -1,16 +1,14 @@
-import { useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect, ChangeEvent } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
 import TextField from 'components/TextField/TextField'
-import Dropdown from 'components/Dropdown/Dropdown'
+import { FaTrash } from 'react-icons/fa'
 
 function CompositeViewPage() {
   const location = useLocation()
   const navigate = useNavigate()
 
   const compositeData = location.state || {}
-  const [program, setProgram] = useState(compositeData.program || '')
-  const [year, setYear] = useState(compositeData.year || '')
   const [names, setNames] = useState<string[]>(compositeData.names || [])
   const [imageSrc, setImageSrc] = useState<string | null>(null)
 
@@ -35,8 +33,6 @@ function CompositeViewPage() {
   const handleSave = () => {
     const updatedComposite = {
       id: compositeData.id || 'new-id',
-      program,
-      year,
       names
     }
 
@@ -67,33 +63,8 @@ function CompositeViewPage() {
         )}
       </div>
 
-      {/* Editable Program and Year */}
-      <div className="mb-6 w-full max-w-xl">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Program
-          </label>
-          <Dropdown
-            options={['Electrical', 'Mechanical', 'Software Engineering']}
-            selectedValue={program}
-            onSelect={setProgram}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Year
-          </label>
-          <Dropdown
-            options={['2022', '2023', '2024']}
-            selectedValue={year}
-            onSelect={setYear}
-          />
-        </div>
-      </div>
-
       {/* Editable Names List */}
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-4xl">
         <h3 className="mb-4 text-lg font-medium">Student Names</h3>
         <div className="flex flex-col gap-4">
           {names.map((name, index) => (
@@ -106,12 +77,12 @@ function CompositeViewPage() {
                 }
                 placeholder={`Enter name for student ${index + 1}`}
               />
-              <TextButton
-                variant="tertiary"
+              <button
+                className="mt-4 flex h-9 items-center justify-center rounded-md border border-red-600 bg-white p-2 text-red-600 transition-colors hover:bg-red-600 hover:text-white"
                 onClick={() => setNames(names.filter((_, i) => i !== index))}
               >
-                Remove
-              </TextButton>
+                <FaTrash />
+              </button>
             </div>
           ))}
         </div>
@@ -126,7 +97,7 @@ function CompositeViewPage() {
       {/* Action Buttons */}
       <div className="mt-6 flex gap-4">
         <TextButton variant="primary" onClick={handleSave}>
-          Save and Go to Manage Composites
+          Save Composite
         </TextButton>
         <TextButton variant="secondary" onClick={handleBackToComposites}>
           Back to Composites
