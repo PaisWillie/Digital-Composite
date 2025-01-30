@@ -15,14 +15,14 @@ function AdminPage() {
       <div className="flex w-full max-w-sm flex-col gap-4">
         <TextButton
           variant="primary"
-          onClick={() => handleNavigate('/Admin/UploadPage')}
+          onClick={() => handleNavigate('/admin/uploadPage')}
         >
           Upload Composite
         </TextButton>
 
         <TextButton
           variant="secondary"
-          onClick={() => handleNavigate('/Admin/ManageCompositesPage')}
+          onClick={() => handleNavigate('/admin/manageCompositesPage')}
         >
           Manage Composites
         </TextButton>
