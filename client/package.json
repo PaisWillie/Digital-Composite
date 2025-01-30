@@ -26,6 +26,7 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.3.0",
     "@udecode/cn": "^43.0.0",
     "antd": "^5.23.3",
     "react": "^18.3.1",
