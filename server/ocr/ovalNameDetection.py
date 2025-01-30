@@ -2,6 +2,7 @@ import cv2
 import easyocr
 import os
 import numpy as np
+import json
 
 # Initialize EasyOCR Reader
 reader = easyocr.Reader(['en'], gpu=False)
@@ -106,6 +107,7 @@ def is_valid_name(text):
 
 # Process each detected oval to extract and validate text
 def process_ovals(image, student_regions):
+    data = []
     final_image = image.copy()
     mapped_ovals = []
     for idx, student in enumerate(student_regions):
@@ -145,9 +147,25 @@ def process_ovals(image, student_regions):
             name_text = " ".join(valid_lines)
             cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
-            print(f"Name: {name_text}, Center: {center}, top_left: {top_left}, top_right: {top_right}, bottom_left: {bottom_left}, bottom_right: {bottom_right}")
+            output = f"Name: {name_text}, Center: {center}, top_left: {top_left}, top_right: {top_right}, bottom_left: {bottom_left}, bottom_right: {bottom_right}"
+
+            # add output to data as json
+            data.append({
+                            "name": name_text, 
+                            "center": center, 
+                            "top_left": top_left, 
+                            "top_right": top_right, 
+                            "bottom_left": bottom_left, 
+                            "bottom_right": bottom_right, 
+                            "student_region": student
+                        })
+            print(output)
         else:
             print(f"Invalid name detected for oval {idx + 1}, skipping...")
+
+    # write data to json file
+    with open("output.json", "w+") as json_file:
+        json.dump(data, json_file)
 
     print(f"height: {height}, width: {width}")
 
