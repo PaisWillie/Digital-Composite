@@ -10,6 +10,15 @@ class S3DAO {
         this.s3 = null;
     }
 
+    async streamToBuffer(stream) {
+        return new Promise((resolve, reject) => {
+            const chunks = [];
+            stream.on("data", (chunk) => chunks.push(chunk));
+            stream.on("end", () => resolve(Buffer.concat(chunks)));
+            stream.on("error", (err) => reject(err));
+        });
+    };
+
     /**
      * Upload a file to S3.
      * @param {string} filePath - Local file path.
@@ -41,26 +50,23 @@ class S3DAO {
      * @param {string} objectName - S3 object key.
      * @param {string} downloadPath - Local path to save the downloaded file.
      */
-    async downloadFile(objectName, downloadPath) {
+    async downloadFile(objectName) {
 
         this.s3 = await s3_client(this.roleArn, this.region);
 
         try {
-            const { Body } = await this.s3.send(
+            const { Body, ContentType } = await this.s3.send(
                 new GetObjectCommand({
                   Bucket: this.bucketName,
                   Key: objectName,
                 }),
-              );
+            );
 
-            const chunks = [];
-            for await (const chunk of Body) {
-                chunks.push(chunk);
-            }
-            const buffer = Buffer.concat(chunks);
+            const buffer = await this.streamToBuffer(Body);
 
-            // Write the buffer to the file
-            fs.writeFileSync(downloadPath, buffer);
+            console.log("Reached Dao")
+
+            return { Body: buffer , ContentType }
 
         } catch (error) {
             throw new Error(`File download failed: ${error.message}`);

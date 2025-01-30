@@ -1,19 +1,14 @@
 const fs = require("fs");
-const dal = require("../../db/dal/image_service");
-
-// Example local approach. If you want S3, see `s3.service.js`.
+const ImageService = require("../../db/dal/image_service");
 
 exports.getImage = async ({ year, program }) => {
+
+  const dal = new ImageService()
+
+  console.log("Reached Service Level")
   
-  const possibleFiles = fs.readdirSync(uploadPath);
-
-  // Try to find a file that might match the pattern
-  // e.g. "year-program" in the filename
-  const fileName = possibleFiles.find((f) => f.includes(`${year}-${program}`));
-  if (!fileName) return null;
-
-  // Return buffer
-  return fs.readFileSync(path.join(uploadPath, fileName));
+  return dal.downloadImage("2024/electrical/test.jpg")
+  
 };
 
 exports.saveImage = async ({ year, program, file }) => {

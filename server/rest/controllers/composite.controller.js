@@ -1,4 +1,5 @@
-const compositeService = require("../services/year.service");
+const compositeService = require("../services/composite.service");
+const fs = require("fs");
 
 exports.getImageByYearAndProgram = async (req, res, next) => {
     try {
@@ -9,14 +10,24 @@ exports.getImageByYearAndProgram = async (req, res, next) => {
             return res.status(400).send("Bad Request. Please provide the year and program")
         }
 
-        const imageBuffer = await compositeService.getImage({ year, program });
+        const {Body, ContentType } = await compositeService.getImage({ year, program });
 
-        if (!imageBuffer) {
+        if (!Body) {
             return res.status(404).send("Image not found");
         }
 
-        res.set("Content-Type", "image/jpeg"); 
-        return res.status(200).send(imageBuffer);
+        console.log("REached final")
+
+        res.setHeader("Content-Type", ContentType);
+        res.setHeader("Content-Disposition", `attachment; filename="keyFileName"`);
+        res.status(200)
+        res.send(Body); 
+
+        fs.writeFile("pic.png", Body, (err) => {
+            if (err) throw err;
+            console.log("The file has been saved!");
+        });
+
     } catch (error) {
         next(error);
     }

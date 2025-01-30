@@ -1,14 +1,14 @@
 FROM public.ecr.aws/lambda/python:3.10
 
-RUN apt-get update && \
-  apt-get install -y \
-  g++ \
-  make \
-  cmake \
-  unzip \
-  libcurl4-openssl-dev
+RUN yum update -y && \
+    yum -y install \
+    g++ \
+    make \
+    cmake \
+    unzip \
+    libcurl4-openssl-dev
 
-RUN apt-get install -y --fix-missing \
+RUN yum -y install \
     build-essential \
     cmake \
     gfortran \
@@ -32,7 +32,7 @@ RUN apt-get install -y --fix-missing \
     python3-numpy \
     software-properties-common \
     zip \
-    && apt-get clean && rm -rf /tmp/* /var/tmp/*
+    && yum clean all && rm -rf /tmp/* /var/tmp/*
 
 RUN pip install easyocr opencv-python-headless numpy boto3
 

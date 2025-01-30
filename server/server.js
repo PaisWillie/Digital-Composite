@@ -9,16 +9,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Import routes
-const studentsRoutes = require("./routes/students.routes");
-const compositeRoutes = require("./routes/year.routes");
+const studentsRoutes = require("./rest/routes/students.routes");
+const compositeRoutes = require("./rest/routes/composite.routes");
 
 // Use routes
 app.use("/allStudents", studentsRoutes);
 app.use("/composite", compositeRoutes); // for GET /year?program? and PUT /year/program
 
 // Generic error handling (optional advanced structure)
-const { errorHandler } = require("./utils/errorHandler");
-app.use(errorHandler);
+//const { errorHandler } = require("./utils/errorHandler");
+//app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {

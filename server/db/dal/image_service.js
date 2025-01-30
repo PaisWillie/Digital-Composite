@@ -21,8 +21,9 @@ class ImageService {
      * @param {string} imageName - S3 object key for the image.
      * @param {string} downloadPath - Local path to save the downloaded image.
      */
-    async downloadImage(objectName, downloadPath) {
-        await this.s3DAO.downloadFile(objectName, downloadPath);
+    async downloadImage(objectName) {
+        console.log("Reached DAL")
+        return await this.s3DAO.downloadFile(objectName);
     }
 }
 
