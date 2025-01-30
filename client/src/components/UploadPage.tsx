@@ -4,6 +4,8 @@ import TextButton from 'components/Button/TextButton'
 import Select from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
 import { Accept, useDropzone } from 'react-dropzone'
+import { toast, ToastOptions } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function UploadPage() {
   const [uploadFile, setUploadFile] = useState<File | null>(null)
@@ -24,7 +26,7 @@ function UploadPage() {
 
   const handleUpload = () => {
     if (!uploadFile || !program || !year) {
-      alert('Please fill in all fields and select a file.')
+      toast.error('Please fill in all fields and select a file.', toastOptions)
       return
     }
 
@@ -48,6 +50,8 @@ function UploadPage() {
         names: [] // No names yet; this can be updated in CompositeViewPage
       }
     })
+
+    toast.success('File uploaded successfully!', toastOptions)
   }
 
   const handleBackToAdmin = () => {
@@ -86,6 +90,20 @@ function UploadPage() {
     accept,
     multiple: false
   })
+
+  const toastOptions: ToastOptions = {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    style: {
+      backgroundColor: '#7A003C',
+      color: '#FFFFFF'
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-6">

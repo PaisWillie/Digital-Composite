@@ -11,6 +11,8 @@ import AdminPage from 'components/AdminPage'
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import UploadPage from 'components/UploadPage'
 import ManageCompositesPage from 'components/ManageCompositesPage'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)
@@ -70,7 +72,7 @@ const router = createBrowserRouter([
   }
 ])
 
-// Render the App with Auth0 and Router
+// Render the App with Auth0, Router, and ToastContainer
 root.render(
   <Auth0Provider
     domain={import.meta.env.VITE_AUTH0_DOMAIN}
@@ -88,5 +90,6 @@ root.render(
     }}
   >
     <RouterProvider router={router} />
+    <ToastContainer />
   </Auth0Provider>
 )
