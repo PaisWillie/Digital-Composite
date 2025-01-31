@@ -1,29 +1,17 @@
-const fs = require("fs");
 const ImageService = require("../../db/dal/image_service");
 
 exports.getImage = async ({ year, program }) => {
 
-  const dal = new ImageService()
+  const s3_dal = new ImageService()
+  const objKey = `${year}/${program}/random.png`
 
-  console.log("Reached Service Level")
-  
-  return dal.downloadImage("2024/electrical/test.jpg")
-  
+  return s3_dal.downloadImage(objKey)
 };
 
 exports.saveImage = async ({ year, program, file }) => {
-  // If we used diskStorage in multer, file will have a path
-  // e.g., /uploads/file-123456.jpg
-  // If you want S3, you can pass file to s3Service.uploadFile
 
-  // This example does nothing special because Multer is already saving
-  // it to the disk. If you want to rename it or store metadata, do it here.
+  const s3_dal = new ImageService()
+  const objKey = `${year}/${program}/random.png`
 
-  // Possibly rename the file to something like "year-program-originalName"
-  // if you want. For demonstration:
-  const newFileName = `${year}-${program}-${file.filename}`;
-  const newPath = path.join(path.dirname(file.path), newFileName);
-  fs.renameSync(file.path, newPath);
-
-  return newFileName;
+  return s3_dal.uploadImage(objKey, file)
 };

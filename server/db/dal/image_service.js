@@ -11,9 +11,8 @@ class ImageService {
      * @param {string} imageName - Desired name for the uploaded image.
      * @returns {Promise<string>} - Public URL of the uploaded image.
      */
-    async uploadImage(filePath, year, program) {
-        const objectName = `${year}/${program}/random.png`;
-        return this.s3DAO.uploadFile(filePath, objectName);
+    async uploadImage(objectkey, file) {
+        return this.s3DAO.uploadFile(objectkey, file);
     }
 
     /**

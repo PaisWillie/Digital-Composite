@@ -16,8 +16,6 @@ exports.getImageByYearAndProgram = async (req, res, next) => {
             return res.status(404).send("Image not found");
         }
 
-        console.log("REached final")
-
         res.setHeader("Content-Type", ContentType);
         res.setHeader("Content-Disposition", `attachment; filename="keyFileName"`);
         res.status(200)
@@ -33,17 +31,22 @@ exports.getImageByYearAndProgram = async (req, res, next) => {
     }
 };
 
-exports.uploadImageByYearAndProgram = async (req, res, next) => {
+exports.uploadImageByYearAndProgram = async (req, res) => {
     try {
         const { year, program } = req.params;
-        // in mutler
+
+        console.log("Request Params:", { year, program });
+        console.log("Request Body:", req.body);
+        console.log("Request File:", req.file); // This should not be undefined
+
         if (!req.file) {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        await compositeService.saveImage({ year, program, file: req.file });
+        const uploadResult = await compositeService.saveImage({ year, program, file: req.file });
+
         return res.status(200).json({ message: "Image uploaded successfully" });
     } catch (error) {
-        next(error);
+        return res.status(500).json({ error: error.message })
     }
 };

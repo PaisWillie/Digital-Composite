@@ -1,8 +1,9 @@
-FROM public.ecr.aws/lambda/python:3.10
+FROM public.ecr.aws/lambda/python:3.9
 
 RUN yum update -y && \
     yum -y install \
     g++ \
+    python3-devel zlib-devel libjpeg-devel \
     make \
     cmake \
     unzip \

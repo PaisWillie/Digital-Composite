@@ -1,18 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const yearController = require("../controllers/composite.controller");
-// const upload = require("../middlewares/upload.middleware");
+const compositeController = require("../controllers/composite.controller");
+const upload = require("../middleware/upload.middleware");
 
 // GET /year?program? 
-router.get("/year", yearController.getImageByYearAndProgram);
+router.get("/getComposite", compositeController.getImageByYearAndProgram);
 
 // PUT /year/program  (uploading image)
-/*
-router.put(
-  "/:year/:program",
+router.post(
+  "/uploadComposite/:year/:program",
   upload.single("file"), // "file" is the name of the form field 
-  yearController.uploadImageByYearAndProgram
+  compositeController.uploadImageByYearAndProgram
 );
-*/
 
 module.exports = router;
