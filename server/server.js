@@ -13,7 +13,7 @@ const studentsRoutes = require("./rest/routes/students.routes");
 const compositeRoutes = require("./rest/routes/composite.routes");
 
 // Use routes
-app.use("/allStudents", studentsRoutes);
+app.use("/students", studentsRoutes);
 app.use("/composite", compositeRoutes); // for GET /year?program? and PUT /year/program
 
 // Generic error handling (optional advanced structure)

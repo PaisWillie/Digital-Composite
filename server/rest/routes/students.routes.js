@@ -3,6 +3,9 @@ const router = express.Router();
 const studentsController = require("../controllers/students.controller");
 
 // GET /allStudents -> returns { year-program: {name: center} }
-router.get("/", studentsController.getAllStudents);
+router.get("/getAll", studentsController.getAllStudents);
+
+// PUT -> add Student to DB manually
+router.put("/addStudent", studentsController.addStudent)
 
 module.exports = router;
