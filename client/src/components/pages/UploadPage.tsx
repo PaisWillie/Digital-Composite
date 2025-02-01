@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Accept, useDropzone } from 'react-dropzone'
 import { toast, ToastOptions } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { programOptions, yearOptions } from 'utils/constants'
 
 function UploadPage() {
   const [uploadFile, setUploadFile] = useState<File | null>(null)
@@ -21,21 +22,43 @@ function UploadPage() {
   >([])
   const navigate = useNavigate()
 
+  console.log(existingComposites)
   useEffect(() => {
     // Fetch existing program/year combinations from the backend
     const fetchComposites = async () => {
       try {
-        const response = await fetch('/api/composites', {
-          method: 'GET'
-        })
+        const response = await fetch(
+          'http://localhost:3000/students/getUniquePrograms',
+          {
+            method: 'GET'
+          }
+        )
+
+        if (!response.ok) {
+          toast.error(`HTTP error! status: ${response.status}`, toastOptions)
+          return
+        }
+
         const data = await response.json()
-        setExistingComposites(data.composites)
+
+        if (!data || !Array.isArray(data)) {
+          throw new Error('Invalid data format')
+        }
+
+        const newData = data.map((data: string) => {
+          const array = data.split('#'),
+            year = array[0],
+            program = array[1]
+          return { year: year, program: program }
+        })
+        setExistingComposites(newData)
       } catch (error) {
         console.error('Error fetching composites:', error)
       }
     }
 
     fetchComposites()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -52,7 +75,7 @@ function UploadPage() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program, year, existingComposites])
+  }, [program, year])
 
   const handleDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -100,6 +123,7 @@ function UploadPage() {
       navigate('/admin/compositeViewPage', {
         state: {
           id: uuidv4(), // Generate a unique ID for the composite
+          file: uploadFile,
           program: program.value,
           year: year.value,
           names: [] // No names yet; this can be updated in CompositeViewPage
@@ -114,29 +138,6 @@ function UploadPage() {
   const handleBackToAdmin = () => {
     navigate('/admin')
   }
-
-  const programOptions = [
-    { label: 'BTech', value: 'BTech' },
-    { label: 'Chemical Engineering', value: 'Chemical Engineering' },
-    { label: 'Civil Engineering', value: 'Civil Engineering' },
-    { label: 'Computer Engineering', value: 'Computer Engineering' },
-    { label: 'Computer Science', value: 'Computer Science' },
-    { label: 'Electrical', value: 'Electrical' },
-    { label: 'Engineering Class', value: 'Engineering Class' },
-    { label: 'Engineering Physics', value: 'Engineering Physics' },
-    { label: 'IBEHS', value: 'IBEHS' },
-    { label: 'iBioMed', value: 'iBioMed' },
-    { label: 'Materials', value: 'Materials' },
-    { label: 'Mechanical', value: 'Mechanical' },
-    { label: 'Mechatronics', value: 'Mechatronics' },
-    { label: 'Software Engineering', value: 'Software Engineering' }
-  ]
-
-  const currentYear = new Date().getFullYear()
-  const yearOptions = Array.from({ length: currentYear - 1920 + 1 }, (_, i) => {
-    const year = 1920 + i
-    return { label: year.toString(), value: year.toString() }
-  })
 
   const accept: Accept = {
     'image/*': []
