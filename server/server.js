@@ -2,8 +2,11 @@
 require("dotenv").config();
 const spawn = require('child_process').spawn;
 const express = require("express");
+const cors = require('cors')
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors())
 
 // Body parser
 app.use(express.json());

@@ -17,6 +17,12 @@ class StudentService {
     async getUniquePrograms() {
         return this.RDS.getAllUniqueImageIds()
     }
+
+    async getStudentsByProgram(year, program) {
+        const imageId = `${year}-${program}`
+
+        return this.RDS.getStudentDataByImageId(imageId)
+    }
 }
 
 module.exports = StudentService

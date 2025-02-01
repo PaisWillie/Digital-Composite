@@ -77,6 +77,35 @@ class RDS {
             return [];
         }
     }
-}
 
+    async getStudentDataByImageId(imageId) {
+        try {
+            const [rows] = await pool.execute("SELECT * FROM OCRDATA WHERE image_id = ?", [imageId]);
+    
+            // Check if any rows are returned
+            if (rows.length > 0) {
+                // If there are rows, we can parse the JSON fields
+                const studentData = rows.map(row => {
+                    return {
+                        name: row.name,
+                        image_id: row.image_id,
+                        top_left: row.top_left ? JSON.parse(JSON.stringify(row.top_left)) : null,
+                        top_right: row.top_right ? JSON.parse(JSON.stringify(row.top_right)) : null,
+                        bottom_left: row.bottom_left ? JSON.parse(JSON.stringify(row.bottom_left)) : null,
+                        bottom_right: row.bottom_right ? JSON.parse(JSON.stringify(row.bottom_right)) : null,
+                        student_region: row.student_region ? JSON.parse(JSON.stringify(row.student_region)) : null
+                    };
+                });
+    
+                return studentData;
+            } else {
+                console.log("No data found for the given image_id.");
+                return [];
+            }
+        } catch (error) {
+            console.error("Error fetching student data by image_id:", error);
+            return [];
+        }
+    }
+}
 module.exports = RDS

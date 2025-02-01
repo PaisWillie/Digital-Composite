@@ -7,7 +7,9 @@ router.get("/getAll", studentsController.getAllStudents);
 
 router.get("/getUniquePrograms", studentsController.getUniquePrograms);
 
+router.get("/getStudentByYearProgram", studentsController.getStudentsByProgram);
+
 // PUT -> add Student to DB manually
-router.put("/addStudent", studentsController.addStudent)
+router.put("/addStudent", studentsController.addStudentBatch)
 
 module.exports = router;
