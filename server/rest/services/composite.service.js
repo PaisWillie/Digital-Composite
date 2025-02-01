@@ -1,17 +1,17 @@
 const ImageService = require("../../db/dal/image_service");
 
-exports.getImage = async ({ year, program }) => {
+exports.getImage = async ({bucketname, year, program }) => {
 
   const s3_dal = new ImageService()
   const objKey = `${year}/${program}/random.png`
 
-  return s3_dal.downloadImage(objKey)
+  return s3_dal.downloadImage(bucketname, objKey)
 };
 
-exports.saveImage = async ({ year, program, file }) => {
+exports.saveImage = async ({bucketname, year, program, file }) => {
 
   const s3_dal = new ImageService()
   const objKey = `${year}/${program}/random.png`
 
-  return s3_dal.uploadImage(objKey, file)
+  return s3_dal.uploadImage(bucketname, objKey, file)
 };

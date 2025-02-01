@@ -5,6 +5,7 @@ const upload = require("../middleware/upload.middleware");
 
 // GET /year?program? 
 router.get("/getComposite", compositeController.getImageByYearAndProgram);
+router.get("/getCompositePreview", compositeController.getImageByYearAndProgramPreview)
 
 // PUT /year/program  (uploading image)
 router.post(

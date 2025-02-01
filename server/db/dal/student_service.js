@@ -6,7 +6,7 @@ class StudentService {
     }
 
     async addStudent(year, program, data) {
-        const imageId = `${year}-${program}`
+        const imageId = `${year}#${program}`
         this.RDS.addStudent(data.name, imageId, data.top_left, data.top_right, data.bottom_left, data.bottom_right, data.student_region)
     }
 
@@ -19,7 +19,7 @@ class StudentService {
     }
 
     async getStudentsByProgram(year, program) {
-        const imageId = `${year}-${program}`
+        const imageId = `${year}#${program}`
 
         return this.RDS.getStudentDataByImageId(imageId)
     }

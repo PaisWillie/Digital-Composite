@@ -11,8 +11,8 @@ class ImageService {
      * @param {string} imageName - Desired name for the uploaded image.
      * @returns {Promise<string>} - Public URL of the uploaded image.
      */
-    async uploadImage(objectkey, file) {
-        return this.s3DAO.uploadFile(objectkey, file);
+    async uploadImage(bucketname, objectkey, file) {
+        return this.s3DAO.uploadFile(bucketname, objectkey, file);
     }
 
     /**
@@ -20,8 +20,8 @@ class ImageService {
      * @param {string} imageName - S3 object key for the image.
      * @param {string} downloadPath - Local path to save the downloaded image.
      */
-    async downloadImage(objectName) {
-        return await this.s3DAO.downloadFile(objectName);
+    async downloadImage(bucketname, objectName) {
+        return await this.s3DAO.downloadFile(bucketname, objectName);
     }
 }
 

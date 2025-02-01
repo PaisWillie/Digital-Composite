@@ -3,7 +3,7 @@ const studentService = require("../services/students.service")
 const { spawn } = require("child_process");
 const fs = require("fs");
 
-exports.getImageByYearAndProgram = async (req, res, next) => {
+async function downloadImage(req, res, bucketname){
     try {
         const { year } = req.query;
         const { program } = req.query;
@@ -12,7 +12,7 @@ exports.getImageByYearAndProgram = async (req, res, next) => {
             return res.status(400).send("Bad Request. Please provide the year and program")
         }
 
-        const {Body, ContentType } = await compositeService.getImage({ year, program });
+        const {Body, ContentType } = await compositeService.getImage({ bucketname, year, program });
 
         if (!Body) {
             return res.status(404).send("Image not found");
@@ -29,8 +29,16 @@ exports.getImageByYearAndProgram = async (req, res, next) => {
         });
 
     } catch (error) {
-        next(error);
+        return res.status(500).json({ error: error.message })
     }
+}
+
+exports.getImageByYearAndProgram = async (req, res) => {
+    downloadImage(req, res, "digital-composite-bucket")
+};
+
+exports.getImageByYearAndProgramPreview = async (req, res) => {
+    downloadImage(req, res, "digital-composite-preview")
 };
 
 exports.uploadImageByYearAndProgram = async (req, res) => {
@@ -45,7 +53,9 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        const uploadResult = await compositeService.saveImage({ year, program, file: req.file });
+        const bucketName = "digital-composite-bucket";
+
+        const uploadResult = await compositeService.saveImage({ bucketName, year, program, file: req.file });
 
         const parsedData = await new Promise( (resolve, reject) => {
             const pythonProcess = spawn("python", ["scripts/ovalNameDetection.py", `${year}-${program}`]);
