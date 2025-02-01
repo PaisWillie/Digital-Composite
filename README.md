@@ -1,4 +1,4 @@
-# Project Name
+# GradSight
 
 Developer Names:
 
