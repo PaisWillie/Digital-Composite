@@ -8,9 +8,9 @@ import json
 reader = easyocr.Reader(['en'], gpu=False)
 
 # Paths     
-image_path = "../test/test.jpg"
+image_path = "./testcomposite/test.jpg"
 output_folder = "output"
-os.makedirs(output_folder, exist_ok=True)
+program_year = "2024-Materials_Engineering"
 
 # Allowed characters
 allowed_chars = set(
@@ -105,6 +105,11 @@ def extract_text_roi(image, center, axes, padding=0, base_text_height=60, max_li
 def is_valid_name(text):
     return all(char in allowed_chars or char.isspace() for char in text)
 
+
+def boundingEllipseRectangle(ellipse):
+    box = cv2.boxPoints(ellipse)
+    return box.astype(int).tolist()
+
 # Process each detected oval to extract and validate text
 def process_ovals(image, student_regions):
     data = []
@@ -122,19 +127,13 @@ def process_ovals(image, student_regions):
         lines = extracted_text.strip().split("\n")
         valid_lines = [line.strip() for line in lines if line.strip()][:2]
 
-        # Convert major and minor axes to semi-axes
-        a, b = axes[0] / 2, axes[1] / 2
+        corners = boundingEllipseRectangle(student)
 
-        # Compute extreme points
-        top_left = (int(center[0] - b), int(center[1] - a))
-        top_right = (int(center[0] + b), int(center[1] - a))
-        bottom_left = (int(center[0] - b), int(center[1] + a))
-        bottom_right = (int(center[0] + b), int(center[1] + a))
-        if top_left[0] < 0:
-            top_left = (0, top_left[1])
-        if bottom_left[0] < 0:
-            bottom_left = (0, bottom_left[1])
-
+        # Assign corners to variables
+        top_left = corners[1]
+        top_right = corners[2]
+        bottom_left = corners[0]
+        bottom_right = corners[3]
         height, width = final_image.shape[:2]
 
 
@@ -147,26 +146,31 @@ def process_ovals(image, student_regions):
             name_text = " ".join(valid_lines)
             cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
-            output = f"Name: {name_text}, Center: {center}, top_left: {top_left}, top_right: {top_right}, bottom_left: {bottom_left}, bottom_right: {bottom_right}"
+            output = f"Name: {name_text}"
 
             # add output to data as json
-            data.append({
+            data.append({   
                             "name": name_text, 
-                            "center": center, 
                             "top_left": top_left, 
                             "top_right": top_right, 
                             "bottom_left": bottom_left, 
                             "bottom_right": bottom_right, 
                             "student_region": student
                         })
+            corners = boundingEllipseRectangle(student)
             print(output)
         else:
             print(f"Invalid name detected for oval {idx + 1}, skipping...")
 
-    # write data to json file
-    with open("output.json", "w+") as json_file:
-        json.dump(data, json_file)
+    # Format data into final JSON
+    og_data = [{"programYear": program_year,
+                "students": data}]
 
+    # write data to json file
+    with open(f"./output/{program_year}.json", "w+") as json_file:
+        json.dump(og_data, json_file)
+
+    print(f"Data saved in './output/{program_year}.json'")
     print(f"height: {height}, width: {width}")
 
     return final_image
@@ -181,9 +185,9 @@ def main():
     temp_student_regions, areas = filter_contours(contours)
     student_regions = filter_by_area(temp_student_regions, areas)
     final_image = process_ovals(image, student_regions)
-    output_image_path = os.path.join(output_folder, "result_with_rois.jpg")
+    output_image_path = os.path.join(output_folder, f"{program_year}_output.jpg")
     cv2.imwrite(output_image_path, final_image)
-    print(f"Final result saved in '{output_folder}/result_with_rois.jpg'")
+    print(f"Final result saved in '{output_folder}/{program_year}_output.jpg'")
 
 # Entry point of the script
 if __name__ == "__main__":
