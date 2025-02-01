@@ -1,4 +1,4 @@
-import Layout from './Layout/Layout'
+import Layout from '../Layout/Layout'
 
 const SearchResultPage = () => {
   return <Layout>Search Results</Layout>

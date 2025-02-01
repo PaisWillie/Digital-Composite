@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
 import Select from 'react-select'
@@ -16,7 +16,43 @@ function UploadPage() {
   const [year, setYear] = useState<{ label: string; value: string } | null>(
     null
   )
+  const [existingComposites, setExistingComposites] = useState<
+    { program: string; year: string }[]
+  >([])
   const navigate = useNavigate()
+
+  useEffect(() => {
+    // Fetch existing program/year combinations from the backend
+    const fetchComposites = async () => {
+      try {
+        const response = await fetch('/api/composites', {
+          method: 'GET'
+        })
+        const data = await response.json()
+        setExistingComposites(data.composites)
+      } catch (error) {
+        console.error('Error fetching composites:', error)
+      }
+    }
+
+    fetchComposites()
+  }, [])
+
+  useEffect(() => {
+    if (program && year && existingComposites.length > 0) {
+      const exists = existingComposites.some(
+        (composite) =>
+          composite.program === program.value && composite.year === year.value
+      )
+      if (exists) {
+        toast.info(
+          'This program and year combination already has a composite.',
+          toastOptions
+        )
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [program, year, existingComposites])
 
   const handleDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -24,34 +60,55 @@ function UploadPage() {
     }
   }
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!uploadFile || !program || !year) {
       toast.error('Please fill in all fields and select a file.', toastOptions)
       return
     }
 
-    const renamedFile = new File(
-      [uploadFile],
-      `${year.value}-${program.value}${uploadFile.name.substring(
-        uploadFile.name.lastIndexOf('.')
-      )}`,
-      {
-        type: uploadFile.type
-      }
+    // Check if the program and year combination already exists
+    const exists = existingComposites.some(
+      (composite) =>
+        composite.program === program.value && composite.year === year.value
     )
+    if (exists) {
+      toast.error(
+        'This program and year combination already has a composite.',
+        toastOptions
+      )
+      return
+    }
 
-    // Redirect to CompositeViewPage with composite data
-    navigate('/Admin/compositeViewPage', {
-      state: {
-        id: uuidv4(), // Generate a unique ID for the composite
-        file: renamedFile,
-        program: program.value,
-        year: year.value,
-        names: [] // No names yet; this can be updated in CompositeViewPage
+    // Prepare form data for the POST request
+    const formData = new FormData()
+    formData.append('picture', uploadFile)
+    formData.append('program', program.value)
+    formData.append('year', year.value)
+
+    try {
+      const response = await fetch('/api/uploadComposite', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        throw new Error('Error uploading file')
       }
-    })
 
-    toast.success('File uploaded successfully!', toastOptions)
+      toast.success('File uploaded successfully!', toastOptions)
+      // Redirect to CompositeViewPage with composite data
+      navigate('/admin/compositeViewPage', {
+        state: {
+          id: uuidv4(), // Generate a unique ID for the composite
+          program: program.value,
+          year: year.value,
+          names: [] // No names yet; this can be updated in CompositeViewPage
+        }
+      })
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      toast.error('Error uploading file.', toastOptions)
+    }
   }
 
   const handleBackToAdmin = () => {
@@ -76,8 +133,8 @@ function UploadPage() {
   ]
 
   const currentYear = new Date().getFullYear()
-  const yearOptions = Array.from({ length: currentYear - 1900 + 1 }, (_, i) => {
-    const year = 1900 + i
+  const yearOptions = Array.from({ length: currentYear - 1920 + 1 }, (_, i) => {
+    const year = 1920 + i
     return { label: year.toString(), value: year.toString() }
   })
 

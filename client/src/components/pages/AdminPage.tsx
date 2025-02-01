@@ -26,6 +26,13 @@ function AdminPage() {
         >
           Manage Composites
         </TextButton>
+
+        <TextButton
+          variant="primary"
+          onClick={() => handleNavigate('/admin/blackListStudentPage')}
+        >
+          Black List Student
+        </TextButton>
       </div>
     </div>
   )
