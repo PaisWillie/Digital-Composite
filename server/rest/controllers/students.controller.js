@@ -35,13 +35,13 @@ exports.getUniquePrograms = async (req, res) => {
 
 exports.getStudentsByProgram = async (req, res) => {
   try {
-    const { Year, Program } = req.body
+    const { year, program } = req.query;
 
-    if (Year == null || Program == null) {
-      return res.status(400).send("Bad Request. Please provide the year and program")
+    if (year == null || program == null) {
+      return res.status(400).send("Ba Request. Please provide the year and program")
     }
-    
-    const allStudents = await studentsService.getStudentsByYearProgram(Year, Program);
+
+    const allStudents = await studentsService.getStudentsByYearProgram(year, program);
     return res.status(200).json(allStudents);
   } catch (error) {
     return res.status(500).json({ error: error.message })

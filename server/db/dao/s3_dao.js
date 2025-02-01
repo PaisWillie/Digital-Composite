@@ -20,17 +20,18 @@ class S3DAO {
 
     /**
      * Upload a file to S3.
+     * @param {bucketname} bucket - bucket name
      * @param {File} file - Local file path.
      * @param {string} objectName - S3 object key.
      * @returns {string} - Public URL of the uploaded file.
      */
-    async uploadFile(objKey, file) {
+    async uploadFile(bucketname, objKey, file) {
         
         this.s3 = await s3_client(this.roleArn, this.region);
 
         try {
             const params = {
-                Bucket: this.bucketName,
+                Bucket: bucketname,
                 Key: objKey,
                 Body: file.buffer,
                 ContentType: file.mimetype
@@ -46,16 +47,17 @@ class S3DAO {
 
     /**
      * Download a file from S3.
+     * @param {bucketname} bucket - bucket name
      * @param {string} objectName - S3 object key.
      */
-    async downloadFile(objectName) {
+    async downloadFile(bucketname, objectName) {
 
         this.s3 = await s3_client(this.roleArn, this.region);
 
         try {
             const { Body, ContentType } = await this.s3.send(
                 new GetObjectCommand({
-                  Bucket: this.bucketName,
+                  Bucket: bucketname,
                   Key: objectName,
                 }),
             );
