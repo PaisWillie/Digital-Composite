@@ -26,3 +26,9 @@ exports.getUniquePrograms = async () => {
 
   return studentsDAL.getUniquePrograms();
 }
+
+exports.getStudentsByYearProgram = async (year, program) => {
+  const studentsDAL = new StudentsDAL();
+
+  return studentsDAL.getStudentsByProgram(year, program)
+}
