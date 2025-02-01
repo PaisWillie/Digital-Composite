@@ -1,4 +1,6 @@
 const compositeService = require("../services/composite.service");
+const studentService = require("../services/students.service")
+const { spawn } = require("child_process");
 const fs = require("fs");
 
 exports.getImageByYearAndProgram = async (req, res, next) => {
@@ -45,7 +47,40 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
 
         const uploadResult = await compositeService.saveImage({ year, program, file: req.file });
 
-        return res.status(200).json({ message: "Image uploaded successfully" });
+        const parsedData = await new Promise( (resolve, reject) => {
+            const pythonProcess = spawn("python", ["scripts/ovalNameDetection.py", `${year}-${program}`]);
+
+            let dataBuffer = "";
+    
+            pythonProcess.stdin.write(req.file.buffer);
+            pythonProcess.stdin.end();
+    
+            pythonProcess.stdout.on("data", (data) => {
+                dataBuffer += data.toString();
+            });
+    
+            pythonProcess.stderr.on("data", (data) => {
+                console.error(`Python Error: ${data}`);
+            });
+        
+            pythonProcess.on("close", (code) => {
+                try{
+                    console.log(dataBuffer)
+                    console.log(`Python script exited with code ${code}`);
+                    resolve(JSON.parse(dataBuffer))
+                } catch (error) {
+                    reject(error)
+                }                
+            });
+        })
+        
+        console.log(parsedData)
+        console.log(typeof(parsedData))
+        
+        await studentService.addBatch({year, program, parsedData})
+    
+        return res.status(200).json({ message: "Image uploaded successfully"});
+
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }

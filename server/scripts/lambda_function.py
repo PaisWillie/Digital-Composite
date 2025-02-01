@@ -1,7 +1,7 @@
 import sys
 import cv2
 import easyocr
-import boto3
+import json
 import numpy as np
 
 # Initialize EasyOCR Reader
@@ -109,7 +109,6 @@ def process_ovals(image, student_regions):
         center, axes, angle = student
         roi, roi_left, roi_top, roi_right, roi_bottom = extract_text_roi(image, center, axes)
         if roi is None:
-            print(f"Invalid ROI detected for oval {idx + 1}, skipping...")
             continue
         gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         results = reader.readtext(gray_roi, detail=0)
@@ -125,10 +124,7 @@ def process_ovals(image, student_regions):
             name_text = " ".join(valid_lines)
             cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
-            metadata_list.append({"Name": name_text, "Center": center})
-            print(f"Name: {name_text}, Center: {center}")
-        else:
-            print(f"Invalid name detected for oval {idx + 1}, skipping...")
+            metadata_list.append({"Name": name_text, "CenterX": center[0], "CenterY": center[1]})
     return metadata_list
 
 # Main function to execute the steps
@@ -139,7 +135,6 @@ def main(image_data):
     image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
 
     if image is None:
-        print("Error: Failed to decode image")
         sys.exit(1)
     
     contrast = adjust_contrast(image)
@@ -154,4 +149,4 @@ def main(image_data):
 if __name__ == "__main__":
     image_data = sys.stdin.buffer.read()
     final_metadata = main(image_data)
-    print(final_metadata)  # Ensure the output can be captured in Node.js
+    print(json.dumps(final_metadata))

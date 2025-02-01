@@ -2,20 +2,8 @@ const studentsService = require("../services/students.service");
 
 exports.getAllStudents = async (req, res) => {
     try {
-        /**
-         * {
-         *   "2023-Software": {"JohnDoe#1": "0.1982", 
-         *                     "JaneSmith#2": "0.2382",
-         *                      ....
-         *                    },
-         *   "2024-Electrical":{"MarkBoom#8": "0.5832", 
-         *                     "JaneSmith#9": "0.3382",
-         *                      ....
-         *                    },
-         * }
-         */
-        const allStudents = await studentsService.getAllStudents();
-        return res.status(200).json(allStudents);
+      const allStudents = await studentsService.getAllStudents();
+      return res.status(200).json(allStudents);
     } catch (error) {
       return res.status(500).json({ error: error.message })
     }
@@ -34,4 +22,13 @@ exports.addStudent = async (req, res) => {
     } catch (error) {
       return res.status(500).json({ error: error.message })
     }
+};
+
+exports.getUniquePrograms = async (req, res) => {
+  try {
+    const allStudents = await studentsService.getUniquePrograms();
+    return res.status(200).json(allStudents);
+  } catch (error) {
+    return res.status(500).json({ error: error.message })
+  }
 };

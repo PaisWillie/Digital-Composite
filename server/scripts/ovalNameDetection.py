@@ -1,8 +1,9 @@
-import sys
 import cv2
 import easyocr
-import boto3
+import sys
+import os
 import numpy as np
+import json
 
 # Initialize EasyOCR Reader
 reader = easyocr.Reader(['en'], gpu=False)
@@ -15,10 +16,6 @@ allowed_chars = set(
     "\u00c0\u00c2\u00c4\u00c9\u00c8\u00ca\u00cb\u00ce\u00cf\u00d4\u00d6\u00d9\u00db\u00dc\u00c7"
     "\u2019'-\u2013_! ()&"
 )
-
-# Load an image from the specified path
-def load_image(image_path):
-    return cv2.imread(image_path)
 
 # Adjust the contrast of the image
 def adjust_contrast(image, alpha=0.9, beta=0):
@@ -100,58 +97,90 @@ def extract_text_roi(image, center, axes, padding=0, base_text_height=60, max_li
 def is_valid_name(text):
     return all(char in allowed_chars or char.isspace() for char in text)
 
+
+def boundingEllipseRectangle(ellipse):
+    box = cv2.boxPoints(ellipse)
+    return box.astype(int).tolist()
+
 # Process each detected oval to extract and validate text
-def process_ovals(image, student_regions):
+def process_ovals(image, student_regions, program_year):
+    data = []
     final_image = image.copy()
     mapped_ovals = []
-    metadata_list = []
     for idx, student in enumerate(student_regions):
         center, axes, angle = student
         roi, roi_left, roi_top, roi_right, roi_bottom = extract_text_roi(image, center, axes)
         if roi is None:
-            print(f"Invalid ROI detected for oval {idx + 1}, skipping...")
             continue
         gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         results = reader.readtext(gray_roi, detail=0)
         extracted_text = "\n".join(results)
         lines = extracted_text.strip().split("\n")
         valid_lines = [line.strip() for line in lines if line.strip()][:2]
+
+        corners = boundingEllipseRectangle(student)
+
+        # Assign corners to variables
+        top_left = corners[1]
+        top_right = corners[2]
+        bottom_left = corners[0]
+        bottom_right = corners[3]
+        height, width = final_image.shape[:2]
+
+
         # Check if the extracted text is a valid name
         if valid_lines and is_valid_name(" ".join(valid_lines)):
-            mapped_ovals.append({"center": center, "name_lines": valid_lines})
+            mapped_ovals.append({"center": center, "name_lines": valid_lines, "top_left": top_left, "top_right": top_right, "bottom_left": bottom_left, "bottom_right": bottom_right})
             # Draw the ellipse and ROI on the final image
             cv2.ellipse(final_image, student, (0, 255, 0), 2)
             cv2.rectangle(final_image, (roi_left, roi_top), (roi_right, roi_bottom), (255, 0, 0), 2)
             name_text = " ".join(valid_lines)
             cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
-            metadata_list.append({"Name": name_text, "Center": center})
-            print(f"Name: {name_text}, Center: {center}")
-        else:
-            print(f"Invalid name detected for oval {idx + 1}, skipping...")
-    return metadata_list
+            output = f"Name: {name_text}"
+
+            # add output to data as json
+            data.append({   
+                            "name": name_text, 
+                            "top_left": top_left, 
+                            "top_right": top_right, 
+                            "bottom_left": bottom_left, 
+                            "bottom_right": bottom_right, 
+                            "student_region": student
+                        })
+            corners = boundingEllipseRectangle(student)
+
+    # Format data into final JSON
+    og_data = [{"programYear": program_year,
+                "students": data}]
+
+    return og_data
 
 # Main function to execute the steps
-def main(image_data):
+def main(image_data, program_year):
     image_array = np.frombuffer(image_data, dtype=np.uint8)
+
+    if not image_data:
+        print("Error: No image data received.", file=sys.stderr)
+        sys.exit(1)
     
     # Decode the image
     image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
 
     if image is None:
-        print("Error: Failed to decode image")
         sys.exit(1)
-    
+
     contrast = adjust_contrast(image)
     edges = detect_edges(contrast)
     dilated_edges = morphological_operations(edges)
     contours = find_contours(dilated_edges)
     temp_student_regions, areas = filter_contours(contours)
     student_regions = filter_by_area(temp_student_regions, areas)
-    metadata = process_ovals(image, student_regions)
+    metadata = process_ovals(image, student_regions, program_year)
     return metadata
 
 if __name__ == "__main__":
+    program_year = sys.argv[1]
     image_data = sys.stdin.buffer.read()
-    final_metadata = main(image_data)
-    print(final_metadata)  # Ensure the output can be captured in Node.js
+    final_meta = main(image_data, program_year)
+    print(json.dumps(final_meta))

@@ -5,9 +5,17 @@ class StudentService {
         this.RDS = new RDS();
     }
 
-    async addStudent(year, program, name, center) {
+    async addStudent(year, program, data) {
         const imageId = `${year}-${program}`
-        this.RDS.addStudent(imageId, name, center)
+        this.RDS.addStudent(data.name, imageId, data.top_left, data.top_right, data.bottom_left, data.bottom_right, data.student_region)
+    }
+
+    async getAllStudents() {
+        return this.RDS.getAllStudents()
+    }
+
+    async getUniquePrograms() {
+        return this.RDS.getAllUniqueImageIds()
     }
 }
 
