@@ -33,6 +33,14 @@ def morphological_operations(edges):
 
 # Find contours in the dilated edge image
 def find_contours(dilated_edges):
+    contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    while len(contours) < 10:
+        contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        if not contours:
+            return []
+        else:
+            cv2.drawContours(dilated_edges, contours[0], -1, 0, thickness=cv2.FILLED)
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
