@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
@@ -63,7 +64,6 @@ function UploadPage() {
           return { year: year, program: program }
         })
         setExistingComposites(newData)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         toast.error(`Error fetching composites: ${error.message}`, {
           position: 'top-center',
@@ -135,75 +135,61 @@ function UploadPage() {
       return
     }
 
-    // Check if the program and year combination already exists
-    const exists = existingComposites.some(
-      (composite) =>
-        composite.program === program.value && composite.year === year.value
-    )
-    if (exists) {
-      toast.error(
-        'This program and year combination already has a composite.',
-        {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          style: {
-            backgroundColor: '#7A003C',
-            color: '#FFFFFF'
-          }
-        }
-      )
-      return
-    }
-
     // Prepare form data for the POST request
     const formData = new FormData()
-    formData.append('picture', uploadFile)
+    formData.append('file', uploadFile)
     formData.append('program', program.value)
     formData.append('year', year.value)
 
+    const toastId = toast.loading('Proccessing file...', {
+      position: 'top-center',
+      autoClose: false,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      style: {
+        backgroundColor: '#7A003C',
+        color: '#FFFFFF'
+      }
+    })
+
     try {
-      const response = await fetch('/api/uploadComposite', {
-        method: 'POST',
-        body: formData
-      })
+      const response = await fetch(
+        `http://localhost:3000/composite/uploadComposite/${year.value}/${program.value}`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      )
 
       if (!response.ok) {
         throw new Error('Error uploading file')
       }
 
-      toast.success('File uploaded successfully!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          backgroundColor: '#7A003C',
-          color: '#FFFFFF'
-        }
-      })
+      const result = await response.json()
+
+      // Dismiss the loading toast
+      toast.dismiss(toastId)
+
       // Redirect to CompositeViewPage with composite data
       navigate('/admin/compositeViewPage', {
         state: {
           id: uuidv4(), // Generate a unique ID for the composite
-          file: uploadFile,
+          file: uploadFile, // Pass the actual file object
           program: program.value,
           year: year.value,
-          names: [] // No names yet; this can be updated in CompositeViewPage
+          names: result.data[0].students // Populate names with students' data
         }
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      toast.error(`Error uploading file: ${error.message}`, {
-        position: 'top-center',
+      toast.update(toastId, {
+        render: `Error uploading file: ${error.message}`,
+        type: 'error',
+        isLoading: false,
         autoClose: 5000,
+        position: 'top-center',
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
