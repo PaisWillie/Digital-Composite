@@ -87,6 +87,7 @@ class RDS {
                 // If there are rows, we can parse the JSON fields
                 const studentData = rows.map(row => {
                     return {
+                        id: row.id,
                         name: row.name,
                         image_id: row.image_id,
                         top_left: row.top_left ? JSON.parse(JSON.stringify(row.top_left)) : null,
