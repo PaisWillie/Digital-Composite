@@ -20,15 +20,15 @@ function AdminPage() {
           Upload Composite
         </TextButton>
 
-        <TextButton
+        {/* <TextButton
           variant="secondary"
           onClick={() => handleNavigate('/admin/manageCompositesPage')}
         >
           Manage Composites
-        </TextButton>
+        </TextButton> */}
 
         <TextButton
-          variant="primary"
+          variant="secondary"
           onClick={() => handleNavigate('/admin/blackListStudentPage')}
         >
           Black List Student

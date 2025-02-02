@@ -4,7 +4,7 @@ import TextButton from 'components/Button/TextButton'
 import Select from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
 import { Accept, useDropzone } from 'react-dropzone'
-import { toast, ToastOptions } from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { programOptions, yearOptions } from 'utils/constants'
 
@@ -22,7 +22,6 @@ function UploadPage() {
   >([])
   const navigate = useNavigate()
 
-  console.log(existingComposites)
   useEffect(() => {
     // Fetch existing program/year combinations from the backend
     const fetchComposites = async () => {
@@ -35,7 +34,19 @@ function UploadPage() {
         )
 
         if (!response.ok) {
-          toast.error(`HTTP error! status: ${response.status}`, toastOptions)
+          toast.error(`HTTP error! status: ${response.status}`, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            style: {
+              backgroundColor: '#7A003C',
+              color: '#FFFFFF'
+            }
+          })
           return
         }
 
@@ -52,13 +63,25 @@ function UploadPage() {
           return { year: year, program: program }
         })
         setExistingComposites(newData)
-      } catch (error) {
-        console.error('Error fetching composites:', error)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        toast.error(`Error fetching composites: ${error.message}`, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          style: {
+            backgroundColor: '#7A003C',
+            color: '#FFFFFF'
+          }
+        })
       }
     }
 
     fetchComposites()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -70,12 +93,23 @@ function UploadPage() {
       if (exists) {
         toast.info(
           'This program and year combination already has a composite.',
-          toastOptions
+          {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            style: {
+              backgroundColor: '#7A003C',
+              color: '#FFFFFF'
+            }
+          }
         )
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program, year])
+  }, [program, year, existingComposites])
 
   const handleDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -85,7 +119,19 @@ function UploadPage() {
 
   const handleUpload = async () => {
     if (!uploadFile || !program || !year) {
-      toast.error('Please fill in all fields and select a file.', toastOptions)
+      toast.error('Please fill in all fields and select a file.', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: '#7A003C',
+          color: '#FFFFFF'
+        }
+      })
       return
     }
 
@@ -97,7 +143,19 @@ function UploadPage() {
     if (exists) {
       toast.error(
         'This program and year combination already has a composite.',
-        toastOptions
+        {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          style: {
+            backgroundColor: '#7A003C',
+            color: '#FFFFFF'
+          }
+        }
       )
       return
     }
@@ -118,7 +176,19 @@ function UploadPage() {
         throw new Error('Error uploading file')
       }
 
-      toast.success('File uploaded successfully!', toastOptions)
+      toast.success('File uploaded successfully!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: '#7A003C',
+          color: '#FFFFFF'
+        }
+      })
       // Redirect to CompositeViewPage with composite data
       navigate('/admin/compositeViewPage', {
         state: {
@@ -129,9 +199,21 @@ function UploadPage() {
           names: [] // No names yet; this can be updated in CompositeViewPage
         }
       })
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('Error uploading file.', toastOptions)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(`Error uploading file: ${error.message}`, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: '#7A003C',
+          color: '#FFFFFF'
+        }
+      })
     }
   }
 
@@ -148,20 +230,6 @@ function UploadPage() {
     accept,
     multiple: false
   })
-
-  const toastOptions: ToastOptions = {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    style: {
-      backgroundColor: '#7A003C',
-      color: '#FFFFFF'
-    }
-  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-6">
