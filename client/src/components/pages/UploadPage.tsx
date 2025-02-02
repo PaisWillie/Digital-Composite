@@ -141,7 +141,7 @@ function UploadPage() {
     formData.append('program', program.value)
     formData.append('year', year.value)
 
-    const toastId = toast.loading('Uploading file...', {
+    const toastId = toast.loading('Proccessing file...', {
       position: 'top-center',
       autoClose: false,
       hideProgressBar: false,

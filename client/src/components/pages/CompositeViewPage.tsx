@@ -72,19 +72,42 @@ function CompositeViewPage() {
     ])
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updatedComposite = {
-      id: compositeData.id || 'new-id',
-      names
+      Program: compositeData.program,
+      Year: compositeData.year,
+      Batch: { students: names }
     }
 
-    navigate('/Admin/ManageCompositesPage', {
-      state: [updatedComposite]
-    })
+    try {
+      const response = await fetch(
+        'http://localhost:3000/students/addStudent',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedComposite)
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      const result = await response.json()
+      console.log('Success:', result)
+
+      navigate('/Admin/ManageCompositesPage', {
+        state: [updatedComposite]
+      })
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 
-  const handleBackToComposites = () => {
-    navigate('/Admin/ManageCompositesPage')
+  const handleBackToAdmin = () => {
+    navigate('/admin')
   }
 
   let scaleX = 1
@@ -99,7 +122,6 @@ function CompositeViewPage() {
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
       <h2 className="mb-6 text-2xl font-semibold">Edit Composite</h2>
-      {/* Composite Image Display */}
       <div
         ref={containerRef}
         className="relative mb-6 flex h-96 w-full max-w-4xl items-center justify-center rounded-lg bg-gray-300"
@@ -200,8 +222,8 @@ function CompositeViewPage() {
         <TextButton variant="primary" onClick={handleSave}>
           Save Composite
         </TextButton>
-        <TextButton variant="secondary" onClick={handleBackToComposites}>
-          Back to Composites
+        <TextButton variant="secondary" onClick={handleBackToAdmin}>
+          Back to Admin
         </TextButton>
       </div>
     </div>
