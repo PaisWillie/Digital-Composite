@@ -1,17 +1,19 @@
 const StudentsDAL = require("../../db/dal/student_service");
 
-exports.addStudent = async ({ year, program, data }) => {
+async function addStudent(Year, Program, Data) {
     
   const studentsDAL = new StudentsDAL();
   
-  return studentsDAL.addStudent(year, program, data)
+  return studentsDAL.addStudent(Year, Program, Data)
   
 };
 
-exports.addBatch = async ({year, program, batchreq}) => {
-  const students = batchreq.students
+exports.addBatch = async ({Year, Program, Batch}) => {
+  const students = Batch.students
   students.forEach((data) => {
-    this.addStudent(year, program, data)
+    console.log(data)
+    console.log(typeof(data))
+    addStudent(Year, Program, data)
   });
 }
 
