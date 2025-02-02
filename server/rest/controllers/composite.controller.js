@@ -1,7 +1,5 @@
 const compositeService = require("../services/composite.service");
-const studentService = require("../services/students.service")
 const { spawn } = require("child_process");
-const fs = require("fs");
 
 async function downloadImage(req, res, bucketname){
     try {
@@ -43,9 +41,9 @@ exports.getImageByYearAndProgramPreview = async (req, res) => {
 
 exports.uploadImageByYearAndProgram = async (req, res) => {
     try {
-        const { year, program } = req.params;
+        const year = req.body.year;
+        const program = req.body.program;
 
-        console.log("Request Params:", { year, program });
         console.log("Request Body:", req.body);
         console.log("Request File:", req.file); // This should not be undefined
 
@@ -53,11 +51,10 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        const bucketname = "digital-composite-bucket";
+        let bucketname = "digital-composite-bucket";
+        await compositeService.saveImage({ bucketname, year, program, file: req.file });
 
-        const uploadResult = await compositeService.saveImage({ bucketname, year, program, file: req.file });
-
-        const parsedData = await new Promise( (resolve, reject) => {
+        const ocrParsedData = await new Promise( (resolve, reject) => {
             const pythonProcess = spawn("python", ["scripts/ovalNameDetection.py", `${year}-${program}`]);
 
             let dataBuffer = "";
@@ -83,13 +80,43 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
                 }                
             });
         })
-        
-        console.log(parsedData)
-        console.log(typeof(parsedData))
-        
-        // await studentService.addBatch({year, program, parsedData})
+
+        const scalingImage = await new Promise( (resolve, reject) => {
+            const pythonProcess = spawn("python", ["scripts/scaleComposite.py"]);
+
+            let resizedImageBuffer = Buffer.alloc(0);
     
-        return res.status(200).json({ message: "Image uploaded successfully", data: parsedData });
+            pythonProcess.stdin.write(req.file.buffer);
+            pythonProcess.stdin.end();
+    
+            pythonProcess.stdout.on("data", (data) => {
+                resizedImageBuffer = Buffer.concat([resizedImageBuffer, data]);
+            });
+    
+            pythonProcess.stderr.on("data", (data) => {
+                console.error(`Python Error: ${data}`);
+            });
+        
+            pythonProcess.on("close", (code) => {
+                try{
+                    console.log(resizedImageBuffer)
+                    console.log(`Python script exited with code ${code}`);
+                    resolve(resizedImageBuffer)
+                } catch (error) {
+                    reject(error)
+                }                
+            });
+        })
+
+        const previewFile = {
+            mimetype: req.file.mimetype,
+            buffer: Buffer.isBuffer(scalingImage) ? scalingImage : Buffer.from(scalingImage)
+        }
+
+        bucketname = "digital-composite-preview";
+        await compositeService.saveImage({ bucketname, year, program, file: previewFile });
+                    
+        return res.status(200).json({ message: "Image uploaded successfully", data: ocrParsedData });
 
     } catch (error) {
         return res.status(500).json({ error: error.message })

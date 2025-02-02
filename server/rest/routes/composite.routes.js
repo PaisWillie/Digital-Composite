@@ -9,7 +9,7 @@ router.get("/getCompositePreview", compositeController.getImageByYearAndProgramP
 
 // PUT /year/program  (uploading image)
 router.post(
-  "/uploadComposite/:year/:program",
+  "/uploadComposite",
   upload.single("file"), // "file" is the name of the form field 
   compositeController.uploadImageByYearAndProgram
 );
