@@ -53,9 +53,9 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        const bucketName = "digital-composite-bucket";
+        const bucketname = "digital-composite-bucket";
 
-        const uploadResult = await compositeService.saveImage({ bucketName, year, program, file: req.file });
+        const uploadResult = await compositeService.saveImage({ bucketname, year, program, file: req.file });
 
         const parsedData = await new Promise( (resolve, reject) => {
             const pythonProcess = spawn("python", ["scripts/ovalNameDetection.py", `${year}-${program}`]);
@@ -87,9 +87,9 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
         console.log(parsedData)
         console.log(typeof(parsedData))
         
-        await studentService.addBatch({year, program, parsedData})
+        // await studentService.addBatch({year, program, parsedData})
     
-        return res.status(200).json({ message: "Image uploaded successfully"});
+        return res.status(200).json({ message: "Image uploaded successfully", data: parsedData });
 
     } catch (error) {
         return res.status(500).json({ error: error.message })
