@@ -8,9 +8,9 @@ import json
 reader = easyocr.Reader(['en'], gpu=False)
 
 # Paths     
-image_path = "./testcomposite/test.jpg"
+image_path = "./testcomposite/test4.jpg"
 output_folder = "output"
-program_year = "2024-Materials_Engineering"
+program_year = "2024-Software_Engineering"
 
 # Allowed characters
 allowed_chars = set(
@@ -41,7 +41,40 @@ def morphological_operations(edges):
 
 # Find contours in the dilated edge image
 def find_contours(dilated_edges):
+    contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    while len(contours) < 10:
+        contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        if not contours:
+            return []
+        else:
+            #print("Contours found: ", len(contours))
+            cv2.drawContours(dilated_edges, contours[0], -1, 0, thickness=cv2.FILLED)
+            #cv2.imshow("Contours", dilated_edges)
+            #cv2.waitKey(0)
+            #cv2.destroyAllWindows()
+
+
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # draw contours on the image
+    #cv2.drawContours(ogimage, contours, -1, (0, 255, 0), 2)
+    # show the image with contours
+    #print(len(contours))
+    # scale down the image
+
+    # save the iamge
+    #cv2.imwrite("output/HAMMADTEST.jpg", ogimage)
+
+    #height, width = ogimage.shape[:2]
+    #new_width = 1500
+    #aspect_ratio = new_width / float(width)
+    #new_height = int(height * aspect_ratio)
+
+    #ogimage = cv2.resize(ogimage, (new_width, new_height))
+    #cv2.imshow("Contours", ogimage)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+
     return contours
 
 # Filter contours to find potential student regions based on aspect ratio and size
