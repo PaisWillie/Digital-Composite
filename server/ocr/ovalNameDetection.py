@@ -8,7 +8,7 @@ import json
 reader = easyocr.Reader(['en'], gpu=False)
 
 # Paths     
-image_path = "./testcomposite/test4.jpg"
+image_path = "./testcomposite/test6.jpg"
 output_folder = "output"
 program_year = "2024-Software_Engineering"
 
@@ -35,12 +35,12 @@ def detect_edges(image):
 
 # Apply morphological operations to close gaps in the edges
 def morphological_operations(edges):
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
     closed_edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
     return cv2.dilate(closed_edges, kernel, iterations=1)
 
 # Find contours in the dilated edge image
-def find_contours(dilated_edges):
+def find_contours(dilated_edges, ogimage):
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
     while len(contours) < 10:
@@ -57,7 +57,8 @@ def find_contours(dilated_edges):
 
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # draw contours on the image
-    #cv2.drawContours(ogimage, contours, -1, (0, 255, 0), 2)
+    #temp_copy = ogimage.copy()
+    #cv2.drawContours(temp_copy, contours, -1, (0, 255, 0), 1)
     # show the image with contours
     #print(len(contours))
     # scale down the image
@@ -65,12 +66,12 @@ def find_contours(dilated_edges):
     # save the iamge
     #cv2.imwrite("output/HAMMADTEST.jpg", ogimage)
 
-    #height, width = ogimage.shape[:2]
+    #height, width = dilated_edges.shape[:2]
     #new_width = 1500
     #aspect_ratio = new_width / float(width)
     #new_height = int(height * aspect_ratio)
 
-    #ogimage = cv2.resize(ogimage, (new_width, new_height))
+    #ogimage = cv2.resize(temp_copy, (new_width, new_height))
     #cv2.imshow("Contours", ogimage)
     #cv2.waitKey(0)
     #cv2.destroyAllWindows()
@@ -78,11 +79,23 @@ def find_contours(dilated_edges):
     return contours
 
 # Filter contours to find potential student regions based on aspect ratio and size
-def filter_contours(contours):
+def filter_contours(contours, ogimage):
+    #print("length of contours: ", len(contours))
     temp_student_regions = []
     areas = []
+    # calcualte area of contour
+    contourareas = [cv2.contourArea(contour) for contour in contours]
+    bigarea = sorted(contourareas)[-3]
+    #print("big area: ", max(contourareas), bigarea)
+    tolerance = 0.3
+    minarea = bigarea * (1 - tolerance)
+    maxarea = bigarea * (1 + tolerance)
+
+
     for contour in contours:
-        if len(contour) >= 400:
+        if len(contour) >= 200:
+            if cv2.contourArea(contour) < minarea or cv2.contourArea(contour) > maxarea:
+                continue
             # Fit an ellipse to the contour
             ellipse = cv2.fitEllipse(contour)
             center, axes, angle = ellipse
@@ -93,6 +106,21 @@ def filter_contours(contours):
                 # Calculate the area of the ellipse
                 area = np.pi * axes[0] * axes[1] / 4
                 areas.append(area)
+                # drwa the ellipse on the image
+                #cv2.ellipse(ogimage, ellipse, (0, 255, 0), 2)
+    # show the image with ellipse
+    #height, width = ogimage.shape[:2]
+
+    # Calculate the new width while maintaining the aspect ratio
+    #new_width = 1200
+    #aspect_ratio = new_width / float(width)
+    #new_height = int(height * aspect_ratio)
+
+    # Resize the image
+    #resized_image = cv2.resize(ogimage, (new_width, new_height))
+    #cv2.imshow("Contours", resized_image)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
     return temp_student_regions, areas
 
 # Filter student regions by area to remove outliers
@@ -104,6 +132,7 @@ def filter_by_area(temp_student_regions, areas, tolerance=0.4):
         # Check if the area is within the tolerance range
         if abs((student[1][0] * student[1][1] * np.pi / 4) - avgarea) <= tolerance * stdarea
     ]
+    student_regions = temp_student_regions
     return student_regions
 
 # Extract the region of interest (ROI) for text extraction
@@ -204,7 +233,7 @@ def process_ovals(image, student_regions):
         json.dump(og_data, json_file)
 
     print(f"Data saved in './output/{program_year}.json'")
-    print(f"height: {height}, width: {width}")
+    #print(f"height: {height}, width: {width}")
 
     return final_image
 
@@ -214,9 +243,11 @@ def main():
     contrast = adjust_contrast(image)
     edges = detect_edges(contrast)
     dilated_edges = morphological_operations(edges)
-    contours = find_contours(dilated_edges)
-    temp_student_regions, areas = filter_contours(contours)
+    contours = find_contours(dilated_edges, image)
+    temp_student_regions, areas = filter_contours(contours, image)
+    print(f"Potential student regions found: {len(temp_student_regions)}")
     student_regions = filter_by_area(temp_student_regions, areas)
+    print(f"Student regions found: {len(student_regions)}")
     final_image = process_ovals(image, student_regions)
     output_image_path = os.path.join(output_folder, f"{program_year}_output.jpg")
     cv2.imwrite(output_image_path, final_image)
