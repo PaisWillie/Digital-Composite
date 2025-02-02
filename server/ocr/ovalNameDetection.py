@@ -125,13 +125,13 @@ def filter_contours(contours, ogimage):
 
 # Filter student regions by area to remove outliers
 def filter_by_area(temp_student_regions, areas, tolerance=0.4):
-    avgarea = np.mean(areas)
-    stdarea = np.std(areas)
-    student_regions = [
-        student for student in temp_student_regions
-        # Check if the area is within the tolerance range
-        if abs((student[1][0] * student[1][1] * np.pi / 4) - avgarea) <= tolerance * stdarea
-    ]
+    #avgarea = np.mean(areas)
+    #stdarea = np.std(areas)
+    #student_regions = [
+    #    student for student in temp_student_regions
+    #    # Check if the area is within the tolerance range
+    #    if abs((student[1][0] * student[1][1] * np.pi / 4) - avgarea) <= tolerance * stdarea
+    #]
     student_regions = temp_student_regions
     return student_regions
 
