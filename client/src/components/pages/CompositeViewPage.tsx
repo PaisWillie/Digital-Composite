@@ -28,8 +28,6 @@ function CompositeViewPage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
 
-  console.log('Composite data:', compositeData)
-
   useEffect(() => {
     if (compositeData.file) {
       const reader = new FileReader()
@@ -98,13 +96,9 @@ function CompositeViewPage() {
     scaleY = displayedHeight / naturalSize.height
   }
 
-  console.log('Scale factors:', { scaleX, scaleY })
-  console.log('Image offset:', imageOffset)
-
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
       <h2 className="mb-6 text-2xl font-semibold">Edit Composite</h2>
-
       {/* Composite Image Display */}
       <div
         ref={containerRef}
@@ -139,8 +133,6 @@ function CompositeViewPage() {
                 const w = (xMax - xMin) * scaleX
                 const h = (yMax - yMin) * scaleY
 
-                console.log(`Student ${index + 1}:`, { x, y, w, h })
-
                 return (
                   <g key={index}>
                     <rect
@@ -172,13 +164,14 @@ function CompositeViewPage() {
           <span className="text-gray-700">Loading image...</span>
         )}
       </div>
-
       <div className="w-full max-w-4xl">
         <h3 className="mb-4 text-lg font-medium">Student Names</h3>
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {names.map((student, index) => (
             <div key={index} className="flex items-center gap-2">
-              <span className="text-lg font-bold">{index + 1}</span>
+              <span className="w-8 pt-4 text-center text-lg font-bold">
+                {index + 1}
+              </span>
               <TextField
                 label={`Name ${index + 1}`}
                 value={student.name}
@@ -203,7 +196,6 @@ function CompositeViewPage() {
           </TextButton>
         </div>
       </div>
-
       <div className="mt-6 flex gap-4">
         <TextButton variant="primary" onClick={handleSave}>
           Save Composite
