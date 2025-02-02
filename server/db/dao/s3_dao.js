@@ -38,7 +38,7 @@ class S3DAO {
             };
 
             await this.s3.send(new PutObjectCommand(params));
-            return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${objKey}`;
+            return `https://${bucketname}.s3.${this.region}.amazonaws.com/${objKey}`;
 
         } catch (error) {
             throw new Error(`File upload failed: ${error.message}`);
