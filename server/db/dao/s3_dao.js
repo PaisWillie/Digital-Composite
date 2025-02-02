@@ -28,7 +28,7 @@ class S3DAO {
     async uploadFile(bucketname, objKey, file) {
         
         this.s3 = await s3_client(this.roleArn, this.region);
-
+        
         try {
             const params = {
                 Bucket: bucketname,
