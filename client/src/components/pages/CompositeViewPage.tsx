@@ -1,16 +1,34 @@
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useState, useEffect, ChangeEvent, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
 import TextField from 'components/TextField/TextField'
 import { FaTrash } from 'react-icons/fa'
+
+type Student = {
+  name: string
+  image_id: string
+  top_left: [number, number]
+  top_right: [number, number]
+  bottom_left: [number, number]
+  bottom_right: [number, number]
+  student_region: [number, number][]
+}
 
 function CompositeViewPage() {
   const location = useLocation()
   const navigate = useNavigate()
 
   const compositeData = location.state || {}
-  const [names, setNames] = useState<string[]>(compositeData.names || [])
+  const [names, setNames] = useState<Student[]>(compositeData.names || [])
   const [imageSrc, setImageSrc] = useState<string | null>(null)
+
+  const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 })
+  const [imageOffset, setImageOffset] = useState({ x: 0, y: 0 })
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+
+  console.log('Composite data:', compositeData)
 
   useEffect(() => {
     if (compositeData.file) {
@@ -20,14 +38,40 @@ function CompositeViewPage() {
     }
   }, [compositeData.file])
 
+  const handleImageLoad = () => {
+    if (imageRef.current && containerRef.current) {
+      setNaturalSize({
+        width: imageRef.current.naturalWidth,
+        height: imageRef.current.naturalHeight
+      })
+      const containerBox = containerRef.current.getBoundingClientRect()
+      const imageBox = imageRef.current.getBoundingClientRect()
+      setImageOffset({
+        x: imageBox.left - containerBox.left,
+        y: imageBox.top - containerBox.top
+      })
+    }
+  }
+
   const handleNameChange = (index: number, newName: string) => {
     const updatedNames = [...names]
-    updatedNames[index] = newName
+    updatedNames[index].name = newName
     setNames(updatedNames)
   }
 
   const handleAddName = () => {
-    setNames([...names, ''])
+    setNames([
+      ...names,
+      {
+        name: '',
+        image_id: '',
+        top_left: [0, 0],
+        top_right: [0, 0],
+        bottom_left: [0, 0],
+        bottom_right: [0, 0],
+        student_region: []
+      }
+    ])
   }
 
   const handleSave = () => {
@@ -36,9 +80,8 @@ function CompositeViewPage() {
       names
     }
 
-    // Pass the updated composite as part of an array to ManageCompositesPage
     navigate('/Admin/ManageCompositesPage', {
-      state: [updatedComposite] // Pass an array to state
+      state: [updatedComposite]
     })
   }
 
@@ -46,32 +89,99 @@ function CompositeViewPage() {
     navigate('/Admin/ManageCompositesPage')
   }
 
+  let scaleX = 1
+  let scaleY = 1
+  if (imageRef.current && naturalSize.width > 0 && naturalSize.height > 0) {
+    const displayedWidth = imageRef.current.clientWidth
+    const displayedHeight = imageRef.current.clientHeight
+    scaleX = displayedWidth / naturalSize.width
+    scaleY = displayedHeight / naturalSize.height
+  }
+
+  console.log('Scale factors:', { scaleX, scaleY })
+  console.log('Image offset:', imageOffset)
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
       <h2 className="mb-6 text-2xl font-semibold">Edit Composite</h2>
 
       {/* Composite Image Display */}
-      <div className="mb-6 flex h-96 w-full max-w-4xl items-center justify-center rounded-lg bg-gray-300">
+      <div
+        ref={containerRef}
+        className="relative mb-6 flex h-96 w-full max-w-4xl items-center justify-center rounded-lg bg-gray-300"
+      >
         {imageSrc ? (
-          <img
-            src={imageSrc}
-            alt="Composite"
-            className="max-h-full max-w-full rounded-lg"
-          />
+          <>
+            <img
+              ref={imageRef}
+              src={imageSrc}
+              alt="Composite"
+              className="max-h-full max-w-full rounded-lg"
+              onLoad={handleImageLoad}
+            />
+            <svg className="pointer-events-none absolute left-0 top-0 size-full">
+              {names.map((student, index) => {
+                const { top_left, top_right, bottom_left, bottom_right } =
+                  student
+                const corners = [top_left, top_right, bottom_left, bottom_right]
+
+                const xs = corners.map((c) => c[0])
+                const ys = corners.map((c) => c[1])
+
+                const xMin = Math.min(...xs)
+                const xMax = Math.max(...xs)
+                const yMin = Math.min(...ys)
+                const yMax = Math.max(...ys)
+
+                // Apply scale and offset
+                const x = xMin * scaleX + imageOffset.x
+                const y = yMin * scaleY + imageOffset.y
+                const w = (xMax - xMin) * scaleX
+                const h = (yMax - yMin) * scaleY
+
+                console.log(`Student ${index + 1}:`, { x, y, w, h })
+
+                return (
+                  <g key={index}>
+                    <rect
+                      x={x}
+                      y={y}
+                      width={w}
+                      height={h}
+                      fill="none"
+                      stroke="red"
+                      strokeWidth="2"
+                    />
+                    <text
+                      x={x + w / 2}
+                      y={y + h / 2}
+                      fill="red"
+                      fontSize="16"
+                      fontWeight="bold"
+                      textAnchor="middle"
+                      alignmentBaseline="middle"
+                    >
+                      {index + 1}
+                    </text>
+                  </g>
+                )
+              })}
+            </svg>
+          </>
         ) : (
           <span className="text-gray-700">Loading image...</span>
         )}
       </div>
 
-      {/* Editable Names List */}
       <div className="w-full max-w-4xl">
         <h3 className="mb-4 text-lg font-medium">Student Names</h3>
         <div className="flex flex-col gap-4">
-          {names.map((name, index) => (
+          {names.map((student, index) => (
             <div key={index} className="flex items-center gap-2">
+              <span className="text-lg font-bold">{index + 1}</span>
               <TextField
                 label={`Name ${index + 1}`}
-                value={name}
+                value={student.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleNameChange(index, e.target.value)
                 }
@@ -94,7 +204,6 @@ function CompositeViewPage() {
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="mt-6 flex gap-4">
         <TextButton variant="primary" onClick={handleSave}>
           Save Composite
