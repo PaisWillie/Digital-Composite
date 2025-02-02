@@ -169,7 +169,6 @@ function UploadPage() {
       }
 
       const result = await response.json()
-      console.log('Upload result:', result)
 
       // Dismiss the loading toast
       toast.dismiss(toastId)

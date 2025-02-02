@@ -14,8 +14,6 @@ function ManageCompositesPage() {
     ? location.state
     : []
 
-  console.log('Received composites:', composites) // Debug log to verify state
-
   const navigate = useNavigate()
 
   const handleEdit = (composite: Composite) => {
