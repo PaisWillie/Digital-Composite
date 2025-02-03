@@ -1,16 +1,41 @@
 import { cn } from '@udecode/cn'
+import { useState } from 'react'
 import {
   FaAngleLeft,
   FaAngleRight,
   FaArrowUp,
   FaDeleteLeft
 } from 'react-icons/fa6'
+import { RiSpace } from 'react-icons/ri'
 
 type OnScreenKeyboardProps = {
   onPress: (keyPressed: string) => void
 }
 
 const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
+  const [isShiftActive, setIsShiftActive] = useState(false)
+
+  const handleKeyPress = (keyPressed: string) => {
+    if (keyPressed === 'shift') {
+      setIsShiftActive(!isShiftActive)
+    } else {
+      onPress(keyPressed)
+
+      // if shift is active, deactivate it after pressing a key
+      if (isShiftActive) {
+        setIsShiftActive(false)
+      }
+    }
+  }
+
+  const getShiftedCharacter = (character: string) => {
+    if (isShiftActive) {
+      return character.toUpperCase()
+    } else {
+      return character
+    }
+  }
+
   const renderButton = (
     label: React.ReactNode,
     keyPressed: string,
@@ -18,7 +43,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
   ) => (
     <button
       className={cn([keyStyle, additionalClasses])}
-      onClick={() => onPress(keyPressed)}
+      onClick={() => handleKeyPress(keyPressed)}
     >
       {label}
     </button>
@@ -29,16 +54,20 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
       <div id="row-1" className="grid-cols-16 grid">
         {/* {renderButton('abc123', 'abc123', 'col-span-2 aspect-auto')} */}
         <div className="col-span-2" />
-        {renderButton('q', 'q', leftBorderStyle)}
-        {renderButton('w', 'w')}
-        {renderButton('e', 'e')}
-        {renderButton('r', 'r')}
-        {renderButton('t', 't')}
-        {renderButton('y', 'y')}
-        {renderButton('u', 'u')}
-        {renderButton('i', 'i')}
-        {renderButton('o', 'o')}
-        {renderButton('p', 'p')}
+        {renderButton(
+          getShiftedCharacter('q'),
+          getShiftedCharacter('q'),
+          leftBorderStyle
+        )}
+        {renderButton(getShiftedCharacter('w'), getShiftedCharacter('w'))}
+        {renderButton(getShiftedCharacter('e'), getShiftedCharacter('e'))}
+        {renderButton(getShiftedCharacter('r'), getShiftedCharacter('r'))}
+        {renderButton(getShiftedCharacter('t'), getShiftedCharacter('t'))}
+        {renderButton(getShiftedCharacter('y'), getShiftedCharacter('y'))}
+        {renderButton(getShiftedCharacter('u'), getShiftedCharacter('u'))}
+        {renderButton(getShiftedCharacter('i'), getShiftedCharacter('i'))}
+        {renderButton(getShiftedCharacter('o'), getShiftedCharacter('o'))}
+        {renderButton(getShiftedCharacter('p'), getShiftedCharacter('p'))}
         {renderButton(<FaDeleteLeft />, 'backspace', rightBorderStyle)}
         {renderButton('1', '1')}
         {renderButton('2', '2')}
@@ -47,15 +76,19 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
       <div id="row-2" className="grid-cols-16 grid">
         {/* {renderButton('@?#', '@?#', 'col-span-2 aspect-auto')} */}
         <div className="col-span-2" />
-        {renderButton('a', 'a', leftBorderStyle)}
-        {renderButton('s', 's')}
-        {renderButton('d', 'd')}
-        {renderButton('f', 'f')}
-        {renderButton('g', 'g')}
-        {renderButton('h', 'h')}
-        {renderButton('j', 'j')}
-        {renderButton('k', 'k')}
-        {renderButton('l', 'l')}
+        {renderButton(
+          getShiftedCharacter('a'),
+          getShiftedCharacter('a'),
+          leftBorderStyle
+        )}
+        {renderButton(getShiftedCharacter('s'), getShiftedCharacter('s'))}
+        {renderButton(getShiftedCharacter('d'), getShiftedCharacter('d'))}
+        {renderButton(getShiftedCharacter('f'), getShiftedCharacter('f'))}
+        {renderButton(getShiftedCharacter('g'), getShiftedCharacter('g'))}
+        {renderButton(getShiftedCharacter('h'), getShiftedCharacter('h'))}
+        {renderButton(getShiftedCharacter('j'), getShiftedCharacter('j'))}
+        {renderButton(getShiftedCharacter('k'), getShiftedCharacter('k'))}
+        {renderButton(getShiftedCharacter('l'), getShiftedCharacter('l'))}
         {renderButton(';', ';')}
         {renderButton("'", "'", rightBorderStyle)}
         {renderButton('4', '4')}
@@ -65,13 +98,13 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
       <div id="row-3" className="grid-cols-16 grid">
         <div className={cn([keyStyle, 'col-span-2 aspect-auto'])} />
         {renderButton(<FaArrowUp />, 'shift', leftBorderStyle)}
-        {renderButton('z', 'z')}
-        {renderButton('x', 'x')}
-        {renderButton('c', 'c')}
-        {renderButton('v', 'v')}
-        {renderButton('b', 'b')}
-        {renderButton('n', 'n')}
-        {renderButton('m', 'm')}
+        {renderButton(getShiftedCharacter('z'), getShiftedCharacter('z'))}
+        {renderButton(getShiftedCharacter('x'), getShiftedCharacter('x'))}
+        {renderButton(getShiftedCharacter('c'), getShiftedCharacter('c'))}
+        {renderButton(getShiftedCharacter('v'), getShiftedCharacter('v'))}
+        {renderButton(getShiftedCharacter('b'), getShiftedCharacter('b'))}
+        {renderButton(getShiftedCharacter('n'), getShiftedCharacter('n'))}
+        {renderButton(getShiftedCharacter('m'), getShiftedCharacter('m'))}
         {renderButton(',', ',')}
         {renderButton('.', '.')}
         {renderButton('/', '/', rightBorderStyle)}
@@ -84,7 +117,11 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton(<FaAngleLeft />, 'left', leftBorderStyle)}
         {renderButton(<FaAngleRight />, 'right')}
         <div className={keyStyle} />
-        {renderButton('space', 'space', 'col-span-5 aspect-auto')}
+        {renderButton(
+          <RiSpace />,
+          'space',
+          'col-span-5 aspect-auto border-b-[1px]'
+        )}
         <div className={keyStyle} />
         {renderButton(
           'Search',
