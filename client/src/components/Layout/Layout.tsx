@@ -50,7 +50,7 @@ const Layout = ({ children }: LayoutProps) => {
     } else if (keyPressed === 'space') {
       setSearchValue(searchValue + ' ')
     } else if (keyPressed === 'return') {
-      return // TODO
+      handleCancel()
     } else if (keyPressed === 'search') {
       return // TODO
     } else {
