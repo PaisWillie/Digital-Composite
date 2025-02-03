@@ -1,6 +1,11 @@
-# Project Name
+# GradSight
 
 Developer Names:
+- Willie Pai
+- Wajdan Faheem
+- Henushan Balachandran
+- Hammad Pathan
+- Zahin Hossain
 
 Date of project start:
 

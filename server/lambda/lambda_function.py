@@ -1,17 +1,11 @@
+import sys
 import cv2
 import easyocr
 import boto3
 import numpy as np
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 # Initialize EasyOCR Reader
 reader = easyocr.Reader(['en'], gpu=False)
-
-s3 = boto3.client('s3')
-dynamodb = boto3.resource('dynamodb')
 
 # Allowed characters
 allowed_chars = set(
@@ -138,8 +132,16 @@ def process_ovals(image, student_regions):
     return metadata_list
 
 # Main function to execute the steps
-def main(image_path):
-    image = load_image(image_path)
+def main(image_data):
+    image_array = np.frombuffer(image_data, dtype=np.uint8)
+    
+    # Decode the image
+    image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+
+    if image is None:
+        print("Error: Failed to decode image")
+        sys.exit(1)
+    
     contrast = adjust_contrast(image)
     edges = detect_edges(contrast)
     dilated_edges = morphological_operations(edges)
@@ -149,39 +151,7 @@ def main(image_path):
     metadata = process_ovals(image, student_regions)
     return metadata
 
-def lambda_handler(event, context):
-    """
-    Lambda function handler. Triggered by an S3 upload.
-    """
-    # Extract bucket and file information from the S3 event
-    bucket_name = event['Records'][0]['s3']['bucket']['name']
-    object_key = event['Records'][0]['s3']['object']['key']
-    
-    # Download the file locally
-    local_file_path = f"/tmp/{os.path.basename(object_key)}"
-    s3.download_file(bucket_name, object_key, local_file_path)
-    
-    # Perform OCR and metadata extraction
-    metadata = main(local_file_path)
-    
-    # Prepare metadata for DynamoDB
-    item = {
-        'ImageID': object_key,
-        'Metadata': metadata
-    }
-    
-    # Save metadata to DynamoDB
-    table = dynamodb.Table("composite-metadata")
-    table.put_item(Item=item)
-    
-    return {
-        'statusCode': 200,
-        'body': json.dumps({
-            'message': 'Metadata extracted and saved to DynamoDB',
-            'metadata': metadata
-        })
-    }
-
-# Entry point of the script
 if __name__ == "__main__":
-    main()
+    image_data = sys.stdin.buffer.read()
+    final_metadata = main(image_data)
+    print(final_metadata)  # Ensure the output can be captured in Node.js
