@@ -54,11 +54,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
       <div id="row-1" className="grid-cols-16 grid">
         {/* {renderButton('abc123', 'abc123', 'col-span-2 aspect-auto')} */}
         <div className="col-span-2" />
-        {renderButton(
-          getShiftedCharacter('q'),
-          getShiftedCharacter('q'),
-          leftBorderStyle
-        )}
+        {renderButton(getShiftedCharacter('q'), getShiftedCharacter('q'))}
         {renderButton(getShiftedCharacter('w'), getShiftedCharacter('w'))}
         {renderButton(getShiftedCharacter('e'), getShiftedCharacter('e'))}
         {renderButton(getShiftedCharacter('r'), getShiftedCharacter('r'))}
@@ -76,11 +72,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
       <div id="row-2" className="grid-cols-16 grid">
         {/* {renderButton('@?#', '@?#', 'col-span-2 aspect-auto')} */}
         <div className="col-span-2" />
-        {renderButton(
-          getShiftedCharacter('a'),
-          getShiftedCharacter('a'),
-          leftBorderStyle
-        )}
+        {renderButton(getShiftedCharacter('a'), getShiftedCharacter('a'))}
         {renderButton(getShiftedCharacter('s'), getShiftedCharacter('s'))}
         {renderButton(getShiftedCharacter('d'), getShiftedCharacter('d'))}
         {renderButton(getShiftedCharacter('f'), getShiftedCharacter('f'))}
@@ -97,7 +89,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
       </div>
       <div id="row-3" className="grid-cols-16 grid">
         <div className={cn([keyStyle, 'col-span-2 aspect-auto'])} />
-        {renderButton(<FaArrowUp />, 'shift', leftBorderStyle)}
+        {renderButton(<FaArrowUp />, 'shift')}
         {renderButton(getShiftedCharacter('z'), getShiftedCharacter('z'))}
         {renderButton(getShiftedCharacter('x'), getShiftedCharacter('x'))}
         {renderButton(getShiftedCharacter('c'), getShiftedCharacter('c'))}
@@ -113,24 +105,26 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton('9', '9')}
       </div>
       <div id="row-4" className="grid-cols-16 grid">
-        {renderButton('return', 'return', 'col-span-2 aspect-auto')}
-        {renderButton(<FaAngleLeft />, 'left', leftBorderStyle)}
-        {renderButton(<FaAngleRight />, 'right')}
-        <div className={keyStyle} />
+        <div className="col-span-2" />
+        {/* {renderButton('Return', 'return', 'col-span-2 aspect-auto')} */}
+        {renderButton('Return', 'return', `col-span-2 aspect-auto`)}
+        {/* {renderButton(<FaAngleLeft />, 'left', leftBorderStyle)}
+        {renderButton(<FaAngleRight />, 'right')} */}
+        <div />
         {renderButton(
           <RiSpace />,
           'space',
           'col-span-5 aspect-auto border-b-[1px]'
         )}
-        <div className={keyStyle} />
+        <div />
         {renderButton(
           'Search',
           'Search',
           `${rightBorderStyle} col-span-2 aspect-auto`
         )}
-        <div className={keyStyle} />
+        <div />
         {renderButton('0', '0')}
-        <div className={keyStyle} />
+        <div />
       </div>
     </div>
   )
