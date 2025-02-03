@@ -21,11 +21,6 @@ async function downloadImage(req, res, bucketname){
         res.status(200)
         res.send(Body); 
 
-        fs.writeFile("pic.png", Body, (err) => {
-            if (err) throw err;
-            console.log("The file has been saved!");
-        });
-
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -122,5 +117,20 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
         return res.status(500).json({ error: error.message })
     }
 };
+
+exports.blacklistStudent = async (req, res) => {
+    try {
+      const { student } = req.body;
+  
+      if (!student) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+  
+      await compositeService.blacklistStudent(student);
+      return res.status(200).json({ message: "Blacklisted student successfully" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message })
+    }
+  }
 
 
