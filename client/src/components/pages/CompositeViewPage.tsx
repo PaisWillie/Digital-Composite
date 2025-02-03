@@ -19,12 +19,15 @@ function CompositeViewPage() {
   const navigate = useNavigate()
 
   const compositeData = location.state || {}
-  const [names, setNames] = useState<Student[]>(compositeData.names || [])
+  const [names, setNames] = useState<Student[]>(
+    [...compositeData.names].reverse() || []
+  )
   const [imageSrc, setImageSrc] = useState<string | null>(null)
 
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 })
   const [imageOffset, setImageOffset] = useState({ x: 0, y: 0 })
 
+  console.log(names[names.length - 1])
   const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
 
@@ -119,12 +122,68 @@ function CompositeViewPage() {
     scaleY = displayedHeight / naturalSize.height
   }
 
+  const calculateAverageRectangle = () => {
+    let totalWidth = 0
+    let totalHeight = 0
+    let count = 0
+
+    names.forEach((student) => {
+      const { top_left, top_right, bottom_left, bottom_right } = student
+      const width = top_right[0] - top_left[0]
+      const height = bottom_left[1] - top_left[1]
+
+      // Only include valid rectangles with positive dimensions
+      if (width > 0 && height > 0) {
+        totalWidth += width
+        totalHeight += height
+        count += 1
+      }
+    })
+
+    // Default to 80x100 if no valid rectangles exist
+    if (count === 0) {
+      return { width: 80, height: 100 }
+    }
+
+    return {
+      width: totalWidth / count,
+      height: totalHeight / count
+    }
+  }
+
+  const handleImageClick = (e: React.MouseEvent) => {
+    if (!imageRef.current) return
+
+    const rect = imageRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / scaleX
+    const y = (e.clientY - rect.top) / scaleY
+
+    const avgRect = calculateAverageRectangle()
+    const rectWidth = avgRect.width || 80 // use default width if no rectangles exist
+    const rectHeight = avgRect.height || 100 // use default height if no rectangles exist
+    const halfWidth = rectWidth / 2
+    const halfHeight = rectHeight / 2
+
+    const newStudent: Student = {
+      name: '',
+      image_id: '',
+      top_left: [x - halfWidth, y - halfHeight],
+      top_right: [x + halfWidth, y - halfHeight],
+      bottom_left: [x - halfWidth, y + halfHeight],
+      bottom_right: [x + halfWidth, y + halfHeight],
+      student_region: []
+    }
+
+    setNames([...names, newStudent])
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
       <h2 className="mb-6 text-2xl font-semibold">Edit Composite</h2>
       <div
         ref={containerRef}
         className="relative mb-6 flex h-96 w-full max-w-4xl items-center justify-center rounded-lg bg-gray-300"
+        onClick={handleImageClick}
       >
         {imageSrc ? (
           <>
