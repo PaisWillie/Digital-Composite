@@ -44,7 +44,6 @@ function BlackListStudentPage() {
     if (program && year) {
       const fetchCompositeData = async () => {
         try {
-          // 1) Fetch composite image
           const response = await fetch(
             `http://localhost:3000/composite/getComposite?program=${program.value}&year=${year.value}`,
             { method: 'GET' }
@@ -58,7 +57,6 @@ function BlackListStudentPage() {
           const imageStr = arrayBufferToBase64(buffer)
           setImageSrc(base64Flag + imageStr)
 
-          // 2) Fetch students
           const studentsResponse = await fetch(
             `http://localhost:3000/students/getStudentByYearProgram?program=${program.value}&year=${year.value}`,
             { method: 'GET' }
@@ -174,7 +172,7 @@ function BlackListStudentPage() {
 
     try {
       const response = await fetch('http://localhost:3000/blackList', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -295,7 +293,6 @@ function BlackListStudentPage() {
       </div>
 
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-        {/* Program */}
         <div className="mb-4">
           <label className="block pb-1 text-sm font-medium text-gray-700">
             Select Program
@@ -309,7 +306,6 @@ function BlackListStudentPage() {
           />
         </div>
 
-        {/* Year */}
         <div className="mb-4">
           <label className="block pb-1 text-sm font-medium text-gray-700">
             Select Year
@@ -323,7 +319,6 @@ function BlackListStudentPage() {
           />
         </div>
 
-        {/* Student */}
         {imageSrc && students.length > 0 && (
           <div className="mb-4">
             <label className="block pb-1 text-sm font-medium text-gray-700">
