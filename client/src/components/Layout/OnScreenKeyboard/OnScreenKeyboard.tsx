@@ -1,11 +1,6 @@
 import { cn } from '@udecode/cn'
 import { useState } from 'react'
-import {
-  FaAngleLeft,
-  FaAngleRight,
-  FaArrowUp,
-  FaDeleteLeft
-} from 'react-icons/fa6'
+import { FaArrowUp, FaDeleteLeft } from 'react-icons/fa6'
 import { RiSpace } from 'react-icons/ri'
 
 type OnScreenKeyboardProps = {
@@ -119,7 +114,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         <div />
         {renderButton(
           'Search',
-          'Search',
+          'search',
           `${rightBorderStyle} col-span-2 aspect-auto`
         )}
         <div />

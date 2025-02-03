@@ -1,6 +1,6 @@
 import Layout from '../Layout/Layout'
 import { Carousel } from 'antd'
-import { FaPlus } from 'react-icons/fa6'
+import { FaArrowLeft, FaPlus } from 'react-icons/fa6'
 import { useState } from 'react'
 import TextButton from 'components/Button/TextButton'
 
@@ -51,24 +51,6 @@ const SearchResultPage = () => {
       <div className="flex flex-col">
         {selectedCompositeId === -1 ? (
           <>
-            <div id="filters" className="mt-3 flex flex-row gap-x-2">
-              <TextButton
-                onClick={() => {}}
-                leadingIcon={<FaPlus />}
-                isMobile
-                variant="secondary"
-              >
-                Select year
-              </TextButton>
-              <TextButton
-                onClick={() => {}}
-                leadingIcon={<FaPlus />}
-                isMobile
-                variant="secondary"
-              >
-                Select program
-              </TextButton>
-            </div>
             <Carousel
               easing="ease-in"
               speed={1500}
@@ -90,15 +72,49 @@ const SearchResultPage = () => {
                 </div>
               ))}
             </Carousel>
+            <div id="filters" className="mt-3 flex flex-row gap-x-2">
+              <TextButton
+                onClick={() => {}}
+                leadingIcon={<FaPlus />}
+                isMobile
+                variant="secondary"
+              >
+                Select year
+              </TextButton>
+              <TextButton
+                onClick={() => {}}
+                leadingIcon={<FaPlus />}
+                isMobile
+                variant="secondary"
+              >
+                Select program
+              </TextButton>
+            </div>
           </>
         ) : (
           <>
-            <div
+            {/* <div
               onClick={() => {
                 setSelectedCompositeId(-1)
               }}
             >
               Back
+            </div> */}
+            <img
+              src={images[selectedCompositeId]}
+              useMap="#workmap"
+              className="max-h-[95vh] object-contain"
+            />
+            <div className="max-w-fit">
+              <TextButton
+                onClick={() => {
+                  setSelectedCompositeId(-1)
+                }}
+                leadingIcon={<FaArrowLeft />}
+                isMobile
+              >
+                Back
+              </TextButton>
             </div>
             {/* WIP: Zoom into Carousel */}
             {/* <Carousel infinite easing="ease-in" speed={1500}>
@@ -112,15 +128,10 @@ const SearchResultPage = () => {
                     src={image}
                     useMap="#workmap"
                     className="max-h-[95vh] object-contain"
-                  />
-                </div>
+                    />
+                    </div>
               ))}
             </Carousel> */}
-            <img
-              src={images[selectedCompositeId]}
-              useMap="#workmap"
-              className="max-h-[95vh] object-contain"
-            />
           </>
         )}
       </div>
