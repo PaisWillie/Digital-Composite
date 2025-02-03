@@ -1,4 +1,10 @@
 import { cn } from '@udecode/cn'
+import {
+  FaAngleLeft,
+  FaAngleRight,
+  FaArrowUp,
+  FaDeleteLeft
+} from 'react-icons/fa6'
 
 type OnScreenKeyboardProps = {
   onPress: (keyPressed: string) => void
@@ -20,8 +26,9 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
 
   return (
     <div className="grid grid-rows-4">
-      <div id="row-1" className="grid grid-cols-16">
-        {renderButton('abc123', 'abc123', 'col-span-2 aspect-auto')}
+      <div id="row-1" className="grid-cols-16 grid">
+        {/* {renderButton('abc123', 'abc123', 'col-span-2 aspect-auto')} */}
+        <div className="col-span-2" />
         {renderButton('q', 'q', leftBorderStyle)}
         {renderButton('w', 'w')}
         {renderButton('e', 'e')}
@@ -32,13 +39,14 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton('i', 'i')}
         {renderButton('o', 'o')}
         {renderButton('p', 'p')}
-        {renderButton('backspace', 'backspace', rightBorderStyle)}
+        {renderButton(<FaDeleteLeft />, 'backspace', rightBorderStyle)}
         {renderButton('1', '1')}
         {renderButton('2', '2')}
         {renderButton('3', '3')}
       </div>
-      <div id="row-2" className="grid grid-cols-16">
-        {renderButton('@?#', '@?#', 'col-span-2 aspect-auto')}
+      <div id="row-2" className="grid-cols-16 grid">
+        {/* {renderButton('@?#', '@?#', 'col-span-2 aspect-auto')} */}
+        <div className="col-span-2" />
         {renderButton('a', 'a', leftBorderStyle)}
         {renderButton('s', 's')}
         {renderButton('d', 'd')}
@@ -54,9 +62,9 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton('5', '5')}
         {renderButton('6', '6')}
       </div>
-      <div id="row-3" className="grid grid-cols-16">
+      <div id="row-3" className="grid-cols-16 grid">
         <div className={cn([keyStyle, 'col-span-2 aspect-auto'])} />
-        {renderButton('shift', 'shift', leftBorderStyle)}
+        {renderButton(<FaArrowUp />, 'shift', leftBorderStyle)}
         {renderButton('z', 'z')}
         {renderButton('x', 'x')}
         {renderButton('c', 'c')}
@@ -71,16 +79,16 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton('8', '8')}
         {renderButton('9', '9')}
       </div>
-      <div id="row-4" className="grid grid-cols-16">
+      <div id="row-4" className="grid-cols-16 grid">
         {renderButton('return', 'return', 'col-span-2 aspect-auto')}
-        {renderButton('left', 'left', leftBorderStyle)}
-        {renderButton('right', 'right')}
+        {renderButton(<FaAngleLeft />, 'left', leftBorderStyle)}
+        {renderButton(<FaAngleRight />, 'right')}
         <div className={keyStyle} />
         {renderButton('space', 'space', 'col-span-5 aspect-auto')}
         <div className={keyStyle} />
         {renderButton(
-          'search',
-          'search',
+          'Search',
+          'Search',
           `${rightBorderStyle} col-span-2 aspect-auto`
         )}
         <div className={keyStyle} />
