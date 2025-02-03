@@ -128,6 +128,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
 const keyStyle =
   'aspect-square flex items-center justify-center active:bg-gray-100 rounded-[4px]'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const leftBorderStyle = 'border-l-[1px] border-black rounded-l-none'
 const rightBorderStyle = 'border-r-[1px] border-black rounded-r-none'
 
