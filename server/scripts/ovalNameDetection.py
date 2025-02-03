@@ -27,12 +27,20 @@ def detect_edges(image):
 
 # Apply morphological operations to close gaps in the edges
 def morphological_operations(edges):
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
     closed_edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
     return cv2.dilate(closed_edges, kernel, iterations=1)
 
 # Find contours in the dilated edge image
 def find_contours(dilated_edges):
+    contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    while len(contours) < 10:
+        contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        if not contours:
+            return []
+        else:
+            cv2.drawContours(dilated_edges, contours[0], -1, 0, thickness=cv2.FILLED)
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
@@ -40,8 +48,16 @@ def find_contours(dilated_edges):
 def filter_contours(contours):
     temp_student_regions = []
     areas = []
+    contourareas = [cv2.contourArea(contour) for contour in contours]
+    bigarea = sorted(contourareas)[-3]
+    tolerance = 0.3
+    minarea = bigarea * (1 - tolerance)
+    maxarea = bigarea * (1 + tolerance)
+
     for contour in contours:
-        if len(contour) >= 400:
+        if len(contour) >= 200:
+            if cv2.contourArea(contour) < minarea or cv2.contourArea(contour) > maxarea:
+                continue
             # Fit an ellipse to the contour
             ellipse = cv2.fitEllipse(contour)
             center, axes, angle = ellipse
@@ -56,13 +72,14 @@ def filter_contours(contours):
 
 # Filter student regions by area to remove outliers
 def filter_by_area(temp_student_regions, areas, tolerance=0.4):
-    avgarea = np.mean(areas)
-    stdarea = np.std(areas)
-    student_regions = [
-        student for student in temp_student_regions
+    #avgarea = np.mean(areas)
+    #stdarea = np.std(areas)
+    #student_regions = [
+    #    student for student in temp_student_regions
         # Check if the area is within the tolerance range
-        if abs((student[1][0] * student[1][1] * np.pi / 4) - avgarea) <= tolerance * stdarea
-    ]
+    #    if abs((student[1][0] * student[1][1] * np.pi / 4) - avgarea) <= tolerance * stdarea
+    #]
+    student_regions = temp_student_regions
     return student_regions
 
 # Extract the region of interest (ROI) for text extraction

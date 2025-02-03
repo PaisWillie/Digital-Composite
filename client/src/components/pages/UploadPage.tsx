@@ -157,7 +157,7 @@ function UploadPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/composite/uploadComposite/${year.value}/${program.value}`,
+        `http://localhost:3000/composite/uploadComposite`,
         {
           method: 'POST',
           body: formData
