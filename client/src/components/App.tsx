@@ -1,7 +1,6 @@
 import { TestCompositeData } from 'composite-data'
 import CompositeCarousel from './Composite/CompositeCarousel'
 import Layout from './Layout/Layout'
-import './zoom.css'
 
 const composites = [
   {
