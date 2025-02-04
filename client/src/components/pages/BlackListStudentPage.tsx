@@ -173,13 +173,16 @@ function BlackListStudentPage() {
     console.log('Blacklisting student:', JSON.stringify(payload))
 
     try {
-      const response = await fetch('http://localhost:3000/composite/blacklistStudent', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
+      const response = await fetch(
+        'http://localhost:3000/composite/blacklistStudent',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        }
+      )
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
