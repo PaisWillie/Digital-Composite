@@ -1,9 +1,8 @@
 const { default: s3_client } = require("../client/s3_client");
-const { PutObjectCommand, GetObjectCommand} = require("@aws-sdk/client-s3");
+const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand} = require("@aws-sdk/client-s3");
 
 class S3DAO {
     constructor() {
-        this.bucketName = "digital-composite-bucket";
         this.region = "us-east-2";
         this.roleArn = "arn:aws:iam::717279725934:role/Admin"; 
         this.s3 = null;
@@ -64,12 +63,27 @@ class S3DAO {
 
             const buffer = await this.streamToBuffer(Body);
 
-            console.log("Reached Dao")
-
             return { Body: buffer , ContentType }
 
         } catch (error) {
             throw new Error(`File download failed: ${error.message}`);
+        }
+    }
+
+    /**
+     * delete a file from S3.
+     * @param {bucketname} bucket - bucket name
+     * @param {string} objectName - S3 object key.
+     */
+    async deleteFile(bucketname, objectname) {
+        this.s3 = await s3_client(this.roleArn, this.region);
+
+        try {
+            const bucketParams = { Bucket: bucketname, Key: objectname}
+            const data = await this.s3.send(new DeleteObjectCommand(bucketParams));
+            return data
+        } catch (error) {
+            throw new Error(`File deletion failed: ${error.message}`);
         }
     }
 }

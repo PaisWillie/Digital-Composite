@@ -13,8 +13,8 @@ def main(image_data):
     resized_img = img.resize((new_width, new_height))
 
     img_byte_array = BytesIO()
-    resized_img.save(img_byte_array, format="JPEG")  # Ensure format is correct
-    return img_byte_array.getvalue()  # Return byte data   
+    resized_img.save(img_byte_array, format="JPEG") 
+    return img_byte_array.getvalue()   
 
 if __name__ == "__main__":
     image_data = sys.stdin.buffer.read()

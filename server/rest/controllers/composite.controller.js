@@ -1,4 +1,5 @@
 const compositeService = require("../services/composite.service");
+const { executePythonScript } = require("../../util/pythonExecutor");
 const { spawn } = require("child_process");
 
 async function downloadImage(req, res, bucketname){
@@ -76,32 +77,11 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
             });
         })
 
-        const scalingImage = await new Promise( (resolve, reject) => {
-            const pythonProcess = spawn("python", ["scripts/scaleComposite.py"]);
-
-            let resizedImageBuffer = Buffer.alloc(0);
-    
-            pythonProcess.stdin.write(req.file.buffer);
-            pythonProcess.stdin.end();
-    
-            pythonProcess.stdout.on("data", (data) => {
-                resizedImageBuffer = Buffer.concat([resizedImageBuffer, data]);
-            });
-    
-            pythonProcess.stderr.on("data", (data) => {
-                console.error(`Python Error: ${data}`);
-            });
-        
-            pythonProcess.on("close", (code) => {
-                try{
-                    console.log(resizedImageBuffer)
-                    console.log(`Python script exited with code ${code}`);
-                    resolve(resizedImageBuffer)
-                } catch (error) {
-                    reject(error)
-                }                
-            });
-        })
+        const scalingImage = await executePythonScript(
+            "scripts/scaleComposite.py",
+            req.file.buffer,
+            []
+        );
 
         const previewFile = {
             mimetype: req.file.mimetype,
@@ -118,19 +98,69 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
     }
 };
 
+exports.deleteImageByYearAndProgram = async (req, res) => {
+    try {
+        const { year, program } = req.body;
+
+        if (!year || !program) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        let bucketname = "digital-composite-bucket";
+        await compositeService.deleteImage({ bucketname, year, program });
+
+        bucketname = "digital-composite-preview";
+        await compositeService.deleteImage({ bucketname, year, program });
+
+        return res.status(200).json({ message: "Image deleted successfully" });
+
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
+
 exports.blacklistStudent = async (req, res) => {
     try {
-      const { student } = req.body;
-  
-      if (!student) {
-        return res.status(400).json({ message: "Missing required fields" });
-      }
-  
-      await compositeService.blacklistStudent(student);
-      return res.status(200).json({ message: "Blacklisted student successfully" });
+        const { year, program, student } = req.body;
+
+        if (!student) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        let bucketname = "digital-composite-bucket";
+        const {Body, ContentType } = await compositeService.getImage({ bucketname, year, program });
+
+        const blacklistStudentImg = await executePythonScript(
+            "scripts/blacklistStudent.py", 
+            Body, 
+            [JSON.stringify(student)]
+        );
+
+        const blacklistFile = {
+            mimetype: 'image/jpeg',
+            buffer: Buffer.isBuffer(blacklistStudentImg) ? blacklistStudentImg : Buffer.from(blacklistStudentImg)
+        }
+
+        await compositeService.saveImage({ bucketname, year, program, file: blacklistFile });
+
+        const blacklistScaledImage = await executePythonScript(
+            "scripts/scaleComposite.py",
+            blacklistStudentImg,
+            []
+        );
+
+        const blacklistScaledFile = {
+            mimetype: 'image/jpeg',
+            buffer: Buffer.isBuffer(blacklistScaledImage) ? blacklistScaledImage : Buffer.from(blacklistScaledImage)
+        }
+
+        bucketname = "digital-composite-preview";
+        await compositeService.saveImage({ bucketname, year, program, file: blacklistScaledFile });
+      
+        return res.status(200).json({ message: "Blacklisted student successfully" });
     } catch (error) {
-      return res.status(500).json({ error: error.message })
+        return res.status(500).json({ error: error.message })
     }
-  }
+}
 
 
