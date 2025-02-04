@@ -23,6 +23,10 @@ class ImageService {
     async downloadImage(bucketname, objectName) {
         return await this.s3DAO.downloadFile(bucketname, objectName);
     }
+
+    async deleteImage(bucketname, objectName) {
+        return await this.s3DAO.deleteFile(bucketname, objectName);
+    }
 }
 
 module.exports = ImageService;
