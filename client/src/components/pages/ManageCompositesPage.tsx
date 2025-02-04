@@ -71,6 +71,7 @@ function ManageCompositesPage() {
     }
 
     setFilteredComposites(filtered)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear, selectedProgram])
 
   const handleEdit = async (composite: Composite) => {
