@@ -8,9 +8,10 @@ import json
 reader = easyocr.Reader(['en'], gpu=False)
 
 # Paths     
-image_path = "./testcomposite/test.jpg"
+image_path = "./testcomposite/test2.jpg"
 output_folder = "output"
-program_year = "2024-Materials_Engineering"
+program_year = "L"
+globalimge = cv2.imread(image_path)
 
 # Allowed characters
 allowed_chars = set(
@@ -27,35 +28,75 @@ def load_image(image_path):
 
 # Adjust the contrast of the image
 def adjust_contrast(image, alpha=0.9, beta=0):
-    return cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    #return cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    return image
 
 # Detect edges in the image using the Canny edge detector
 def detect_edges(image):
-    return cv2.Canny(image, 100, 200)
+    xd = cv2.Canny(image, 100, 200)
+    xd2 = cv2.resize(xd, (1000, 1000))
+    #cv2.imshow("Edges", xd2)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows
+    # convert to gray
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #blur = cv2.GaussianBlur(gray, (25, 25), 0)
+    inverted = 255 - (gray)
+    #thresh = cv2.adaptiveThreshold(inverted, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+    return xd
 
 # Apply morphological operations to close gaps in the edges
 def morphological_operations(edges):
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
     closed_edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
     return cv2.dilate(closed_edges, kernel, iterations=1)
+    #return edges
 
 # Find contours in the dilated edge image
 def find_contours(dilated_edges):
+    contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    while len(contours) < 10:
+        contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        if not contours:
+            return []
+        else:
+            cv2.drawContours(dilated_edges, contours[0], -1, 0, thickness=cv2.FILLED)
+            newiamge = cv2.resize(dilated_edges, (1000, 1000))
+            cv2.imshow("Contours", newiamge)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # show contours
+    cv2.drawContours(globalimge, contours, -1, (0, 255, 0), 2)
+    updated = cv2.resize(globalimge, (1400, 1400))
+    cv2.imshow("Contours", updated)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows
+
     return contours
 
 # Filter contours to find potential student regions based on aspect ratio and size
 def filter_contours(contours):
     temp_student_regions = []
     areas = []
+    contourareas = [cv2.contourArea(contour) for contour in contours]
+    bigarea = sorted(contourareas)[-3]
+    tolerance = 0.35
+    minarea = bigarea * (1 - tolerance)
+    maxarea = bigarea * (1 + tolerance)
+
     for contour in contours:
-        if len(contour) >= 400:
+        if len(contour) >= 200:
+            if cv2.contourArea(contour) < minarea or cv2.contourArea(contour) > maxarea:
+                continue
             # Fit an ellipse to the contour
             ellipse = cv2.fitEllipse(contour)
             center, axes, angle = ellipse
             aspect_ratio = float(axes[0]) / axes[1]
             # Check if the aspect ratio is within the desired range
-            if 0.7 <= aspect_ratio <= 0.9:
+            if 0.69 <= aspect_ratio <= 0.9:
                 temp_student_regions.append(ellipse)
                 # Calculate the area of the ellipse
                 area = np.pi * axes[0] * axes[1] / 4
@@ -64,13 +105,14 @@ def filter_contours(contours):
 
 # Filter student regions by area to remove outliers
 def filter_by_area(temp_student_regions, areas, tolerance=0.4):
-    avgarea = np.mean(areas)
-    stdarea = np.std(areas)
-    student_regions = [
-        student for student in temp_student_regions
+    #avgarea = np.mean(areas)
+    #stdarea = np.std(areas)
+    #student_regions = [
+    #    student for student in temp_student_regions
         # Check if the area is within the tolerance range
-        if abs((student[1][0] * student[1][1] * np.pi / 4) - avgarea) <= tolerance * stdarea
-    ]
+    #    if abs((student[1][0] * student[1][1] * np.pi / 4) - avgarea) <= tolerance * stdarea
+    #]
+    student_regions = temp_student_regions
     return student_regions
 
 # Extract the region of interest (ROI) for text extraction
@@ -119,7 +161,6 @@ def process_ovals(image, student_regions):
         center, axes, angle = student
         roi, roi_left, roi_top, roi_right, roi_bottom = extract_text_roi(image, center, axes)
         if roi is None:
-            print(f"Invalid ROI detected for oval {idx + 1}, skipping...")
             continue
         gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         results = reader.readtext(gray_roi, detail=0)
@@ -134,44 +175,44 @@ def process_ovals(image, student_regions):
         top_right = corners[2]
         bottom_left = corners[0]
         bottom_right = corners[3]
-        height, width = final_image.shape[:2]
+        #height, width = final_image.shape[:2]
 
 
         # Check if the extracted text is a valid name
-        if valid_lines and is_valid_name(" ".join(valid_lines)):
-            mapped_ovals.append({"center": center, "name_lines": valid_lines, "top_left": top_left, "top_right": top_right, "bottom_left": bottom_left, "bottom_right": bottom_right})
-            # Draw the ellipse and ROI on the final image
-            cv2.ellipse(final_image, student, (0, 255, 0), 2)
-            cv2.rectangle(final_image, (roi_left, roi_top), (roi_right, roi_bottom), (255, 0, 0), 2)
-            name_text = " ".join(valid_lines)
-            cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
-            output = f"Name: {name_text}"
+        #if valid_lines and is_valid_name(" ".join(valid_lines)):
+        mapped_ovals.append({"center": center, "name_lines": valid_lines, "top_left": top_left, "top_right": top_right, "bottom_left": bottom_left, "bottom_right": bottom_right})
+        # Draw the ellipse and ROI on the final image
+        cv2.ellipse(final_image, student, (0, 255, 0), 2)
+        cv2.rectangle(final_image, (roi_left, roi_top), (roi_right, roi_bottom), (255, 0, 0), 2)
+        name_text = " ".join(valid_lines)
+        cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+        output = f"Name: {name_text}"
 
-            # add output to data as json
-            data.append({   
-                            "name": name_text, 
-                            "top_left": top_left, 
-                            "top_right": top_right, 
-                            "bottom_left": bottom_left, 
-                            "bottom_right": bottom_right, 
-                            "student_region": student
-                        })
-            corners = boundingEllipseRectangle(student)
-            print(output)
-        else:
-            print(f"Invalid name detected for oval {idx + 1}, skipping...")
+        # add output to data as json
+        data.append({   
+                        "name": name_text, 
+                        "top_left": top_left, 
+                        "top_right": top_right, 
+                        "bottom_left": bottom_left, 
+                        "bottom_right": bottom_right, 
+                        "student_region": student
+                    })
+        corners = boundingEllipseRectangle(student)
+        print(output)
+        #else:
+            #print(f"Invalid name detected for oval {idx + 1}, skipping...")
 
     # Format data into final JSON
-    og_data = [{"programYear": program_year,
+    og_data = [{"programYear": "L",
                 "students": data}]
 
     # write data to json file
-    with open(f"./output/{program_year}.json", "w+") as json_file:
+    with open(f"./output/L.json", "w+") as json_file:
         json.dump(og_data, json_file)
 
-    print(f"Data saved in './output/{program_year}.json'")
-    print(f"height: {height}, width: {width}")
+    print(f"Data saved in './output/L.json'")
+    #print(f"height: {height}, width: {width}")
 
     return final_image
 
@@ -185,9 +226,9 @@ def main():
     temp_student_regions, areas = filter_contours(contours)
     student_regions = filter_by_area(temp_student_regions, areas)
     final_image = process_ovals(image, student_regions)
-    output_image_path = os.path.join(output_folder, f"{program_year}_output.jpg")
+    output_image_path = os.path.join(output_folder, "L_output.jpg")
     cv2.imwrite(output_image_path, final_image)
-    print(f"Final result saved in '{output_folder}/{program_year}_output.jpg'")
+    print(f"Final result saved in '{output_folder}/L_output.jpg'")
 
 # Entry point of the script
 if __name__ == "__main__":
