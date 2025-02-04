@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import TextButton from 'components/Button/TextButton'
 import { toast } from 'react-toastify'
 import { v4 as uuidv4 } from 'uuid'
+import Select from 'react-select'
+import { programOptions, yearOptions } from 'utils/constants'
 
 interface Composite {
   id: string
@@ -14,8 +16,8 @@ interface Composite {
 function ManageCompositesPage() {
   const [composites, setComposites] = useState<Composite[]>([])
   const [filteredComposites, setFilteredComposites] = useState<Composite[]>([])
-  const [selectedYear, setSelectedYear] = useState<string>('')
-  const [selectedProgram, setSelectedProgram] = useState<string>('')
+  const [selectedYear, setSelectedYear] = useState<{ value: string; label: string } | null>(null);
+  const [selectedProgram, setSelectedProgram] = useState<{ value: string; label: string } | null>(null);
   const navigate = useNavigate();
 
   // Fetch composites from the API when the component mounts
@@ -42,24 +44,18 @@ function ManageCompositesPage() {
   }, []);
 
   // Function to filter composites based on selected year and program
-  const filterComposites = () => {
+  useEffect(() => {
     let filtered = composites;
 
     if (selectedYear) {
-      filtered = filtered.filter((composite) => composite.year === selectedYear);
+      filtered = filtered.filter((c) => c.year === selectedYear.value);
     }
     if (selectedProgram) {
-      filtered = filtered.filter((composite) => composite.program === selectedProgram);
+      filtered = filtered.filter((c) => c.program === selectedProgram.value);
     }
 
     setFilteredComposites(filtered);
-  };
-
-  // Extract unique years from composites data
-  const uniqueYears = Array.from(new Set(composites.map((composite) => composite.year)));
-
-  // Extract unique programs from composites data
-  const uniquePrograms = Array.from(new Set(composites.map((composite) => composite.program)));
+  }, [selectedYear, selectedProgram]);
 
   const handleEdit = async (composite: Composite) => {
     try {
@@ -112,40 +108,37 @@ function ManageCompositesPage() {
     navigate('/admin')
   };
 
-  useEffect(() => {
-    filterComposites();
-  }, [selectedYear, selectedProgram]);
-
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
       <h2 className="mb-6 text-2xl font-semibold">Manage Composites</h2>
 
       <div className="flex gap-4 mb-6">
-      <select 
-          className="border p-2"
-          value={selectedProgram}
-          onChange={(e) => setSelectedProgram(e.target.value)}
-        >
-          <option value="">Select Program</option>
-          {uniquePrograms.map((program) => (
-            <option key={program} value={program}>
-              {program}
-            </option>
-          ))}
-        </select>
 
-        <select 
-          className="border p-2"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
-        >
-          <option value="">Select Year</option>
-          {uniqueYears.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
+        <div className="mb-4">
+          <label className="block pb-1 text-sm font-medium text-gray-700">
+            Select Program
+          </label>
+          <Select
+            options={programOptions}
+            value={selectedProgram}
+            onChange={setSelectedProgram}
+            isClearable
+            placeholder="Select Program"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block pb-1 text-sm font-medium text-gray-700">
+            Select Year
+          </label>
+          <Select
+            options={yearOptions}
+            value={selectedYear}
+            onChange={setSelectedYear}
+            isClearable
+            placeholder="Select Year"
+          />
+        </div>
       </div>
 
       {filteredComposites.length === 0 ? (
