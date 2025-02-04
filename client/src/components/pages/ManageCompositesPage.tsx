@@ -1,46 +1,156 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import TextButton from 'components/Button/TextButton'
+import { toast } from 'react-toastify'
+import { v4 as uuidv4 } from 'uuid'
 
 interface Composite {
   id: string
   program: string
   year: string
-  names: string[]
+  ogprogram: string
 }
 
 function ManageCompositesPage() {
-  const location = useLocation()
-  const composites: Composite[] = Array.isArray(location.state)
-    ? location.state
-    : []
+  const [composites, setComposites] = useState<Composite[]>([])
+  const [filteredComposites, setFilteredComposites] = useState<Composite[]>([])
+  const [selectedYear, setSelectedYear] = useState<string>('')
+  const [selectedProgram, setSelectedProgram] = useState<string>('')
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  // Fetch composites from the API when the component mounts
+  useEffect(() => {
+    const fetchComposites = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/students/getUniquePrograms'); // Fill in the API URL
+        if (!response.ok) throw new Error('Failed to fetch composites');
 
-  const handleEdit = (composite: Composite) => {
-    navigate('/Admin/CompositeViewPage', { state: composite })
-  }
+        const data = await response.json();
+        const formattedData = data.map((item: string, index: number) => {
+          const [year, program] = item.split('#');
+          const formattedProgram = program.replace(/([a-z])([A-Z])/g, '$1 $2');
+          return { id: index.toString(), year, program: formattedProgram, ogprogram: program };
+        });
+        setComposites(formattedData);
+        setFilteredComposites(formattedData);  // Set initial list of composites
+      } catch (error: any) {
+        toast.error(`Error fetching composites: ${error.message}`);
+      }
+    };
 
-  const handleDelete = (id: string) => {
+    fetchComposites();
+  }, []);
+
+  // Function to filter composites based on selected year and program
+  const filterComposites = () => {
+    let filtered = composites;
+
+    if (selectedYear) {
+      filtered = filtered.filter((composite) => composite.year === selectedYear);
+    }
+    if (selectedProgram) {
+      filtered = filtered.filter((composite) => composite.program === selectedProgram);
+    }
+
+    setFilteredComposites(filtered);
+  };
+
+  // Extract unique years from composites data
+  const uniqueYears = Array.from(new Set(composites.map((composite) => composite.year)));
+
+  // Extract unique programs from composites data
+  const uniquePrograms = Array.from(new Set(composites.map((composite) => composite.program)));
+
+  const handleEdit = async (composite: Composite) => {
+    try {
+      const response = await fetch(`http://localhost:3000/composite/getComposite?year=${composite.year}&program=${composite.ogprogram}`);
+      if (!response.ok) throw new Error('Failed to fetch composite');
+
+      const fileBlob = await response.blob();
+      const file = new File([fileBlob], `${composite.program}_${composite.year}.jpg`, { type: fileBlob.type });
+
+      const response2 = await fetch(`http://localhost:3000/students/getStudentByYearProgram?year=${composite.year}&program=${composite.ogprogram}`);
+      if (!response2.ok) throw new Error('Failed to fetch students for this composite');
+      const result2 = await response2.json();
+      console.log(result2);
+
+      navigate('/Admin/CompositeViewPage', { 
+        state: {
+          id: uuidv4(),
+          file,
+          program: composite.program,
+          year: composite.year,
+          names: result2
+        }
+      });
+    } catch (error: any) {
+      toast.error(`Error fetching composite: ${error.message}`);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this composite?'
-    )
-    if (confirmDelete) {
-      const updatedComposites = composites.filter((comp) => comp.id !== id)
-      navigate('/Admin/ManageCompositesPage', { state: updatedComposites })
+    );
+    if (!confirmDelete) return;
+    
+    try {
+      const response = await fetch('YOUR_API_URL_HERE/${id}', { // Fill in the API URL)
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete composite');
+
+      setComposites((prevComposites) => prevComposites.filter((comp) => comp.id !== id));
+      toast.success('Composite deleted successfully');
+    } catch (error: any) {
+      toast.error(`Error deleting composite: ${error.message}`);
     }
-  }
+  };
 
   const handleBackToAdmin = () => {
     navigate('/admin')
-  }
+  };
+
+  useEffect(() => {
+    filterComposites();
+  }, [selectedYear, selectedProgram]);
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
       <h2 className="mb-6 text-2xl font-semibold">Manage Composites</h2>
 
-      {composites.length === 0 ? (
+      <div className="flex gap-4 mb-6">
+      <select 
+          className="border p-2"
+          value={selectedProgram}
+          onChange={(e) => setSelectedProgram(e.target.value)}
+        >
+          <option value="">Select Program</option>
+          {uniquePrograms.map((program) => (
+            <option key={program} value={program}>
+              {program}
+            </option>
+          ))}
+        </select>
+
+        <select 
+          className="border p-2"
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(e.target.value)}
+        >
+          <option value="">Select Year</option>
+          {uniqueYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {filteredComposites.length === 0 ? (
         <p className="text-gray-500">
-          No composites available. Ensure you save a composite first.
+          No composites available for the selected filters.
         </p>
       ) : (
         <table className="w-full max-w-4xl border border-gray-300">
@@ -52,8 +162,8 @@ function ManageCompositesPage() {
             </tr>
           </thead>
           <tbody>
-            {composites.map((composite, index) => (
-              <tr key={index}>
+            {filteredComposites.map((composite) => (
+              <tr key={composite.id}>
                 <td className="border p-2">{composite.program}</td>
                 <td className="border p-2">{composite.year}</td>
                 <td className="flex gap-2 border p-2">
@@ -82,7 +192,7 @@ function ManageCompositesPage() {
         </TextButton>
       </div>
     </div>
-  )
+  );
 }
 
-export default ManageCompositesPage
+export default ManageCompositesPage;
