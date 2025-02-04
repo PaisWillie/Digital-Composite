@@ -51,7 +51,7 @@ function ManageCompositesPage() {
       filtered = filtered.filter((c) => c.year === selectedYear.value);
     }
     if (selectedProgram) {
-      filtered = filtered.filter((c) => c.program === selectedProgram.value);
+      filtered = filtered.filter((c) => c.ogprogram === selectedProgram.value);
     }
 
     setFilteredComposites(filtered);
@@ -74,7 +74,7 @@ function ManageCompositesPage() {
         state: {
           id: uuidv4(),
           file,
-          program: composite.program,
+          program: composite.ogprogram,
           year: composite.year,
           names: result2
         }
@@ -100,8 +100,6 @@ function ManageCompositesPage() {
       });
       
       if (!response.ok) throw new Error('Failed to delete composite');
-
-      setComposites((prevComposites) => prevComposites.filter((comp) => comp.year !== composite.year && comp.ogprogram !== composite.ogprogram));
       toast.success('Composite deleted successfully');
       fetchComposites();
     } catch (error: any) {
