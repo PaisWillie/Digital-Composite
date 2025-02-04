@@ -27,7 +27,7 @@ def detect_edges(image):
 
 # Apply morphological operations to close gaps in the edges
 def morphological_operations(edges):
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
     closed_edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
     return cv2.dilate(closed_edges, kernel, iterations=1)
 
@@ -50,7 +50,7 @@ def filter_contours(contours):
     areas = []
     contourareas = [cv2.contourArea(contour) for contour in contours]
     bigarea = sorted(contourareas)[-3]
-    tolerance = 0.3
+    tolerance = 0.35
     minarea = bigarea * (1 - tolerance)
     maxarea = bigarea * (1 + tolerance)
 
@@ -187,8 +187,8 @@ def main(image_data, program_year):
     if image is None:
         sys.exit(1)
 
-    contrast = adjust_contrast(image)
-    edges = detect_edges(contrast)
+    #contrast = adjust_contrast(image)
+    edges = detect_edges(image)
     dilated_edges = morphological_operations(edges)
     contours = find_contours(dilated_edges)
     temp_student_regions, areas = filter_contours(contours)
