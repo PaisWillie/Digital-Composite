@@ -40,3 +40,9 @@ exports.blacklistStudent = async (studentData, year, program) => {
 
   return studentsDAL.blacklistStudent(studentData, year, program)
 }
+
+exports.deleteStudentsWithImageId = async (year, program) => {
+  const studentsDAL = new StudentsDAL();
+
+  return studentsDAL.deleteStudentsWithImageId(year, program)
+}

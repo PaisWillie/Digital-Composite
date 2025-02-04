@@ -23,6 +23,12 @@ class StudentService {
 
         return this.RDS.getStudentDataByImageId(imageId)
     }
+
+    async deleteStudentsWithImageId(year, program) {
+        const imageId = `${year}#${program}`
+
+        return this.RDS.deleteStudentsWithImageId(imageId)
+    }
 }
 
 module.exports = StudentService

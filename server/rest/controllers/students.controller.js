@@ -17,7 +17,9 @@ exports.addStudentBatch = async (req, res) => {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
+      await studentsService.deleteStudentsWithImageId(Year, Program);
       await studentsService.addBatch({ Year, Program, Batch });
+      
       return res.status(200).json({ message: "Added student successfully" });
     } catch (error) {
       return res.status(500).json({ error: error.message })

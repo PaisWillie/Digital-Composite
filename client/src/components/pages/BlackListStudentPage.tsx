@@ -170,9 +170,14 @@ function BlackListStudentPage() {
       student: selectedStudent.student_region
     }
 
+    console.log('Blacklisting student:', JSON.stringify(payload))
+
     try {
-      const response = await fetch('http://localhost:3000/blacklistStudent', {
+      const response = await fetch('http://localhost:3000/composite/blacklistStudent', {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(payload)
       })
 
