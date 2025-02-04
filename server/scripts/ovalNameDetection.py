@@ -63,7 +63,7 @@ def filter_contours(contours):
             center, axes, angle = ellipse
             aspect_ratio = float(axes[0]) / axes[1]
             # Check if the aspect ratio is within the desired range
-            if 0.7 <= aspect_ratio <= 0.9:
+            if 0.69 <= aspect_ratio <= 0.9:
                 temp_student_regions.append(ellipse)
                 # Calculate the area of the ellipse
                 area = np.pi * axes[0] * axes[1] / 4
