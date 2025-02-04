@@ -1,4 +1,5 @@
 const compositeService = require("../services/composite.service");
+const studentService = require("../services/students.service");
 const { executePythonScript } = require("../../util/pythonExecutor");
 const { spawn } = require("child_process");
 
@@ -111,6 +112,8 @@ exports.deleteImageByYearAndProgram = async (req, res) => {
 
         bucketname = "digital-composite-preview";
         await compositeService.deleteImage({ bucketname, year, program });
+
+        await studentService.deleteStudentsWithImageId(year, program);
 
         return res.status(200).json({ message: "Image deleted successfully" });
 

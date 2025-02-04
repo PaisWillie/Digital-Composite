@@ -78,6 +78,20 @@ class RDS {
         }
     }
 
+    async deleteStudentsWithImageId(imageId) {
+        try {
+
+            const [result] = await pool.execute("DELETE FROM OCRDATA WHERE image_id = ?", [imageId]);
+
+            console.log(`Number of rows deleted: ${result.affectedRows}`);
+            return `Successfully deleted: ${result.affectedRows}`;
+
+        } catch (error) {
+            console.error("Error deleting rows, error");
+            return `Error deleting rows: ${error.message}`;   
+        }
+    }
+    
     async getStudentDataByImageId(imageId) {
         try {
             const [rows] = await pool.execute("SELECT * FROM OCRDATA WHERE image_id = ?", [imageId]);
