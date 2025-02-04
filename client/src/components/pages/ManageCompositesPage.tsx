@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import TextButton from 'components/Button/TextButton'
 import { toast } from 'react-toastify'
 import { v4 as uuidv4 } from 'uuid'
@@ -21,8 +21,7 @@ function ManageCompositesPage() {
   const navigate = useNavigate();
 
   // Fetch composites from the API when the component mounts
-  useEffect(() => {
-    const fetchComposites = async () => {
+    const fetchComposites = useCallback(async () => {
       try {
         const response = await fetch('http://localhost:3000/students/getUniquePrograms'); // Fill in the API URL
         if (!response.ok) throw new Error('Failed to fetch composites');
@@ -38,10 +37,11 @@ function ManageCompositesPage() {
       } catch (error: any) {
         toast.error(`Error fetching composites: ${error.message}`);
       }
-    };
-
-    fetchComposites();
   }, []);
+
+  useEffect(() => {
+    fetchComposites();
+  }, [fetchComposites]);
 
   // Function to filter composites based on selected year and program
   useEffect(() => {
@@ -84,21 +84,26 @@ function ManageCompositesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (composite: Composite) => {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this composite?'
     );
     if (!confirmDelete) return;
     
     try {
-      const response = await fetch('YOUR_API_URL_HERE/${id}', { // Fill in the API URL)
-        method: 'DELETE',
+      const response = await fetch('http://localhost:3000/composite/deleteComposite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ year: composite.year, program: composite.ogprogram })
       });
       
       if (!response.ok) throw new Error('Failed to delete composite');
 
-      setComposites((prevComposites) => prevComposites.filter((comp) => comp.id !== id));
+      setComposites((prevComposites) => prevComposites.filter((comp) => comp.year !== composite.year && comp.ogprogram !== composite.ogprogram));
       toast.success('Composite deleted successfully');
+      fetchComposites();
     } catch (error: any) {
       toast.error(`Error deleting composite: ${error.message}`);
     }
@@ -168,7 +173,7 @@ function ManageCompositesPage() {
                   </TextButton>
                   <TextButton
                     variant="tertiary"
-                    onClick={() => handleDelete(composite.id)}
+                    onClick={() => handleDelete(composite)}
                   >
                     Delete
                   </TextButton>
