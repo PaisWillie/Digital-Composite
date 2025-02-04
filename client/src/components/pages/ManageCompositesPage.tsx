@@ -13,6 +13,8 @@ interface Composite {
   ogprogram: string
 }
 
+// OGPROGRAM IS THE ORIGINAL PROGRAM NAME WITHOUT SPACES
+
 function ManageCompositesPage() {
   const [composites, setComposites] = useState<Composite[]>([])
   const [filteredComposites, setFilteredComposites] = useState<Composite[]>([])
