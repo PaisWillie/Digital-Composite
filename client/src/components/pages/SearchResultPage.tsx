@@ -1,50 +1,53 @@
 import Layout from '../Layout/Layout'
-import { Carousel } from 'antd'
+import { Carousel, Modal } from 'antd'
 import { FaArrowLeft, FaPlus } from 'react-icons/fa6'
 import { useState } from 'react'
 import TextButton from 'components/Button/TextButton'
-
-const images = [
-  '/composites/B-Teach Engineering Composite 2023 Final.jpg',
-  '/composites/B-Tech 2024 Final.jpg',
-  '/composites/B-Tech Engineering 2022 Final.jpg',
-  '/composites/B-Tech Engineering Class of 2021 FINAL.jpg',
-  '/composites/CHEMICAL Engineering Final Composite 2023 Final.jpg',
-  '/composites/Chemical Engineering Revised-Final 2024.jpg',
-  '/composites/CIVIAL Engineering Final Composite 2023 Final.jpg',
-  '/composites/Civil 2024 Revised Final.jpg',
-  '/composites/COMPUTER 2024 Final.jpg',
-  '/composites/COMPUTER Engineering 2023 FINAL.jpg',
-  '/composites/Computer Science 2021 Composite FINAL - Final.jpg',
-  '/composites/Computer Science 2024 Final.jpg',
-  '/composites/COMPUTER SCIENCE Engineering 2023 FINAL.jpg',
-  '/composites/ELECTRICAL 2024 Final.jpg',
-  '/composites/ELECTRICAL Engineering Final Composite 2023 FINAL.jpg',
-  '/composites/ElectricalEngineering-2024.jpg',
-  '/composites/Engineering Class of 2021-Final .jpg',
-  '/composites/Engineering Computer Science-2022 Final.jpg',
-  '/composites/Engineering Physics 2024 Final.jpg',
-  '/composites/IBEHS 2021 Final ( New-First Year).jpg',
-  '/composites/IBEHS 2024 Final.jpg',
-  '/composites/IBEHS Engineering Final Composite 2023 Final.jpg',
-  '/composites/IBEHS-2022 Final.jpg',
-  '/composites/Main Composite 2022 Final.jpg',
-  '/composites/MATERIALS 2024 Final.jpg',
-  '/composites/MATERIALS Engineering Final Composite 2023 FINAL.jpg',
-  '/composites/MECHANICAL 2024 FINAL.jpg',
-  '/composites/MECHANICAL Engineering Final Composite 203 Final.jpg',
-  '/composites/Mechatronics 2024 Final.jpg',
-  '/composites/MECHATRONICS Engineering Final Composite 2023 Final.jpg',
-  '/composites/PHYSICS Engineering Final Composite 2023 Final.jpg',
-  '/composites/SOFTWARE 2024 Final.jpg',
-  '/composites/SOFTWARE Engineering Final Composite 2023FINAL.jpg'
-]
+import { useData } from 'context/DataContext'
+import SingleComposite from 'components/Composite/SingleComposite'
+import CroppedImage from 'components/CroppedImage/CroppedImage'
 
 const SearchResultPage = () => {
   const [selectedCompositeId, setSelectedCompositeId] = useState(-1)
 
+  const { data, loading, error } = useData()
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
+
+  const showModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
+
+  const onStudentClick = (
+    src: string,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ) => {
+    setModalContent(<CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />)
+    showModal()
+  }
+
   // TODO: pressing back button will return back to same position in carousel
   // TODO: add (non-white) arrows to Carousel to make it more accessible
+
+  if (loading) {
+    return <Layout>Loading...</Layout>
+  }
+
+  if (error) {
+    return <Layout>Error: {error}</Layout>
+  }
 
   return (
     <Layout>
@@ -59,7 +62,7 @@ const SearchResultPage = () => {
               slidesPerRow={3}
               rows={3}
             >
-              {images.map((image, index) => (
+              {data?.composites.map((composite, index) => (
                 <div
                   key={index}
                   onClick={() => {
@@ -67,12 +70,15 @@ const SearchResultPage = () => {
                   }}
                   className="flex flex-col items-center gap-y-2"
                 >
-                  <img key={index} src={image} />
-                  <p>Program, Year, {index}</p>
+                  <img key={index} src={composite.src} />
+                  <p>
+                    {composite.program.program}, {composite.program.year}
+                  </p>
                 </div>
               ))}
             </Carousel>
-            <div id="filters" className="mt-3 flex flex-row gap-x-2">
+            {/* TODO: Re-add filter implementation */}
+            {/* <div id="filters" className="mt-3 flex flex-row gap-x-2">
               <TextButton
                 onClick={() => {}}
                 leadingIcon={<FaPlus />}
@@ -89,21 +95,25 @@ const SearchResultPage = () => {
               >
                 Select program
               </TextButton>
-            </div>
+            </div> */}
           </>
         ) : (
           <>
-            {/* <div
-              onClick={() => {
-                setSelectedCompositeId(-1)
-              }}
+            <Modal
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              footer={null}
+              closeIcon={null}
+              centered
             >
-              Back
-            </div> */}
-            <img
-              src={images[selectedCompositeId]}
-              useMap="#workmap"
-              className="max-h-[95vh] object-contain"
+              <div className="flex flex-col items-center">{modalContent}</div>
+            </Modal>
+            <SingleComposite
+              index={selectedCompositeId}
+              src={data?.composites[selectedCompositeId].src || ''}
+              students={data?.composites[selectedCompositeId].students || []}
+              onStudentClick={onStudentClick}
             />
             <div className="max-w-fit">
               <TextButton
@@ -116,22 +126,6 @@ const SearchResultPage = () => {
                 Back
               </TextButton>
             </div>
-            {/* WIP: Zoom into Carousel */}
-            {/* <Carousel infinite easing="ease-in" speed={1500}>
-              {[
-                ...images.slice(selectedCompositeId),
-                ...images.slice(0, selectedCompositeId)
-              ].map((image, index) => (
-                <div key={index}>
-                  <p>selectedCompositeId: {selectedCompositeId}</p>
-                  <img
-                    src={image}
-                    useMap="#workmap"
-                    className="max-h-[95vh] object-contain"
-                    />
-                    </div>
-              ))}
-            </Carousel> */}
           </>
         )}
       </div>
