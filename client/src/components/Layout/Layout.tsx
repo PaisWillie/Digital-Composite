@@ -35,28 +35,7 @@ const Layout = ({ children }: LayoutProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
-  // const [searchOptions, setSearchOptions] = useState<SearchOption[]>([])
-
   const [searchResults, setSearchResults] = useState<SearchOption[]>([])
-
-  // useEffect(() => {
-  //   if (data) {
-  //     const students: { type: 'student'; value: string }[] = data.students.map(
-  //       (student) => ({
-  //         type: 'student',
-  //         value: student.name
-  //       })
-  //     )
-
-  //     const programs: { type: 'program'; value: string }[] =
-  //       data.composites.map((composite) => ({
-  //         type: 'program',
-  //         value: composite.program.program + ', ' + composite.program.year
-  //       }))
-
-  //     setSearchOptions([...students, ...programs])
-  //   }
-  // }, [data])
 
   const [fuse, setFuse] = useState<Fuse<SearchOption> | null>(null)
 
