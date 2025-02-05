@@ -5,8 +5,12 @@ import TextButton from 'components/Button/TextButton'
 import Select from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
 import { Accept, useDropzone } from 'react-dropzone'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import {
+  showErrorToast,
+  showInfoToast,
+  showLoadingToast,
+  updateToast
+} from 'components/Toasts/Toasts'
 import { programOptions, yearOptions } from 'utils/constants'
 
 function UploadPage() {
@@ -24,7 +28,6 @@ function UploadPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Fetch existing program/year combinations from the backend
     const fetchComposites = async () => {
       try {
         const response = await fetch(
@@ -35,19 +38,7 @@ function UploadPage() {
         )
 
         if (!response.ok) {
-          toast.error(`HTTP error! status: ${response.status}`, {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            style: {
-              backgroundColor: '#7A003C',
-              color: '#FFFFFF'
-            }
-          })
+          showErrorToast(`HTTP error! status: ${response.status}`)
           return
         }
 
@@ -64,20 +55,12 @@ function UploadPage() {
           return { year: year, program: program }
         })
         setExistingComposites(newData)
-      } catch (error: any) {
-        toast.error(`Error fetching composites: ${error.message}`, {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          style: {
-            backgroundColor: '#7A003C',
-            color: '#FFFFFF'
-          }
-        })
+      } catch (error) {
+        showErrorToast(
+          `Error fetching composites: ${
+            error instanceof Error ? error.message : 'Unknown error'
+          }`
+        )
       }
     }
 
@@ -91,21 +74,8 @@ function UploadPage() {
           composite.program === program.value && composite.year === year.value
       )
       if (exists) {
-        toast.info(
-          'This program and year combination already has a composite.',
-          {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            style: {
-              backgroundColor: '#7A003C',
-              color: '#FFFFFF'
-            }
-          }
+        showInfoToast(
+          'This program and year combination already has a composite.'
         )
       }
     }
@@ -119,41 +89,16 @@ function UploadPage() {
 
   const handleUpload = async () => {
     if (!uploadFile || !program || !year) {
-      toast.error('Please fill in all fields and select a file.', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          backgroundColor: '#7A003C',
-          color: '#FFFFFF'
-        }
-      })
+      showErrorToast('Please fill in all fields and select a file.')
       return
     }
 
-    // Prepare form data for the POST request
     const formData = new FormData()
     formData.append('file', uploadFile)
     formData.append('program', program.value)
     formData.append('year', year.value)
 
-    const toastId = toast.loading('Processing file...', {
-      position: 'top-center',
-      autoClose: false,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      style: {
-        backgroundColor: '#7A003C',
-        color: '#FFFFFF'
-      }
-    })
+    const toastId = showLoadingToast('Processing file...')
 
     try {
       const response = await fetch(
@@ -170,36 +115,25 @@ function UploadPage() {
 
       const result = await response.json()
 
-      // Dismiss the loading toast
-      toast.dismiss(toastId)
-
-      // Redirect to CompositeViewPage with composite data
+      // Dismiss the loading toast and navigate to the composite view page
+      updateToast(toastId, 'File uploaded successfully!', 'success')
       navigate('/admin/compositeViewPage', {
         state: {
-          id: uuidv4(), // Generate a unique ID for the composite
-          file: uploadFile, // Pass the actual file object
+          id: uuidv4(),
+          file: uploadFile,
           program: program.value,
           year: year.value,
-          names: result.data[0].students // Populate names with students' data
+          names: result.data[0].students
         }
       })
-    } catch (error: any) {
-      toast.update(toastId, {
-        render: `Error uploading file: ${error.message}`,
-        type: 'error',
-        isLoading: false,
-        autoClose: 5000,
-        position: 'top-center',
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          backgroundColor: '#7A003C',
-          color: '#FFFFFF'
-        }
-      })
+    } catch (error) {
+      updateToast(
+        toastId,
+        `Error uploading file: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+        'error'
+      )
     }
   }
 
