@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -6,9 +7,26 @@ import { useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
 import { Line } from 'react-chartjs-2'
 import { ChartOptions, ChartData } from 'chart.js'
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
 
 interface Metric {
   title: string
@@ -28,8 +46,12 @@ interface MostViewedComposite {
 
 function ViewDashboardAnalyticsPage() {
   const [metrics, setMetrics] = useState<Metric[]>([])
-  const [mostCommonSearchTerms, setMostCommonSearchTerms] = useState<MostCommonSearchTerm[]>([])
-  const [mostViewedComposites, setMostViewedComposites] = useState<MostViewedComposite[]>([])
+  const [mostCommonSearchTerms, setMostCommonSearchTerms] = useState<
+    MostCommonSearchTerm[]
+  >([])
+  const [mostViewedComposites, setMostViewedComposites] = useState<
+    MostViewedComposite[]
+  >([])
   const [totalViews, setTotalViews] = useState<number>(0)
   const [searchTrends, setSearchTrends] = useState<any[]>([])
   const navigate = useNavigate()
@@ -41,19 +63,19 @@ function ViewDashboardAnalyticsPage() {
       setTimeout(() => {
         setMetrics([
           { title: 'Total Composites Uploaded', value: 4 },
-          { title: 'Total Active Programs', value: 14 },
+          { title: 'Total Active Programs', value: 14 }
         ])
 
         setMostCommonSearchTerms([
           { term: 'software', count: 7 },
           { term: 'tron', count: 2 },
-          { term: '2024', count: 10 },
+          { term: '2024', count: 10 }
         ])
 
         setMostViewedComposites([
           { program: 'Software Engineering', year: '2024', views: 12 },
           { program: 'Mechanical Engineering', year: '2023', views: 6 },
-          { program: 'Computer Science', year: '2022', views: 3 },
+          { program: 'Computer Science', year: '2022', views: 3 }
         ])
 
         setTotalViews(67)
@@ -69,7 +91,7 @@ function ViewDashboardAnalyticsPage() {
           { date: '2024-01-07', searchCount: 6, viewCount: 12 },
           { date: '2024-01-08', searchCount: 15, viewCount: 25 },
           { date: '2024-01-09', searchCount: 1, viewCount: 6 },
-          { date: '2024-01-10', searchCount: 3, viewCount: 4 },
+          { date: '2024-01-10', searchCount: 3, viewCount: 4 }
         ])
       }, 1000)
     } catch (error: any) {
@@ -93,15 +115,15 @@ function ViewDashboardAnalyticsPage() {
         label: 'Search Count',
         data: searchTrends.map((trend) => trend.searchCount),
         borderColor: 'rgba(75, 192, 192, 1)',
-        fill: false,
+        fill: false
       },
       {
         label: 'View Count',
         data: searchTrends.map((trend) => trend.viewCount),
         borderColor: 'rgba(153, 102, 255, 1)',
-        fill: false,
-      },
-    ],
+        fill: false
+      }
+    ]
   }
 
   const lineChartOptions: ChartOptions<'line'> = {
@@ -111,40 +133,42 @@ function ViewDashboardAnalyticsPage() {
         type: 'category' as const,
         title: {
           display: true,
-          text: 'Date',
-        },
+          text: 'Date'
+        }
       },
       y: {
         type: 'linear' as const,
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Count',
-        },
-      },
+          text: 'Count'
+        }
+      }
     },
     plugins: {
       legend: {
-        position: 'top',
-      },
-    },
+        position: 'top'
+      }
+    }
   }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-6">
       <h2 className="mb-6 text-2xl font-semibold">Dashboard Analytics</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Total Views Card */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="rounded-lg bg-white p-6 shadow-lg">
           <h3 className="text-xl font-semibold text-gray-700">Total Views</h3>
           <p className="text-2xl font-bold text-gray-900">{totalViews}</p>
         </div>
 
         {/* Metrics Cards */}
         {metrics.map((metric) => (
-          <div key={uuidv4()} className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-gray-700">{metric.title}</h3>
+          <div key={uuidv4()} className="rounded-lg bg-white p-6 shadow-lg">
+            <h3 className="text-xl font-semibold text-gray-700">
+              {metric.title}
+            </h3>
             <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
           </div>
         ))}
@@ -152,11 +176,13 @@ function ViewDashboardAnalyticsPage() {
 
       {/* Most Common Search Terms */}
       <div className="mb-6 w-full">
-        <h3 className="text-xl font-semibold text-gray-700 mb-4">Most Common Search Terms</h3>
+        <h3 className="mb-4 text-xl font-semibold text-gray-700">
+          Most Common Search Terms
+        </h3>
         {mostCommonSearchTerms.length > 0 ? (
           <ul className="space-y-4">
             {mostCommonSearchTerms.map((term) => (
-              <li key={uuidv4()} className="bg-white p-4 rounded-lg shadow">
+              <li key={uuidv4()} className="rounded-lg bg-white p-4 shadow">
                 <p className="text-lg font-semibold">{term.term}</p>
                 <p className="text-gray-600">Count: {term.count}</p>
               </li>
@@ -169,12 +195,16 @@ function ViewDashboardAnalyticsPage() {
 
       {/* Most Viewed Composites */}
       <div className="mb-6 w-full">
-        <h3 className="text-xl font-semibold text-gray-700 mb-4">Most Viewed Composites</h3>
+        <h3 className="mb-4 text-xl font-semibold text-gray-700">
+          Most Viewed Composites
+        </h3>
         {mostViewedComposites.length > 0 ? (
           <ul className="space-y-4">
             {mostViewedComposites.map((composite) => (
-              <li key={uuidv4()} className="bg-white p-4 rounded-lg shadow">
-                <p className="text-lg font-semibold">{composite.program} - {composite.year}</p>
+              <li key={uuidv4()} className="rounded-lg bg-white p-4 shadow">
+                <p className="text-lg font-semibold">
+                  {composite.program} - {composite.year}
+                </p>
                 <p className="text-gray-600">Views: {composite.views}</p>
               </li>
             ))}
@@ -185,8 +215,10 @@ function ViewDashboardAnalyticsPage() {
       </div>
 
       {/* Search Trends Graph */}
-      <div className="w-full mb-6">
-        <h3 className="text-xl font-semibold text-gray-700 mb-4">Search Trends and View Counts</h3>
+      <div className="mb-6 w-full">
+        <h3 className="mb-4 text-xl font-semibold text-gray-700">
+          Search Trends and View Counts
+        </h3>
         <Line data={lineChartData} options={lineChartOptions} />
       </div>
 
