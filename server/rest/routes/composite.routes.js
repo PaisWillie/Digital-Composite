@@ -14,4 +14,8 @@ router.post(
   compositeController.uploadImageByYearAndProgram
 );
 
+router.post("/deleteComposite", compositeController.deleteImageByYearAndProgram)
+
+router.put("/blacklistStudent", compositeController.blacklistStudent)
+
 module.exports = router;

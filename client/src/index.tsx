@@ -15,6 +15,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import CompositeViewPage from 'components/pages/CompositeViewPage'
 import BlackListStudentPage from 'components/pages/BlackListStudentPage'
+import ViewDashboardAnalyticsPage from 'components/pages/viewDashboardAnalyticsPage'
 
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)
@@ -81,6 +82,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <BlackListStudentPage />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: '/admin/viewDashboardAnalyticsPage',
+    element: (
+      <ProtectedRoute>
+        <ViewDashboardAnalyticsPage />
       </ProtectedRoute>
     )
   },

@@ -1,29 +1,19 @@
-from PIL import Image
+import json
 import cv2
 import numpy as np
-import os
 import sys
 from io import BytesIO
-
-# Paths
-jpeg_path = "./logo/fireball_logo.jpg"
-output_folder = "output"
-
-# Convert jpg to cv2 format
-def convert_jpg_to_cv2(jpg_image):
-    cv_image = cv2.imread(jpg_image)
-    return cv_image
+import os
 
 def convert_buffer_to_cv2(buffer):
     nparr = np.frombuffer(buffer, np.uint8)
     cv_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     return cv_image
 
+
 # Blacklist student on composite image
-def blacklist_student(composite, student_coords, logo):
-    #base_imageog = cv2.imread(composite)
-    base_imageog = convert_buffer_to_cv2(composite)
-    base_image = base_imageog.copy()
+def main(composite, student_coords, logo):
+    base_image = composite.copy()
 
     cx = int(student_coords[0][0])
     cy = int(student_coords[0][1])
@@ -45,17 +35,24 @@ def blacklist_student(composite, student_coords, logo):
     # Put the modified region back into the base image
     base_image[y1:y2, x1:x2] = roi
 
-    output_image_path = os.path.join(output_folder, f"{program_year}_blacklisted.jpg")
-    cv2.imwrite(output_image_path, base_image)
-    print(f"Blacklisted image saved in '{output_folder}/{program_year}_blacklisted.jpg'")
+    return base_image
 
 
-if __main__ == "__main__":
-    logo = convert_jpg_to_cv2(jpeg_path)
-    blacklist_student(composite_path, json_path, "Kevin Armah Mensah", logo)
+if __name__ == "__main__":
     image_data = sys.stdin.buffer.read()
-    image_array = main(image_data)
-    sys.stdout.buffer.write(image_array)
+    student_coords = json.loads(sys.argv[1])
+
+    composite_img = convert_buffer_to_cv2(image_data)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    logo_path = os.path.join(script_dir, "./logo/fireball_logo.jpg")
+    logo = cv2.imread(logo_path)
+
+    processed_img = main(composite_img, student_coords, logo)
+
+    _, img_encoded = cv2.imencode(".jpg", processed_img)
+    binary_data = img_encoded.tobytes()
+    sys.stdout.buffer.write(binary_data)
+
 
 
 
