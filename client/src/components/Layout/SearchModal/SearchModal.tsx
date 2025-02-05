@@ -4,21 +4,30 @@ import {
   FaArrowRight,
   FaClockRotateLeft,
   FaFile,
-  FaPlus
+  FaPlus,
+  FaUser
 } from 'react-icons/fa6'
+import { SearchOption } from '../Layout'
 
 type SearchModalProps = {
   searchValue: string
-  setSearchValue: (searchValue: string) => void
+  onSearchFieldChange: (searchValue: string) => void
+  searchResults?: SearchOption[]
 }
 
-const SearchModal = ({ searchValue, setSearchValue }: SearchModalProps) => {
+const SearchModal = ({
+  searchValue,
+  onSearchFieldChange,
+  searchResults
+}: SearchModalProps) => {
   return (
     <div className="flex w-full max-w-screen-sm flex-col">
       <TextFieldWithButton
         textFieldPlaceholder="Search by name, program, year"
         textFieldValue={searchValue}
-        onTextFieldChange={(e) => setSearchValue(e.target.value)}
+        onTextFieldChange={(e) => {
+          onSearchFieldChange(e.target.value)
+        }}
         buttonLabel={
           <div className="flex flex-row items-center">
             <span>Search</span>
@@ -45,44 +54,75 @@ const SearchModal = ({ searchValue, setSearchValue }: SearchModalProps) => {
           Select program
         </TextButton>
       </div>
-      <div className="mt-3 flex flex-col">
-        <p className="font-poppins text-xs">Recent searches</p>
-        <TextButton
-          onClick={() => {}}
-          leadingIcon={<FaClockRotateLeft className="text-sm" />}
-          isMobile
-          variant="tertiary"
-        >
-          Buu Ha, Software Engineering, 2025
-        </TextButton>
-        <TextButton
-          onClick={() => {}}
-          leadingIcon={<FaClockRotateLeft className="text-sm" />}
-          isMobile
-          variant="tertiary"
-        >
-          John Appleseed, 2022
-        </TextButton>
-      </div>
-      <div className="mt-3 flex flex-col">
-        <p className="font-poppins text-xs">Recently viewed</p>
-        <TextButton
-          onClick={() => {}}
-          leadingIcon={<FaFile className="text-sm" />}
-          isMobile
-          variant="tertiary"
-        >
-          Computer Science, 2024
-        </TextButton>
-        <TextButton
-          onClick={() => {}}
-          leadingIcon={<FaFile className="text-sm" />}
-          isMobile
-          variant="tertiary"
-        >
-          Materials, 2019
-        </TextButton>
-      </div>
+      {searchResults ? (
+        <div className="mt-3 flex flex-col">
+          <p className="font-poppins text-xs">Suggestions</p>
+          {searchResults.slice(0, 10).map((result, index) => {
+            return result.type === 'student' ? (
+              <TextButton
+                key={index}
+                onClick={() => {}}
+                leadingIcon={<FaUser className="text-sm" />}
+                isMobile
+                variant="tertiary"
+              >
+                {result.value}
+              </TextButton>
+            ) : (
+              <TextButton
+                key={index}
+                onClick={() => {}}
+                leadingIcon={<FaFile className="text-sm" />}
+                isMobile
+                variant="tertiary"
+              >
+                {result.value}
+              </TextButton>
+            )
+          })}
+        </div>
+      ) : (
+        <>
+          <div className="mt-3 flex flex-col">
+            <p className="font-poppins text-xs">Recent searches</p>
+            <TextButton
+              onClick={() => {}}
+              leadingIcon={<FaClockRotateLeft className="text-sm" />}
+              isMobile
+              variant="tertiary"
+            >
+              Buu Ha, Software Engineering, 2025
+            </TextButton>
+            <TextButton
+              onClick={() => {}}
+              leadingIcon={<FaClockRotateLeft className="text-sm" />}
+              isMobile
+              variant="tertiary"
+            >
+              John Appleseed, 2022
+            </TextButton>
+          </div>
+          <div className="mt-3 flex flex-col">
+            <p className="font-poppins text-xs">Recently viewed</p>
+            <TextButton
+              onClick={() => {}}
+              leadingIcon={<FaFile className="text-sm" />}
+              isMobile
+              variant="tertiary"
+            >
+              Computer Science, 2024
+            </TextButton>
+            <TextButton
+              onClick={() => {}}
+              leadingIcon={<FaFile className="text-sm" />}
+              isMobile
+              variant="tertiary"
+            >
+              Materials, 2019
+            </TextButton>
+          </div>
+        </>
+      )}
     </div>
   )
 }

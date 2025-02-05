@@ -1,9 +1,11 @@
 import { Modal } from 'antd'
 import IconButton from 'components/Button/IconButton'
 import SearchModal from 'components/Layout/SearchModal/SearchModal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaBars, FaMagnifyingGlass } from 'react-icons/fa6'
 import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
+import Fuse from 'fuse.js'
+import { useData } from 'context/DataContext'
 
 type NavbarProps = {
   showModal: () => void
@@ -23,13 +25,63 @@ const Navbar = ({ showModal }: NavbarProps) => {
   )
 }
 
+export type SearchOption = {
+  type: 'student' | 'program'
+  value: string
+}
+
 type LayoutProps = {
   children: React.ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const { data, loading, error } = useData()
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+
+  const [searchOptions, setSearchOptions] = useState<SearchOption[]>([])
+
+  const [searchResults, setSearchResults] = useState<SearchOption[]>([])
+
+  useEffect(() => {
+    if (data) {
+      const students: { type: 'student'; value: string }[] = data.students.map(
+        (student) => ({
+          type: 'student',
+          value: student.name
+        })
+      )
+
+      const programs: { type: 'program'; value: string }[] =
+        data.composites.map((composite) => ({
+          type: 'program',
+          value: composite.program.program + ', ' + composite.program.year
+        }))
+
+      setSearchOptions([...students, ...programs])
+    }
+  }, [data])
+
+  const fuse = new Fuse(searchOptions, {
+    keys: ['value'],
+    threshold: 0.4
+  })
+
+  const handleSearchValueChange = (value: string) => {
+    setSearchValue(value)
+
+    if (value.length === 0) {
+      // TODO: clear search results
+      return
+    }
+
+    const results = fuse.search(value)
+    const items = results.map((result) => result.item)
+    setSearchResults(items)
+
+    console.log(searchResults)
+  }
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -46,15 +98,15 @@ const Layout = ({ children }: LayoutProps) => {
   const onKeyPress = (keyPressed: string) => {
     // if keyPress is backspace, remove last character from searchValue
     if (keyPressed === 'backspace') {
-      setSearchValue(searchValue.slice(0, -1))
+      handleSearchValueChange(searchValue.slice(0, -1))
     } else if (keyPressed === 'space') {
-      setSearchValue(searchValue + ' ')
+      handleSearchValueChange(searchValue + ' ')
     } else if (keyPressed === 'return') {
       handleCancel()
     } else if (keyPressed === 'search') {
       return // TODO
     } else {
-      setSearchValue(searchValue + keyPressed)
+      handleSearchValueChange(searchValue + keyPressed)
     }
   }
 
@@ -70,7 +122,8 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <SearchModal
           searchValue={searchValue}
-          setSearchValue={setSearchValue}
+          onSearchFieldChange={handleSearchValueChange}
+          searchResults={searchResults}
         />
       </Modal>
       {isModalOpen && (
