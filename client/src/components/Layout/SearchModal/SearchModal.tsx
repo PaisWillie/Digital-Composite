@@ -1,5 +1,6 @@
 import TextButton from 'components/Button/TextButton'
 import TextFieldWithButton from 'components/TextField/TextFieldWithButton'
+import { SearchOption } from 'context/DataContext'
 import {
   FaArrowRight,
   FaClockRotateLeft,
@@ -8,8 +9,6 @@ import {
   FaUser
 } from 'react-icons/fa6'
 import { parseProgram } from 'utils/parse'
-import { useNavigate } from 'react-router-dom'
-import { SearchOption } from 'context/DataContext'
 
 type SearchModalProps = {
   searchValue: string
@@ -22,8 +21,6 @@ const SearchModal = ({
   onSearchFieldChange,
   searchResults
 }: SearchModalProps) => {
-  const navigate = useNavigate()
-
   return (
     <div className="flex w-full max-w-screen-sm flex-col">
       <TextFieldWithButton
