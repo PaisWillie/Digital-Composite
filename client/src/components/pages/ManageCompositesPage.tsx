@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState, useCallback } from 'react'
 import TextButton from 'components/Button/TextButton'
@@ -48,7 +49,7 @@ function ManageCompositesPage() {
         }
       })
       setComposites(formattedData)
-      setFilteredComposites(formattedData) // Set initial list of composites
+      setFilteredComposites(formattedData)
     } catch (error: any) {
       toast.error(`Error fetching composites: ${error.message}`)
     }
@@ -70,6 +71,7 @@ function ManageCompositesPage() {
     }
 
     setFilteredComposites(filtered)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear, selectedProgram])
 
   const handleEdit = async (composite: Composite) => {
