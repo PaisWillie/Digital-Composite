@@ -33,9 +33,15 @@ const SearchResultPage = () => {
     x1: number,
     y1: number,
     x2: number,
-    y2: number
+    y2: number,
+    name: string
   ) => {
-    setModalContent(<CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />)
+    setModalContent(
+      <div className="flex flex-col items-center gap-y-2 text-center">
+        <CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />
+        <p className="font-poppins text-center font-medium">{name}</p>
+      </div>
+    )
     showModal()
   }
 
