@@ -6,7 +6,7 @@ import { useData } from 'context/DataContext'
 import Fuse from 'fuse.js'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa6'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { parseProgram } from 'utils/parse'
 import Layout from '../Layout/Layout'
 
@@ -104,7 +104,7 @@ const SearchResultPage = () => {
     setModalContent(
       <div className="flex flex-col items-center gap-y-2 text-center">
         <CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />
-        <p className="font-poppins text-center font-medium">{name}</p>
+        <p className="text-center font-poppins font-medium">{name}</p>
       </div>
     )
     showModal()
@@ -143,7 +143,7 @@ const SearchResultPage = () => {
                   className="flex flex-col items-center gap-y-2"
                 >
                   <img key={index} src={composite.src} />
-                  <p className="font-poppins text-center font-medium">
+                  <p className="text-center font-poppins font-medium">
                     {parseProgram(composite.program.program)}
                     {', '}
                     {composite.program.year}

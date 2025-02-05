@@ -1,9 +1,11 @@
+// TODO: Remove this later
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import TextButton from 'components/Button/TextButton'
 import TextFieldWithButton from 'components/TextField/TextFieldWithButton'
 import { SearchOption, useData } from 'context/DataContext'
 import { useState } from 'react'
 import { FaArrowRight, FaFile, FaUser } from 'react-icons/fa6'
-import Select from 'react-select'
 
 import { parseProgram } from 'utils/parse'
 
