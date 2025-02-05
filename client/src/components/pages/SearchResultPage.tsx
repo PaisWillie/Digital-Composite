@@ -6,7 +6,7 @@ import { useData } from 'context/DataContext'
 import Fuse from 'fuse.js'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa6'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { parseProgram } from 'utils/parse'
 import Layout from '../Layout/Layout'
 
@@ -77,8 +77,8 @@ const SearchResultPage = () => {
         )
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     // TODO: Fix the exhaustive-deps warning
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProgram, selectedYear, data])
 
   const showModal = () => {

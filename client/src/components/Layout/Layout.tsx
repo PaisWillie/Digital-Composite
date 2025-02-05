@@ -1,11 +1,12 @@
 import { Modal } from 'antd'
 import IconButton from 'components/Button/IconButton'
 import SearchModal from 'components/Layout/SearchModal/SearchModal'
+import { SearchOption, useData } from 'context/DataContext'
+import Fuse from 'fuse.js'
 import { useEffect, useState } from 'react'
 import { FaBars, FaMagnifyingGlass } from 'react-icons/fa6'
+import { useNavigate } from 'react-router-dom'
 import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
-import Fuse from 'fuse.js'
-import { SearchOption, useData } from 'context/DataContext'
 
 type NavbarProps = {
   showModal: () => void
@@ -38,6 +39,8 @@ const Layout = ({ children }: LayoutProps) => {
   const [searchResults, setSearchResults] = useState<SearchOption[]>([])
 
   const [fuse, setFuse] = useState<Fuse<SearchOption> | null>(null)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (data) {
@@ -77,6 +80,11 @@ const Layout = ({ children }: LayoutProps) => {
     setIsModalOpen(false)
   }
 
+  const handleSearchButtonClick = () => {
+    navigate(`/view-all?search=${searchValue}`, { replace: true })
+    navigate(0)
+  }
+
   const onKeyPress = (keyPressed: string) => {
     // if keyPress is backspace, remove last character from searchValue
     if (keyPressed === 'backspace') {
@@ -86,7 +94,7 @@ const Layout = ({ children }: LayoutProps) => {
     } else if (keyPressed === 'return') {
       handleCancel()
     } else if (keyPressed === 'search') {
-      return // TODO
+      handleSearchButtonClick()
     } else {
       handleSearchValueChange(searchValue + keyPressed)
     }

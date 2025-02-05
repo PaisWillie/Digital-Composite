@@ -14,12 +14,14 @@ type SearchModalProps = {
   searchValue: string
   onSearchFieldChange: (searchValue: string) => void
   searchResults: SearchOption[]
+  handleSearchButtonClick: () => void
 }
 
 const SearchModal = ({
   searchValue,
   onSearchFieldChange,
-  searchResults
+  searchResults,
+  handleSearchButtonClick
 }: SearchModalProps) => {
   return (
     <div className="flex w-full max-w-screen-sm flex-col">
@@ -35,7 +37,9 @@ const SearchModal = ({
             <FaArrowRight className="ml-[8px]" />
           </div>
         }
-        onButtonClick={() => console.log('Searching...')}
+        onButtonClick={() => {
+          handleSearchButtonClick()
+        }}
       />
       <div id="filters" className="mt-3 flex flex-row gap-x-2">
         <TextButton
