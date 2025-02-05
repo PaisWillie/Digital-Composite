@@ -1,4 +1,4 @@
-import { Program, Student } from 'types/types'
+import { Program, Student } from 'types/Types'
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   let binary = ''

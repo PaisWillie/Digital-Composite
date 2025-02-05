@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { Program, Student } from 'types/types'
+import { Program, Student } from 'types/Types'
 import { getAllStudents, getCompositeImage, getUniquePrograms } from 'utils/api'
 
 interface DataType {
