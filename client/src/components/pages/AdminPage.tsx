@@ -33,6 +33,13 @@ function AdminPage() {
         >
           Black List Student
         </TextButton>
+
+        <TextButton
+          variant="secondary"
+          onClick={() => handleNavigate('/admin/viewDashboardAnalyticsPage')}
+        >
+          View Dashboard Analytics
+        </TextButton>
       </div>
     </div>
   )
