@@ -1,3 +1,4 @@
+import { StudentCoordinate } from 'components/App'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Program, Student } from 'types/Types'
 import { getAllStudents, getCompositeImage, getUniquePrograms } from 'utils/api'
@@ -7,8 +8,16 @@ interface DataType {
   composites: {
     src: string
     program: Program
+    students: StudentCoordinate[]
   }[]
 }
+// interface DataType {
+//   students: Student[]
+//   composites: {
+//     src: string
+//     program: Program
+//   }[]
+// }
 
 interface DataContextType {
   data: DataType | null
@@ -40,9 +49,54 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         })
       )
 
+      // setData({
+      //   students: students,
+      //   composites: composites
+      // })
+
+      // ====
+
+      const tempComposites: {
+        src: string
+        program: Program
+        students: StudentCoordinate[]
+      }[] = []
+
+      composites.forEach((composite) => {
+        tempComposites.push({
+          src: composite.src,
+          program: composite.program,
+          students: []
+        })
+      })
+
+      students.forEach((student: Student) => {
+        // student.image_id is in the format of 'year#program'
+        // match the student's program with the composite's program
+        const studentProgram = student.image_id.split('#')
+
+        const composite = tempComposites.find(
+          (composite) =>
+            composite.program.program === studentProgram[1] &&
+            composite.program.year === studentProgram[0]
+        )
+
+        if (composite) {
+          composite.students.push({
+            name: student.name,
+            x1: student.top_left[0],
+            y1: student.top_left[1],
+            x2: student.bottom_right[0],
+            y2: student.bottom_right[1]
+          })
+        }
+      })
+
+      // setComposites(tempComposites)
+
       setData({
         students: students,
-        composites: composites
+        composites: tempComposites
       })
     } catch (err) {
       setError('Failed to fetch data')

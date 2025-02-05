@@ -25,7 +25,6 @@ const SingleComposite = ({
   const imgRef = createRef<HTMLImageElement>()
 
   useEffect(() => {
-    console.log('Running!')
     if (imgRef.current && dimensions.width > 0 && dimensions.height > 0) {
       const displayedWidth = imgRef.current.clientWidth
       setScale(displayedWidth / dimensions.width)
