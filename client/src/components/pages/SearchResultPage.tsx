@@ -63,7 +63,7 @@ const SearchResultPage = () => {
       if (searchQuery) {
         const fuse = new Fuse(data?.searchOptions || [], {
           keys: ['value'],
-          includeScore: true
+          threshold: 0.2
         })
 
         const results = fuse.search(searchQuery).map((result) => result.item)

@@ -1,20 +1,17 @@
 import TextButton from 'components/Button/TextButton'
 import TextFieldWithButton from 'components/TextField/TextFieldWithButton'
-import { SearchOption } from 'context/DataContext'
-import {
-  FaArrowRight,
-  FaClockRotateLeft,
-  FaFile,
-  FaPlus,
-  FaUser
-} from 'react-icons/fa6'
+import { SearchOption, useData } from 'context/DataContext'
+import { useState } from 'react'
+import { FaArrowRight, FaFile, FaUser } from 'react-icons/fa6'
+import Select from 'react-select'
+
 import { parseProgram } from 'utils/parse'
 
 type SearchModalProps = {
   searchValue: string
   onSearchFieldChange: (searchValue: string) => void
   searchResults: SearchOption[]
-  handleSearchButtonClick: () => void
+  handleSearchButtonClick: (year?: string, program?: string) => void
 }
 
 const SearchModal = ({
@@ -23,6 +20,16 @@ const SearchModal = ({
   searchResults,
   handleSearchButtonClick
 }: SearchModalProps) => {
+  const { data } = useData()
+
+  const [year, setYear] = useState<{ label: string; value: string } | null>(
+    null
+  )
+  const [program, setProgram] = useState<{
+    label: string
+    value: string
+  } | null>(null)
+
   return (
     <div className="flex w-full max-w-screen-sm flex-col">
       <TextFieldWithButton
@@ -38,11 +45,11 @@ const SearchModal = ({
           </div>
         }
         onButtonClick={() => {
-          handleSearchButtonClick()
+          handleSearchButtonClick(year?.value, program?.value)
         }}
       />
-      <div id="filters" className="mt-3 flex flex-row gap-x-2">
-        <TextButton
+      {/* <div id="filters" className="mt-3 flex flex-row gap-x-2"> */}
+      {/* <TextButton
           onClick={() => {}}
           leadingIcon={<FaPlus />}
           isMobile
@@ -57,8 +64,34 @@ const SearchModal = ({
           variant="secondary"
         >
           Select program
-        </TextButton>
-      </div>
+        </TextButton> */}
+      {/* <Select
+          // Get unique years from all of data.composites.program.year
+          options={data?.composites
+            .map((composite) => composite.program.year)
+            .filter((value, index, self) => self.indexOf(value) === index)
+            .map((year) => {
+              return { label: year, value: year }
+            })}
+          value={year}
+          onChange={setYear}
+          isClearable
+          placeholder="Select Year"
+        />
+        <Select
+          // Get unique programs from all of data.composites.program.program
+          options={data?.composites
+            .map((composite) => composite.program.program)
+            .filter((value, index, self) => self.indexOf(value) === index)
+            .map((program) => {
+              return { label: parseProgram(program), value: program }
+            })}
+          value={program}
+          onChange={setProgram}
+          isClearable
+          placeholder="Select Program"
+        /> */}
+      {/* </div> */}
       {searchResults.length !== 0 ? (
         <div className="mt-3 flex flex-col">
           <p className="font-poppins text-xs">Suggestions</p>
@@ -89,11 +122,12 @@ const SearchModal = ({
         </div>
       ) : (
         <>
-          <div className="mt-3 flex flex-col">
+          {/* <div className="mt-3 flex flex-col">
             <p className="font-poppins text-xs">Recent searches</p>
             <TextButton
               onClick={() => {}}
               leadingIcon={<FaClockRotateLeft className="text-sm" />}
+              href="/view-all?program=SoftwareEngineering&year=2025&search=Buu Ha"
               isMobile
               variant="tertiary"
             >
@@ -102,29 +136,50 @@ const SearchModal = ({
             <TextButton
               onClick={() => {}}
               leadingIcon={<FaClockRotateLeft className="text-sm" />}
+              href="/view-all?search=John Appleseed"
               isMobile
               variant="tertiary"
             >
               John Appleseed, 2022
             </TextButton>
-          </div>
+          </div> */}
           <div className="mt-3 flex flex-col">
             <p className="font-poppins text-xs">Recently viewed</p>
             <TextButton
               onClick={() => {}}
               leadingIcon={<FaFile className="text-sm" />}
+              href="/view-all?program=CivilEngineering&year=2024"
               isMobile
               variant="tertiary"
             >
-              Computer Science, 2024
+              Civil Engineering, 2024
             </TextButton>
             <TextButton
               onClick={() => {}}
               leadingIcon={<FaFile className="text-sm" />}
+              href="/view-all?program=SoftwareEngineering&year=2024"
               isMobile
               variant="tertiary"
             >
-              Materials, 2019
+              Software Engineering, 2024
+            </TextButton>
+            <TextButton
+              onClick={() => {}}
+              leadingIcon={<FaFile className="text-sm" />}
+              href="/view-all?program=Mechatronics&year=2024"
+              isMobile
+              variant="tertiary"
+            >
+              Mechatronics, 2024
+            </TextButton>
+            <TextButton
+              onClick={() => {}}
+              leadingIcon={<FaFile className="text-sm" />}
+              href="/view-all?program=IBEHS&year=2023"
+              isMobile
+              variant="tertiary"
+            >
+              IBEHS, 2023
             </TextButton>
           </div>
         </>

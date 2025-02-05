@@ -1,7 +1,7 @@
 import { cn } from '@udecode/cn'
 
 type IconButtonProps = {
-  onClick: () => void
+  onClick?: () => void
   variant?: 'primary' | 'secondary' | 'tertiary'
   icon: React.ReactNode
   disabled?: boolean

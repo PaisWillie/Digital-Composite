@@ -4,8 +4,8 @@ import SearchModal from 'components/Layout/SearchModal/SearchModal'
 import { SearchOption, useData } from 'context/DataContext'
 import Fuse from 'fuse.js'
 import { useEffect, useState } from 'react'
-import { FaBars, FaMagnifyingGlass } from 'react-icons/fa6'
-import { useNavigate } from 'react-router-dom'
+import { FaBars, FaHouse, FaMagnifyingGlass } from 'react-icons/fa6'
+import { useLocation, useNavigate } from 'react-router-dom'
 import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
 
 type NavbarProps = {
@@ -13,10 +13,13 @@ type NavbarProps = {
 }
 
 const Navbar = ({ showModal }: NavbarProps) => {
+  const location = useLocation()
+
   return (
     <nav className="flex flex-col items-center justify-center gap-y-4">
       <IconButton onClick={showModal} icon={<FaMagnifyingGlass />} />
-      <IconButton href="/view-all" onClick={() => {}} icon={<FaBars />} />
+      <IconButton href="/view-all" icon={<FaBars />} />
+      {location.pathname !== '/' && <IconButton href="/" icon={<FaHouse />} />}
       {/* <IconButton
         href="/about"
         onClick={() => {}}
@@ -47,7 +50,7 @@ const Layout = ({ children }: LayoutProps) => {
       setFuse(
         new Fuse(data.searchOptions, {
           keys: ['value'],
-          threshold: 0.4
+          threshold: 0.2
         })
       )
     }
@@ -80,8 +83,18 @@ const Layout = ({ children }: LayoutProps) => {
     setIsModalOpen(false)
   }
 
-  const handleSearchButtonClick = () => {
-    navigate(`/view-all?search=${searchValue}`, { replace: true })
+  const handleSearchButtonClick = (year?: string, program?: string) => {
+    let url = ''
+
+    if (year) {
+      url += `&year=${year}`
+    }
+
+    if (program) {
+      url += `&program=${program}`
+    }
+
+    navigate(`/view-all?search=${searchValue}${url}`, { replace: true })
     navigate(0)
   }
 
@@ -114,6 +127,7 @@ const Layout = ({ children }: LayoutProps) => {
           searchValue={searchValue}
           onSearchFieldChange={handleSearchValueChange}
           searchResults={searchResults}
+          handleSearchButtonClick={handleSearchButtonClick}
         />
       </Modal>
       {isModalOpen && (
