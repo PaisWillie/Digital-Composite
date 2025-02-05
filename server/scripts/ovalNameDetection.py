@@ -19,7 +19,18 @@ allowed_chars = set(
 
 # Adjust the contrast of the image
 def adjust_contrast(image, alpha=0.9, beta=0):
-    return cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Create a mask for white regions
+    _, mask = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY)
+
+    # Create an output image, setting non-white areas to black
+    output = np.zeros_like(image)
+    output[mask == 255] = [255, 255, 255]  # Keep white areas as white
+    #cv2.imshow("Enhanced", output)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows
+    return output
 
 # Detect edges in the image using the Canny edge detector
 def detect_edges(image):
