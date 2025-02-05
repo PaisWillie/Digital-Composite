@@ -2,10 +2,10 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState, useCallback } from 'react'
 import TextButton from 'components/Button/TextButton'
-import { toast } from 'react-toastify'
-import { v4 as uuidv4 } from 'uuid'
 import Select from 'react-select'
+import { v4 as uuidv4 } from 'uuid'
 import { programOptions, yearOptions } from 'utils/constants'
+import { showErrorToast, showSuccessToast } from 'components/Toasts/Toasts'
 
 interface Composite {
   id: string
@@ -51,7 +51,7 @@ function ManageCompositesPage() {
       setComposites(formattedData)
       setFilteredComposites(formattedData)
     } catch (error: any) {
-      toast.error(`Error fetching composites: ${error.message}`)
+      showErrorToast(`Error fetching composites: ${error.message}`)
     }
   }, [])
 
@@ -94,7 +94,6 @@ function ManageCompositesPage() {
       if (!response2.ok)
         throw new Error('Failed to fetch students for this composite')
       const result2 = await response2.json()
-      console.log(result2)
 
       navigate('/Admin/CompositeViewPage', {
         state: {
@@ -106,7 +105,7 @@ function ManageCompositesPage() {
         }
       })
     } catch (error: any) {
-      toast.error(`Error fetching composite: ${error.message}`)
+      showErrorToast(`Error fetching composite: ${error.message}`)
     }
   }
 
@@ -132,10 +131,10 @@ function ManageCompositesPage() {
       )
 
       if (!response.ok) throw new Error('Failed to delete composite')
-      toast.success('Composite deleted successfully')
+      showSuccessToast('Composite deleted successfully')
       fetchComposites()
     } catch (error: any) {
-      toast.error(`Error deleting composite: ${error.message}`)
+      showErrorToast(`Error deleting composite: ${error.message}`)
     }
   }
 

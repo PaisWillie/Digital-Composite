@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { v4 as uuidv4 } from 'uuid'
 import { useNavigate } from 'react-router-dom'
-import TextButton from 'components/Button/TextButton'
+import { v4 as uuidv4 } from 'uuid'
 import { Line } from 'react-chartjs-2'
 import { ChartOptions, ChartData } from 'chart.js'
 import {
@@ -17,6 +14,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+import TextButton from 'components/Button/TextButton'
+import { showErrorToast } from 'components/Toasts/Toasts'
 
 ChartJS.register(
   CategoryScale,
@@ -95,7 +94,7 @@ function ViewDashboardAnalyticsPage() {
         ])
       }, 1000)
     } catch (error: any) {
-      toast.error(`Error fetching analytics: ${error.message}`)
+      showErrorToast(`Error fetching analytics: ${error.message}`)
     }
   }
 
