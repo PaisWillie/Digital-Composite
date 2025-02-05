@@ -72,7 +72,7 @@ const SearchResultPage = () => {
                   className="flex flex-col items-center gap-y-2"
                 >
                   <img key={index} src={composite.src} />
-                  <p className="text-center font-poppins font-medium">
+                  <p className="font-poppins text-center font-medium">
                     {programOptions.find(
                       (program) => program.value === composite.program.program
                     )?.label ?? ''}{' '}
@@ -108,7 +108,6 @@ const SearchResultPage = () => {
               onOk={handleOk}
               onCancel={handleCancel}
               footer={null}
-              closeIcon={null}
               centered
             >
               <div className="flex flex-col items-center">{modalContent}</div>

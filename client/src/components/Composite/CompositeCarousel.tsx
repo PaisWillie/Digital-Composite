@@ -45,7 +45,6 @@ const CompositeCarousel = ({ composites }: CompositeCarouselProps) => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
-        closeIcon={null}
         centered
       >
         <div className="flex flex-col items-center">{modalContent}</div>
