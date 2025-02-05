@@ -1,21 +1,23 @@
-import { createRoot } from 'react-dom/client'
-import 'tailwindcss/tailwind.css'
+import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import App from 'components/App'
+import AdminPage from 'components/pages/AdminPage'
+import BlackListStudentPage from 'components/pages/BlackListStudentPage'
+import CompositeViewPage from 'components/pages/CompositeViewPage'
+import ManageCompositesPage from 'components/pages/ManageCompositesPage'
+import SearchResultPage from 'components/pages/SearchResultPage'
+import UploadPage from 'components/pages/UploadPage'
+import ViewDashboardAnalyticsPage from 'components/pages/viewDashboardAnalyticsPage'
+import { DataProvider } from 'context/DataContext'
+import { createRoot } from 'react-dom/client'
 import {
   createBrowserRouter,
-  RouterProvider,
   Navigate,
+  RouterProvider,
   useLocation
 } from 'react-router-dom'
-import AdminPage from 'components/pages/AdminPage'
-import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
-import UploadPage from 'components/pages/UploadPage'
-import ManageCompositesPage from 'components/pages/ManageCompositesPage'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import CompositeViewPage from 'components/pages/CompositeViewPage'
-import BlackListStudentPage from 'components/pages/BlackListStudentPage'
-import ViewDashboardAnalyticsPage from 'components/pages/viewDashboardAnalyticsPage'
+import 'tailwindcss/tailwind.css'
 
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)
@@ -44,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <App />
+  },
+  {
+    path: '/view-all',
+    element: <SearchResultPage />
   },
   {
     path: '/admin',
@@ -108,7 +114,9 @@ root.render(
       redirect_uri: window.location.origin + window.location.pathname
     }}
   >
-    <RouterProvider router={router} />
+    <DataProvider>
+      <RouterProvider router={router} />
+    </DataProvider>
     <ToastContainer />
   </Auth0Provider>
 )

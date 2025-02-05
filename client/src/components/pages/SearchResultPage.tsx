@@ -1,7 +1,209 @@
+import { Carousel, Modal } from 'antd'
+import TextButton from 'components/Button/TextButton'
+import SingleComposite from 'components/Composite/SingleComposite'
+import CroppedImage from 'components/CroppedImage/CroppedImage'
+import { useData } from 'context/DataContext'
+import Fuse from 'fuse.js'
+import { useEffect, useState } from 'react'
+import { FaArrowLeft } from 'react-icons/fa6'
+import { useSearchParams } from 'react-router-dom'
+import { parseProgram } from 'utils/parse'
 import Layout from '../Layout/Layout'
 
 const SearchResultPage = () => {
-  return <Layout>Search Results</Layout>
+  const [selectedCompositeId, setSelectedCompositeId] = useState(-1)
+
+  const { data, loading, error } = useData()
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
+
+  const [searchParams] = useSearchParams()
+
+  const selectedProgram = searchParams.get('program')
+  const selectedYear = searchParams.get('year')
+  const searchQuery = searchParams.get('search')
+
+  const [filteredComposites, setFilteredComposites] = useState(
+    data?.composites || []
+  )
+
+  useEffect(() => {
+    if (data?.composites) {
+      // If both program and year is selected, show exact composite
+      if (selectedProgram && selectedYear) {
+        setFilteredComposites(data.composites)
+
+        // Find composite that matches the selected program and year
+        const composite = data.composites.find(
+          (composite) =>
+            composite.program.program === selectedProgram &&
+            composite.program.year === selectedYear
+        )
+
+        if (composite) {
+          setSelectedCompositeId(data.composites.indexOf(composite))
+        }
+      } else if (selectedProgram) {
+        setFilteredComposites(
+          data?.composites.filter(
+            (composite) => composite.program.program === selectedProgram
+          ) || []
+        )
+      } else if (selectedYear) {
+        setFilteredComposites(
+          data?.composites.filter(
+            (composite) => composite.program.year === selectedYear
+          ) || []
+        )
+      } else {
+        setFilteredComposites(data.composites)
+      }
+
+      if (searchQuery) {
+        const fuse = new Fuse(data?.searchOptions || [], {
+          keys: ['value'],
+          threshold: 0.2
+        })
+
+        const results = fuse.search(searchQuery).map((result) => result.item)
+
+        // Filter by remaining composites in filteredComposites that match the value of the search query
+        setFilteredComposites(
+          (prev) =>
+            prev.filter((composite) =>
+              results.some((result) => composite.program === result.program)
+            ) || []
+        )
+      }
+    }
+    // TODO: Fix the exhaustive-deps warning
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProgram, selectedYear, data])
+
+  const showModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
+
+  const onStudentClick = (
+    src: string,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    name: string
+  ) => {
+    setModalContent(
+      <div className="flex flex-col items-center gap-y-2 text-center">
+        <CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />
+        <p className="text-center font-poppins font-medium">{name}</p>
+      </div>
+    )
+    showModal()
+  }
+
+  // TODO: pressing back button will return back to same position in carousel
+  // TODO: add (non-white) arrows to Carousel to make it more accessible
+
+  if (loading) {
+    return <Layout>Loading...</Layout>
+  }
+
+  if (error) {
+    return <Layout>Error: {error}</Layout>
+  }
+
+  return (
+    <Layout>
+      <div className="flex flex-col">
+        {selectedCompositeId === -1 ? (
+          <>
+            <Carousel
+              easing="ease-in"
+              speed={1500}
+              arrows
+              infinite={false}
+              slidesPerRow={3}
+              rows={3}
+            >
+              {filteredComposites.map((composite, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setSelectedCompositeId(index)
+                  }}
+                  className="flex flex-col items-center gap-y-2"
+                >
+                  <img key={index} src={composite.src} />
+                  <p className="text-center font-poppins font-medium">
+                    {parseProgram(composite.program.program)}
+                    {', '}
+                    {composite.program.year}
+                  </p>
+                </div>
+              ))}
+            </Carousel>
+            {/* TODO: Re-add filter implementation */}
+            {/* <div id="filters" className="mt-3 flex flex-row gap-x-2">
+              <TextButton
+                onClick={() => {}}
+                leadingIcon={<FaPlus />}
+                isMobile
+                variant="secondary"
+              >
+                Select year
+              </TextButton>
+              <TextButton
+                onClick={() => {}}
+                leadingIcon={<FaPlus />}
+                isMobile
+                variant="secondary"
+              >
+                Select program
+              </TextButton>
+            </div> */}
+          </>
+        ) : (
+          <>
+            <Modal
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              footer={null}
+              centered
+            >
+              <div className="flex flex-col items-center">{modalContent}</div>
+            </Modal>
+            <SingleComposite
+              index={selectedCompositeId}
+              src={filteredComposites[selectedCompositeId].src || ''}
+              students={filteredComposites[selectedCompositeId].students || []}
+              onStudentClick={onStudentClick}
+            />
+            <div className="max-w-fit">
+              <TextButton
+                onClick={() => {
+                  setSelectedCompositeId(-1)
+                }}
+                leadingIcon={<FaArrowLeft />}
+                isMobile
+              >
+                Back
+              </TextButton>
+            </div>
+          </>
+        )}
+      </div>
+    </Layout>
+  )
 }
 
 export default SearchResultPage

@@ -19,9 +19,12 @@ importers:
       chart.js:
         specifier: ^4.4.7
         version: 4.4.7
+      fuse.js:
+        specifier: ^7.1.0
+        version: 7.1.0
       pnpm:
         specifier: ^9.15.4
-        version: 9.15.4
+        version: 9.15.5
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2362,6 +2365,13 @@ packages:
         integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
       }
 
+  fuse.js@7.1.0:
+    resolution:
+      {
+        integrity: sha512-trLf4SzuuUxfusZADLINj+dE8clK1frKdmqiJNb1Es75fmI5oY6X2mxLVUciLLjxqw/xr72Dhy+lER6dGd02FQ==
+      }
+    engines: { node: '>=10' }
+
   get-func-name@2.0.2:
     resolution:
       {
@@ -3340,10 +3350,10 @@ packages:
         integrity: sha512-+ifYuSSqOQ8CqP4MbZA5hDpb97n3E8SVWdJe+Wms9kj745lmd3b7EZJiqvmLwAlmRfjrI7Hi5z3kdBJ93lFNPA==
       }
 
-  pnpm@9.15.4:
+  pnpm@9.15.5:
     resolution:
       {
-        integrity: sha512-stwg4vxys+GISEWbNzWaMgZGY+VielHkx0ssKd2OjgSRSDw6u0B4nP1Xi/Ni+2uoJhsF8Dh9dnku1uI+o7G2oA==
+        integrity: sha512-hFGWAmqrHMPwmKBHS2TfurKv56G06R3YaJXY5Koyp6bQMEni0K13C75N4COnEi+2jBodbg0DPHB2CF+dXUgA1A==
       }
     engines: { node: '>=18.12' }
     hasBin: true
@@ -6285,6 +6295,8 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
+  fuse.js@7.1.0: {}
+
   get-func-name@2.0.2: {}
 
   get-intrinsic@1.2.4:
@@ -6798,7 +6810,7 @@ snapshots:
       mlly: 1.7.1
       pathe: 1.1.2
 
-  pnpm@9.15.4: {}
+  pnpm@9.15.5: {}
 
   possible-typed-array-names@1.0.0: {}
 
