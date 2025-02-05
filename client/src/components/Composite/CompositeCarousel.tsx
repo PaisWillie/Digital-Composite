@@ -1,20 +1,13 @@
-import { Carousel, ConfigProvider, Modal } from 'antd'
+import { Carousel, Modal } from 'antd'
+import { StudentCoordinate } from 'components/App'
+import CroppedImage from 'components/CroppedImage/CroppedImage'
 import { useState } from 'react'
 import SingleComposite from './SingleComposite'
-import CroppedImage from 'components/CroppedImage/CroppedImage'
 
 type CompositeCarouselProps = {
   composites: {
     src: string
-    originalImageWidth?: number
-    originalImageHeight?: number
-    students: {
-      name: string
-      x1: number
-      y1: number
-      x2: number
-      y2: number
-    }[]
+    students: StudentCoordinate[]
   }[]
 }
 
@@ -47,26 +40,16 @@ const CompositeCarousel = ({ composites }: CompositeCarouselProps) => {
 
   return (
     <>
-      <ConfigProvider
-        theme={{
-          components: {
-            Modal: {
-              // contentBg: 'transparent'
-            }
-          }
-        }}
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={null}
+        closeIcon={null}
+        centered
       >
-        <Modal
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={null}
-          closeIcon={null}
-          centered
-        >
-          <div className="flex flex-col items-center">{modalContent}</div>
-        </Modal>
-      </ConfigProvider>
+        <div className="flex flex-col items-center">{modalContent}</div>
+      </Modal>
       <Carousel
         autoplay
         infinite
@@ -74,19 +57,18 @@ const CompositeCarousel = ({ composites }: CompositeCarouselProps) => {
         easing="ease-in"
         speed={1500}
       >
-        <SingleComposite
+        {/* <SingleComposite
           src="/composites/test.jpg"
-          originalImageWidth={3667}
-          originalImageHeight={2713}
+          // originalImageWidth={3667}
+          // originalImageHeight={2713}
           onStudentClick={onStudentClick}
           students={[]}
-        />
+        /> */}
         {composites.map((composite, index) => (
           <SingleComposite
+            index={index}
             key={index}
             src={composite.src}
-            originalImageWidth={composite.originalImageWidth}
-            originalImageHeight={composite.originalImageHeight}
             students={composite.students}
             onStudentClick={onStudentClick}
           />

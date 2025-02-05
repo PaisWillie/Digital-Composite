@@ -1,16 +1,10 @@
-import { useEffect, useState } from 'react'
+import { StudentCoordinate } from 'components/App'
+import { createRef, useEffect, useState } from 'react'
 
 type SingleCompositeProps = {
+  index: number
   src: string
-  originalImageWidth?: number
-  originalImageHeight?: number
-  students: {
-    name: string
-    x1: number
-    y1: number
-    x2: number
-    y2: number
-  }[]
+  students: StudentCoordinate[]
   onStudentClick: (
     src: string,
     x1: number,
@@ -21,43 +15,39 @@ type SingleCompositeProps = {
 }
 
 const SingleComposite = ({
+  index,
   src,
-  originalImageWidth,
-  originalImageHeight,
   students,
   onStudentClick
 }: SingleCompositeProps) => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-  const [scale, setScale] = useState<number>(1) // Scale of rendered image compared to original image
+  const [scale, setScale] = useState(1) // Scale of rendered image compared to original image
+  const imgRef = createRef<HTMLImageElement>()
 
   useEffect(() => {
-    if (dimensions.width > 0) {
-      if (!originalImageWidth && !originalImageHeight) {
-        throw new Error(
-          'Either originalImageWidth or originalImageHeight must be provided.'
-        )
-      }
-      setScale(
-        dimensions.width / (originalImageWidth ?? originalImageHeight ?? 1)
-      )
+    console.log('Running!')
+    if (imgRef.current && dimensions.width > 0 && dimensions.height > 0) {
+      const displayedWidth = imgRef.current.clientWidth
+      setScale(displayedWidth / dimensions.width)
     }
-  }, [dimensions, originalImageWidth, originalImageHeight])
+  }, [dimensions, imgRef])
 
   return (
     <div>
       <img
+        ref={imgRef}
         src={src}
-        useMap="#workmap"
+        useMap={`#${index}-map`}
         className="object-contain"
         onLoad={(e) => {
-          const img = e.target as HTMLImageElement
+          const originalImg = e.currentTarget as HTMLImageElement
           return setDimensions({
-            width: img.clientWidth,
-            height: img.clientHeight
+            width: originalImg.naturalWidth,
+            height: originalImg.naturalHeight
           })
         }}
       />
-      <map name="workmap">
+      <map name={`${index}-map`}>
         {students.map((student, index) => (
           <area
             key={index}
@@ -80,7 +70,6 @@ const SingleComposite = ({
                 student.y2
               )
             }}
-            href="#"
           />
         ))}
       </map>

@@ -7,6 +7,7 @@ import ManageCompositesPage from 'components/pages/ManageCompositesPage'
 import SearchResultPage from 'components/pages/SearchResultPage'
 import UploadPage from 'components/pages/UploadPage'
 import ViewDashboardAnalyticsPage from 'components/pages/viewDashboardAnalyticsPage'
+import { DataProvider } from 'context/DataContext'
 import { createRoot } from 'react-dom/client'
 import {
   createBrowserRouter,
@@ -113,7 +114,9 @@ root.render(
       redirect_uri: window.location.origin + window.location.pathname
     }}
   >
-    <RouterProvider router={router} />
+    <DataProvider>
+      <RouterProvider router={router} />
+    </DataProvider>
     <ToastContainer />
   </Auth0Provider>
 )
