@@ -3,6 +3,12 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { Program, Student } from 'types/Types'
 import { getAllStudents, getCompositeImage, getUniquePrograms } from 'utils/api'
 
+export type SearchOption = {
+  type: 'student' | 'program'
+  program: Program
+  value: string
+}
+
 interface DataType {
   students: Student[]
   composites: {
@@ -10,6 +16,7 @@ interface DataType {
     program: Program
     students: StudentCoordinate[]
   }[]
+  searchOptions: SearchOption[]
 }
 // interface DataType {
 //   students: Student[]
@@ -37,9 +44,12 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoading(true)
 
+      // Fetch data
+
       const students: Student[] = await getAllStudents()
       const programs: Program[] = await getUniquePrograms()
 
+      // Fetch composite images
       const composites = await Promise.all(
         programs.map(async (program) => {
           return {
@@ -49,13 +59,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         })
       )
 
-      // setData({
-      //   students: students,
-      //   composites: composites
-      // })
-
-      // ====
-
+      // Map students to composites
       const tempComposites: {
         src: string
         program: Program
@@ -92,11 +96,41 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         }
       })
 
-      // setComposites(tempComposites)
+      // Map data to search options
+      const studentSearchOptions: {
+        type: 'student'
+        program: Program
+        value: string
+      }[] = students.map((student) => ({
+        type: 'student',
 
+        program: composites.find(
+          (composite) =>
+            composite.program.program === student.image_id.split('#')[1] &&
+            composite.program.year === student.image_id.split('#')[0]
+        )?.program ?? {
+          program: '',
+          year: ''
+        },
+
+        value: student.name
+      }))
+
+      const programSearchOptions: {
+        type: 'program'
+        program: Program
+        value: string
+      }[] = composites.map((composite) => ({
+        type: 'program',
+        program: composite.program,
+        value: composite.program.program + ', ' + composite.program.year
+      }))
+
+      // Set data
       setData({
         students: students,
-        composites: tempComposites
+        composites: tempComposites,
+        searchOptions: [...studentSearchOptions, ...programSearchOptions]
       })
     } catch (err) {
       setError('Failed to fetch data')

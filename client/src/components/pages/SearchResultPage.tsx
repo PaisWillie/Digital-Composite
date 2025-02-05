@@ -3,9 +3,11 @@ import TextButton from 'components/Button/TextButton'
 import SingleComposite from 'components/Composite/SingleComposite'
 import CroppedImage from 'components/CroppedImage/CroppedImage'
 import { useData } from 'context/DataContext'
-import { useState } from 'react'
+import Fuse from 'fuse.js'
+import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa6'
-import { programOptions } from 'utils/constants'
+import { useSearchParams } from 'react-router-dom'
+import { parseProgram } from 'utils/parse'
 import Layout from '../Layout/Layout'
 
 const SearchResultPage = () => {
@@ -15,6 +17,69 @@ const SearchResultPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
+
+  const [searchParams] = useSearchParams()
+
+  const selectedProgram = searchParams.get('program')
+  const selectedYear = searchParams.get('year')
+  const searchQuery = searchParams.get('search')
+
+  const [filteredComposites, setFilteredComposites] = useState(
+    data?.composites || []
+  )
+
+  useEffect(() => {
+    if (data?.composites) {
+      // If both program and year is selected, show exact composite
+      if (selectedProgram && selectedYear) {
+        setFilteredComposites(data.composites)
+
+        // Find composite that matches the selected program and year
+        const composite = data.composites.find(
+          (composite) =>
+            composite.program.program === selectedProgram &&
+            composite.program.year === selectedYear
+        )
+
+        if (composite) {
+          setSelectedCompositeId(data.composites.indexOf(composite))
+        }
+      } else if (selectedProgram) {
+        setFilteredComposites(
+          data?.composites.filter(
+            (composite) => composite.program.program === selectedProgram
+          ) || []
+        )
+      } else if (selectedYear) {
+        setFilteredComposites(
+          data?.composites.filter(
+            (composite) => composite.program.year === selectedYear
+          ) || []
+        )
+      } else {
+        setFilteredComposites(data.composites)
+      }
+
+      if (searchQuery) {
+        const fuse = new Fuse(data?.searchOptions || [], {
+          keys: ['value'],
+          includeScore: true
+        })
+
+        const results = fuse.search(searchQuery).map((result) => result.item)
+
+        // Filter by remaining composites in filteredComposites that match the value of the search query
+        setFilteredComposites(
+          (prev) =>
+            prev.filter((composite) =>
+              results.some((result) => composite.program === result.program)
+            ) || []
+        )
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // TODO: Fix the exhaustive-deps warning
+  }, [selectedProgram, selectedYear, data])
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -69,7 +134,7 @@ const SearchResultPage = () => {
               slidesPerRow={3}
               rows={3}
             >
-              {data?.composites.map((composite, index) => (
+              {filteredComposites.map((composite, index) => (
                 <div
                   key={index}
                   onClick={() => {
@@ -79,9 +144,8 @@ const SearchResultPage = () => {
                 >
                   <img key={index} src={composite.src} />
                   <p className="font-poppins text-center font-medium">
-                    {programOptions.find(
-                      (program) => program.value === composite.program.program
-                    )?.label ?? ''}{' '}
+                    {parseProgram(composite.program.program)}
+                    {', '}
                     {composite.program.year}
                   </p>
                 </div>
@@ -120,8 +184,8 @@ const SearchResultPage = () => {
             </Modal>
             <SingleComposite
               index={selectedCompositeId}
-              src={data?.composites[selectedCompositeId].src || ''}
-              students={data?.composites[selectedCompositeId].students || []}
+              src={filteredComposites[selectedCompositeId].src || ''}
+              students={filteredComposites[selectedCompositeId].students || []}
               onStudentClick={onStudentClick}
             />
             <div className="max-w-fit">

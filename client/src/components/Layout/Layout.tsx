@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { FaBars, FaMagnifyingGlass } from 'react-icons/fa6'
 import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
 import Fuse from 'fuse.js'
-import { useData } from 'context/DataContext'
+import { SearchOption, useData } from 'context/DataContext'
 
 type NavbarProps = {
   showModal: () => void
@@ -25,62 +25,65 @@ const Navbar = ({ showModal }: NavbarProps) => {
   )
 }
 
-export type SearchOption = {
-  type: 'student' | 'program'
-  value: string
-}
-
 type LayoutProps = {
   children: React.ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const { data, loading, error } = useData()
+  const { data } = useData()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
-  const [searchOptions, setSearchOptions] = useState<SearchOption[]>([])
+  // const [searchOptions, setSearchOptions] = useState<SearchOption[]>([])
 
   const [searchResults, setSearchResults] = useState<SearchOption[]>([])
 
+  // useEffect(() => {
+  //   if (data) {
+  //     const students: { type: 'student'; value: string }[] = data.students.map(
+  //       (student) => ({
+  //         type: 'student',
+  //         value: student.name
+  //       })
+  //     )
+
+  //     const programs: { type: 'program'; value: string }[] =
+  //       data.composites.map((composite) => ({
+  //         type: 'program',
+  //         value: composite.program.program + ', ' + composite.program.year
+  //       }))
+
+  //     setSearchOptions([...students, ...programs])
+  //   }
+  // }, [data])
+
+  const [fuse, setFuse] = useState<Fuse<SearchOption> | null>(null)
+
   useEffect(() => {
     if (data) {
-      const students: { type: 'student'; value: string }[] = data.students.map(
-        (student) => ({
-          type: 'student',
-          value: student.name
+      setFuse(
+        new Fuse(data.searchOptions, {
+          keys: ['value'],
+          threshold: 0.4
         })
       )
-
-      const programs: { type: 'program'; value: string }[] =
-        data.composites.map((composite) => ({
-          type: 'program',
-          value: composite.program.program + ', ' + composite.program.year
-        }))
-
-      setSearchOptions([...students, ...programs])
     }
   }, [data])
-
-  const fuse = new Fuse(searchOptions, {
-    keys: ['value'],
-    threshold: 0.4
-  })
 
   const handleSearchValueChange = (value: string) => {
     setSearchValue(value)
 
-    if (value.length === 0) {
+    if (value.length === 0 || !fuse) {
       // TODO: clear search results
+      setSearchResults([])
+
       return
     }
 
     const results = fuse.search(value)
     const items = results.map((result) => result.item)
     setSearchResults(items)
-
-    console.log(searchResults)
   }
 
   const showModal = () => {

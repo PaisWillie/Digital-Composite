@@ -7,12 +7,14 @@ import {
   FaPlus,
   FaUser
 } from 'react-icons/fa6'
-import { SearchOption } from '../Layout'
+import { parseProgram } from 'utils/parse'
+import { useNavigate } from 'react-router-dom'
+import { SearchOption } from 'context/DataContext'
 
 type SearchModalProps = {
   searchValue: string
   onSearchFieldChange: (searchValue: string) => void
-  searchResults?: SearchOption[]
+  searchResults: SearchOption[]
 }
 
 const SearchModal = ({
@@ -20,6 +22,8 @@ const SearchModal = ({
   onSearchFieldChange,
   searchResults
 }: SearchModalProps) => {
+  const navigate = useNavigate()
+
   return (
     <div className="flex w-full max-w-screen-sm flex-col">
       <TextFieldWithButton
@@ -54,14 +58,14 @@ const SearchModal = ({
           Select program
         </TextButton>
       </div>
-      {searchResults ? (
+      {searchResults.length !== 0 ? (
         <div className="mt-3 flex flex-col">
           <p className="font-poppins text-xs">Suggestions</p>
           {searchResults.slice(0, 10).map((result, index) => {
             return result.type === 'student' ? (
               <TextButton
                 key={index}
-                onClick={() => {}}
+                href={`/view-all?program=${result.program.program}&year=${result.program.year}`}
                 leadingIcon={<FaUser className="text-sm" />}
                 isMobile
                 variant="tertiary"
@@ -71,12 +75,13 @@ const SearchModal = ({
             ) : (
               <TextButton
                 key={index}
-                onClick={() => {}}
+                href={`/view-all?program=${result.program.program}&year=${result.program.year}`}
                 leadingIcon={<FaFile className="text-sm" />}
                 isMobile
                 variant="tertiary"
               >
-                {result.value}
+                {parseProgram(result.value.split(',')[0])},{' '}
+                {result.value.split(',')[1]}
               </TextButton>
             )
           })}
