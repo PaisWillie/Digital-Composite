@@ -198,8 +198,8 @@ def main(image_data, program_year):
     if image is None:
         sys.exit(1)
 
-    #contrast = adjust_contrast(image)
-    edges = detect_edges(image)
+    contrast = adjust_contrast(image)
+    edges = detect_edges(contrast)
     dilated_edges = morphological_operations(edges)
     contours = find_contours(dilated_edges)
     temp_student_regions, areas = filter_contours(contours)
