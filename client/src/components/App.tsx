@@ -40,8 +40,13 @@ function App() {
   //   }
   // }, [data])
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error: {error}</p>
+  if (loading) {
+    return <Layout>Loading...</Layout>
+  }
+
+  if (error) {
+    return <Layout>Error: {error}</Layout>
+  }
 
   return (
     <Layout>
