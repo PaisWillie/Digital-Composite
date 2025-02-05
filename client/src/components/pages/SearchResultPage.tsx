@@ -6,6 +6,7 @@ import TextButton from 'components/Button/TextButton'
 import { useData } from 'context/DataContext'
 import SingleComposite from 'components/Composite/SingleComposite'
 import CroppedImage from 'components/CroppedImage/CroppedImage'
+import { programOptions } from 'utils/constants'
 
 const SearchResultPage = () => {
   const [selectedCompositeId, setSelectedCompositeId] = useState(-1)
@@ -71,8 +72,11 @@ const SearchResultPage = () => {
                   className="flex flex-col items-center gap-y-2"
                 >
                   <img key={index} src={composite.src} />
-                  <p>
-                    {composite.program.program}, {composite.program.year}
+                  <p className="font-poppins text-center font-medium">
+                    {programOptions.find(
+                      (program) => program.value === composite.program.program
+                    )?.label ?? ''}{' '}
+                    {composite.program.year}
                   </p>
                 </div>
               ))}
