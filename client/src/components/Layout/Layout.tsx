@@ -1,8 +1,8 @@
-import IconButton from 'components/Button/IconButton'
-import { FaBars, FaCircleQuestion, FaMagnifyingGlass } from 'react-icons/fa6'
 import { Modal } from 'antd'
-import { useState } from 'react'
+import IconButton from 'components/Button/IconButton'
 import SearchModal from 'components/Layout/SearchModal/SearchModal'
+import { useState } from 'react'
+import { FaBars, FaMagnifyingGlass } from 'react-icons/fa6'
 import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
 
 type NavbarProps = {

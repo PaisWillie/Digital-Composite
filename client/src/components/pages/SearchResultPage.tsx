@@ -1,12 +1,12 @@
-import Layout from '../Layout/Layout'
 import { Carousel, Modal } from 'antd'
-import { FaArrowLeft, FaPlus } from 'react-icons/fa6'
-import { useState } from 'react'
 import TextButton from 'components/Button/TextButton'
-import { useData } from 'context/DataContext'
 import SingleComposite from 'components/Composite/SingleComposite'
 import CroppedImage from 'components/CroppedImage/CroppedImage'
+import { useData } from 'context/DataContext'
+import { useState } from 'react'
+import { FaArrowLeft } from 'react-icons/fa6'
 import { programOptions } from 'utils/constants'
+import Layout from '../Layout/Layout'
 
 const SearchResultPage = () => {
   const [selectedCompositeId, setSelectedCompositeId] = useState(-1)
@@ -72,7 +72,7 @@ const SearchResultPage = () => {
                   className="flex flex-col items-center gap-y-2"
                 >
                   <img key={index} src={composite.src} />
-                  <p className="font-poppins text-center font-medium">
+                  <p className="text-center font-poppins font-medium">
                     {programOptions.find(
                       (program) => program.value === composite.program.program
                     )?.label ?? ''}{' '}

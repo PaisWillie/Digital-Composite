@@ -1,6 +1,4 @@
 import { useData } from 'context/DataContext'
-import { useEffect, useState } from 'react'
-import { Program, Student } from 'types/Types'
 import CompositeCarousel from './Composite/CompositeCarousel'
 import Layout from './Layout/Layout'
 

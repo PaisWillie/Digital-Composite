@@ -46,7 +46,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
 
   return (
     <div className="grid grid-rows-4">
-      <div id="row-1" className="grid-cols-16 grid">
+      <div id="row-1" className="grid grid-cols-16">
         {/* {renderButton('abc123', 'abc123', 'col-span-2 aspect-auto')} */}
         <div className="col-span-2" />
         {renderButton(getShiftedCharacter('q'), getShiftedCharacter('q'))}
@@ -64,7 +64,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton('2', '2')}
         {renderButton('3', '3')}
       </div>
-      <div id="row-2" className="grid-cols-16 grid">
+      <div id="row-2" className="grid grid-cols-16">
         {/* {renderButton('@?#', '@?#', 'col-span-2 aspect-auto')} */}
         <div className="col-span-2" />
         {renderButton(getShiftedCharacter('a'), getShiftedCharacter('a'))}
@@ -82,7 +82,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton('5', '5')}
         {renderButton('6', '6')}
       </div>
-      <div id="row-3" className="grid-cols-16 grid">
+      <div id="row-3" className="grid grid-cols-16">
         <div className={cn([keyStyle, 'col-span-2 aspect-auto'])} />
         {renderButton(<FaArrowUp />, 'shift')}
         {renderButton(getShiftedCharacter('z'), getShiftedCharacter('z'))}
@@ -99,7 +99,7 @@ const OnScreenKeyboard = ({ onPress }: OnScreenKeyboardProps) => {
         {renderButton('8', '8')}
         {renderButton('9', '9')}
       </div>
-      <div id="row-4" className="grid-cols-16 grid">
+      <div id="row-4" className="grid grid-cols-16">
         <div className="col-span-2" />
         {/* {renderButton('Return', 'return', 'col-span-2 aspect-auto')} */}
         {renderButton('Return', 'return', `col-span-2 aspect-auto`)}
