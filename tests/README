@@ -1,0 +1,12 @@
+RUN IN ORDER TO TEST
+
+#Run Auth Test First
+pnpm run test:setup
+
+#Run All tests after Auth
+pnpm run test:run
+
+#View Test Results & Debugging
+pnpm exec playwright show-report
+
+pnpm run test:debug

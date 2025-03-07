@@ -30,6 +30,7 @@
     "@udecode/cn": "^43.0.0",
     "antd": "^5.23.3",
     "chart.js": "^4.4.7",
+    "dotenv": "^16.4.7",
     "fuse.js": "^7.1.0",
     "pnpm": "^9.15.4",
     "react": "^18.3.1",
@@ -43,6 +44,7 @@
     "uuid": "^11.0.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.50.1",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^14.3.1",
     "@types/node": "^20.16.5",
