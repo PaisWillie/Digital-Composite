@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests',
@@ -9,10 +9,10 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     storageState: undefined, // 🚀 Ensures NO session state is reused
     contextOptions: {
-      bypassCSP: true, // Helps with testing applications using CSP
+      bypassCSP: true // Helps with testing applications using CSP
     },
     trace: 'on', // 🔍 Enables trace viewer for debugging
     video: 'on', // 🎥 Records test execution video
-    screenshot: 'on', // 📸 Takes screenshots on failure
-  },
-});
+    screenshot: 'on' // 📸 Takes screenshots on failure
+  }
+})

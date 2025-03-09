@@ -15,8 +15,19 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
+    "types": [
+      "vite/client",
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "playwright",
+      "@playwright/test"
+    ]
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src",
+    "tests",
+    "playwright.config.ts",
+    "vite.config.ts"
+  ],
+  "exclude": ["node_modules", "dist", "coverage"]
 }

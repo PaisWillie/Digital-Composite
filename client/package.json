@@ -23,7 +23,10 @@
     "lint:fix": "eslint --fix src && pnpm format",
     "format": "prettier -w .",
     "format:check": "prettier -c .",
-    "typecheck": "tsc --project tsconfig.json --noEmit"
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test:setup": "playwright test tests/auth.setup.spec.ts --config=playwright.config.ts --headed",
+    "test:run": "playwright test --config=playwright.config.ts --headed",
+    "test:debug": "playwright test --config=playwright.config.ts --debug"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
@@ -44,7 +47,7 @@
     "uuid": "^11.0.5"
   },
   "devDependencies": {
-    "@playwright/test": "^1.50.1",
+    "@playwright/test": "^1.51.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^14.3.1",
     "@types/node": "^20.16.5",
@@ -63,11 +66,15 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-tailwindcss": "^3.17.4",
     "happy-dom": "^12.10.3",
+    "nyc": "^17.1.0",
+    "playwright": "^1.51.0",
     "postcss": "^8.4.47",
     "prettier": "3.1.1",
+    "source-map-support": "^0.5.21",
     "tailwindcss": "^3.4.12",
     "typescript": "^5.6.2",
     "vite": "^5.4.7",
+    "vite-plugin-istanbul": "^7.0.0",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0"
   }
