@@ -15,28 +15,53 @@ def convert_buffer_to_cv2(buffer):
 def main(composite, student_coords, logo):
     base_image = composite.copy()
 
-    cx = int(student_coords[0][0])
-    cy = int(student_coords[0][1])
-    major = int(student_coords[1][0])
-    minor = int(student_coords[1][1])
-    angle = int(student_coords[2])
-    resized_fill = cv2.resize(logo, (major, minor))
+    cx = int(student_coords[0][0])  # Center X
+    cy = int(student_coords[0][1])  # Center Y
+    major = int(student_coords[1][0])  # Major axis (width)
+    minor = int(student_coords[1][1])  # Minor axis (height)
+    angle = int(student_coords[2])  # Rotation angle
 
-    mask = np.zeros_like(base_image[:,:,0])
-    cv2.ellipse(mask, (cx, cy), (major//2, minor//2), angle, 0, 360, 255, thickness=cv2.FILLED)
+    # Compute bounding box coordinates
+    x1 = cx - major // 2
+    y1 = cy - minor // 2
+    x2 = x1 + major
+    y2 = y1 + minor
 
-    x1, y1 = cx - major // 2, cy - minor // 2
-    x2, y2 = x1 + major, y1 + minor
-    roi = base_image[y1:y2, x1:x2]
+    # Ensure coordinates are within image bounds
+    x1, y1 = max(0, x1), max(0, y1)
+    x2, y2 = min(base_image.shape[1], x2), min(base_image.shape[0], y2)
 
-    # Apply the mask to blend the fill image into the base image
-    roi[np.where(mask[y1:y2, x1:x2] == 255)] = resized_fill[np.where(mask[y1:y2, x1:x2] == 255)]
+    # Fill the bounding box area with white
+    base_image[y1:y2, x1:x2] = (255, 255, 255)
 
-    # Put the modified region back into the base image
-    base_image[y1:y2, x1:x2] = roi
+    # Get logo dimensions
+    logo_h, logo_w = logo.shape[:2]
+
+    # Determine the scaling factor (maintain aspect ratio)
+    scale = min(major / logo_w, minor / logo_h)
+    new_w = int(logo_w * scale)
+    new_h = int(logo_h * scale)
+
+    # Resize the logo while maintaining aspect ratio
+    resized_logo = cv2.resize(logo, (new_w, new_h), interpolation=cv2.INTER_AREA)
+
+    # Compute placement so the logo is centered
+    logo_x1 = cx - new_w // 2
+    logo_y1 = cy - new_h // 2
+    logo_x2 = logo_x1 + new_w
+    logo_y2 = logo_y1 + new_h
+
+    # Ensure logo placement is within image bounds
+    logo_x1, logo_y1 = max(0, logo_x1), max(0, logo_y1)
+    logo_x2, logo_y2 = min(base_image.shape[1], logo_x2), min(base_image.shape[0], logo_y2)
+
+    # Extract the logo's region
+    logo_roi = resized_logo[: logo_y2 - logo_y1, : logo_x2 - logo_x1]
+
+    # Overlay the logo onto the white-filled area
+    base_image[logo_y1:logo_y2, logo_x1:logo_x2] = logo_roi
 
     return base_image
-
 
 if __name__ == "__main__":
     image_data = sys.stdin.buffer.read()

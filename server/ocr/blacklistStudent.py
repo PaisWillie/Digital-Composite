@@ -5,6 +5,10 @@ import os
 import sys
 from io import BytesIO
 
+# THIS IS AN OUTDATED SCRIPT DO NOT USE
+# YOU CAN USE SCRIPTS DIRECTLY FROM THE SCRIPTS FOLDER, THERE ARE TESTING SCRIPTS FOR EACH FUNCTIONAL SCRIPT AS WELL
+# THERE
+
 # Paths
 jpeg_path = "./logo/fireball_logo.jpg"
 output_folder = "output"
