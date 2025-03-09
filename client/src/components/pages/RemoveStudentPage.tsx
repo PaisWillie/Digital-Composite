@@ -2,9 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
 import Select, { SingleValue } from 'react-select'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { programOptions, yearOptions } from 'utils/constants'
+import { showErrorToast, showSuccessToast } from 'components/Toasts/Toasts'
 
 type Student = {
   name: string
@@ -72,20 +71,12 @@ function RemoveStudentPage() {
             }))
           )
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          toast.error(`Error fetching composite data: ${error.message}`, {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            style: {
-              backgroundColor: '#7A003C',
-              color: '#FFFFFF'
-            }
-          })
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            showErrorToast(`Error fetching composite data: ${error.message}`)
+          } else {
+            showErrorToast('An unknown error occurred.')
+          }
         }
       }
 
@@ -124,19 +115,7 @@ function RemoveStudentPage() {
   ) => {
     if (selectedOption) {
       setSelectedStudent(selectedOption.value)
-      toast.success('Student selected!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          backgroundColor: '#7A003C',
-          color: '#FFFFFF'
-        }
-      })
+      showSuccessToast('Student selected!')
     } else {
       setSelectedStudent(null)
     }
@@ -148,19 +127,7 @@ function RemoveStudentPage() {
 
   const handleRemove = async () => {
     if (!program || !year || !selectedStudent) {
-      toast.error('Please select a program, year, and student.', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          backgroundColor: '#7A003C',
-          color: '#FFFFFF'
-        }
-      })
+      showErrorToast('Please select a program, year, and student.')
       return
     }
 
@@ -189,34 +156,14 @@ function RemoveStudentPage() {
       }
 
       const result = await response.json()
-      toast.success('Student removed successfully!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          backgroundColor: '#7A003C',
-          color: '#FFFFFF'
-        }
-      })
+      showSuccessToast(result.message || 'Student removed successfully!')
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast.error(`Error removing student: ${error.message}`, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          backgroundColor: '#7A003C',
-          color: '#FFFFFF'
-        }
-      })
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        showErrorToast(`Error removing student: ${error.message}`)
+      } else {
+        showErrorToast('An unknown error occurred.')
+      }
     }
   }
 
