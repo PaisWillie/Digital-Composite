@@ -1,7 +1,7 @@
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'
 import App from 'components/App'
 import AdminPage from 'components/pages/AdminPage'
-import BlackListStudentPage from 'components/pages/BlackListStudentPage'
+import RemoveStudentPage from 'components/pages/RemoveStudentPage'
 import CompositeViewPage from 'components/pages/CompositeViewPage'
 import ManageCompositesPage from 'components/pages/ManageCompositesPage'
 import SearchResultPage from 'components/pages/SearchResultPage'
@@ -84,10 +84,10 @@ const router = createBrowserRouter([
     )
   },
   {
-    path: '/admin/blackListStudentPage',
+    path: '/admin/RemoveStudentPage',
     element: (
       <ProtectedRoute>
-        <BlackListStudentPage />
+        <RemoveStudentPage />
       </ProtectedRoute>
     )
   },

@@ -29,9 +29,9 @@ function AdminPage() {
 
         <TextButton
           variant="secondary"
-          onClick={() => handleNavigate('/admin/blackListStudentPage')}
+          onClick={() => handleNavigate('/admin/removeStudentPage')}
         >
-          Black List Student
+          Remove Student
         </TextButton>
 
         <TextButton
