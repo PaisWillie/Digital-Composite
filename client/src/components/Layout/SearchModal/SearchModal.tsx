@@ -145,7 +145,7 @@ const SearchModal = ({
               John Appleseed, 2022
             </TextButton>
           </div> */}
-          <div className="mt-3 flex flex-col">
+          {/* <div className="mt-3 flex flex-col">
             <p className="font-poppins text-xs">Recently viewed</p>
             <TextButton
               onClick={() => {}}
@@ -183,7 +183,7 @@ const SearchModal = ({
             >
               IBEHS, 2023
             </TextButton>
-          </div>
+          </div> */}
         </>
       )}
     </div>
