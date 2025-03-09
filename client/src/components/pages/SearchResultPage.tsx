@@ -104,7 +104,7 @@ const SearchResultPage = () => {
     setModalContent(
       <div className="flex flex-col items-center gap-y-2 text-center">
         <CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />
-        <p className="text-center font-poppins font-medium">{name}</p>
+        <p className="font-poppins text-center font-medium">{name}</p>
       </div>
     )
     showModal()
@@ -126,6 +126,12 @@ const SearchResultPage = () => {
       <div className="flex flex-col">
         {selectedCompositeId === -1 ? (
           <>
+            {searchQuery && (
+              <p className="font-poppins text-start text-lg font-medium">
+                Search results for:{' '}
+                <span className="font-normal">{searchQuery}</span>
+              </p>
+            )}
             <Carousel
               easing="ease-in"
               speed={1500}
@@ -143,7 +149,7 @@ const SearchResultPage = () => {
                   className="flex flex-col items-center gap-y-2"
                 >
                   <img key={index} src={composite.src} />
-                  <p className="text-center font-poppins font-medium">
+                  <p className="font-poppins text-center font-medium">
                     {parseProgram(composite.program.program)}
                     {', '}
                     {composite.program.year}
