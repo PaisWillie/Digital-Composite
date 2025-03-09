@@ -43,3 +43,6 @@ client/pnpm-lock.yaml
 client/tests/auth.json
 client/pnpm-lock.yaml
 server/pnpm-lock.yaml
+client/.nyc_output
+client/pnpm-lock.yaml
+client/pnpm-lock.yaml

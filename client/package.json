@@ -26,7 +26,9 @@
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "test:setup": "playwright test tests/auth.setup.spec.ts --config=playwright.config.ts --headed",
     "test:run": "playwright test --config=playwright.config.ts --headed",
-    "test:debug": "playwright test --config=playwright.config.ts --debug"
+    "test:debug": "playwright test --config=playwright.config.ts --debug",
+    "test:runnyc": "pnpm exec nyc --reporter=html --reporter=text-summary pnpm exec playwright test --config=playwright.config.ts --headed",
+    "test:coverage": "pnpm exec nyc report --reporter=html --reporter=text-summary"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
@@ -47,6 +49,7 @@
     "uuid": "^11.0.5"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@playwright/test": "^1.51.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^14.3.1",
