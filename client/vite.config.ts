@@ -5,19 +5,30 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import IstanbulPlugin from 'vite-plugin-istanbul'
 
 export default defineConfig({
+  build: {
+    sourcemap: true // Required for proper coverage
+  },
   plugins: [
     react(),
     tsconfigPaths(),
-    IstanbulPlugin({
-      include: [
-        'src/components/pages/**/*.tsx',
-        'src/components/pages/**/*.ts'
-      ],
-      exclude: ['node_modules', 'tests/**', '**/*.spec.ts', '**/*.spec.tsx'],
-      extension: ['.ts', '.tsx'],
-      requireEnv: false, // 🔥 Ensures it always runs
-      forceBuildInstrument: true // 🔥 Forces Vite to instrument files even in development
-    })
+    ...(process.env.USE_BABEL_PLUGIN_ISTANBUL
+      ? [
+          IstanbulPlugin({
+            include: [
+              'src/components/pages/**/*.tsx',
+              'src/components/pages/**/*.ts'
+            ],
+            exclude: [
+              'node_modules',
+              'test/',
+              'src/utils',
+              'src/components/Layout/SearchModal',
+              ''
+            ],
+            extension: ['.ts', '.tsx']
+          })
+        ]
+      : [])
   ],
   test: {
     globals: true,
