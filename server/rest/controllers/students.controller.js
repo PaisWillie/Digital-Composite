@@ -1,4 +1,5 @@
 const studentsService = require("../services/students.service");
+require("dotenv").config();
 
 exports.getAllStudents = async (req, res) => {
     try {
@@ -29,6 +30,7 @@ exports.addStudentBatch = async (req, res) => {
 exports.getUniquePrograms = async (req, res) => {
   try {
     const allStudents = await studentsService.getUniquePrograms();
+    console.log(process.env.DB_HOST)
     return res.status(200).json(allStudents);
   } catch (error) {
     return res.status(500).json({ error: error.message })
