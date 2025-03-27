@@ -31,7 +31,7 @@ function UploadPage() {
     const fetchComposites = async () => {
       try {
         const response = await fetch(
-          'http://localhost:3000/students/getUniquePrograms',
+          'http://3.14.9.208:3306/students/getUniquePrograms',
           {
             method: 'GET'
           }
@@ -102,7 +102,7 @@ function UploadPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/composite/uploadComposite`,
+        `http://3.14.9.208:3306/composite/uploadComposite`,
         {
           method: 'POST',
           body: formData
