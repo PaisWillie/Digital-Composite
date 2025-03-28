@@ -16,7 +16,9 @@ export const getStudents = async (
 ): Promise<Student[]> => {
   try {
     const studentsResponse = await fetch(
-      `http://localhost:3000/students/getStudentByYearProgram?program=${program}&year=${year}`,
+      `http://${
+        import.meta.env.VITE_HOST
+      }/students/getStudentByYearProgram?program=${program}&year=${year}`,
       { method: 'GET' }
     )
 
@@ -39,7 +41,9 @@ export const getCompositeImage = async (
 ): Promise<string> => {
   try {
     const response = await fetch(
-      `http://localhost:3000/composite/getComposite?program=${program}&year=${year}`,
+      `http://${
+        import.meta.env.VITE_HOST
+      }/composite/getComposite?program=${program}&year=${year}`,
       { method: 'GET' }
     )
     if (!response.ok) {
@@ -60,7 +64,7 @@ export const getCompositeImage = async (
 export const getUniquePrograms = async (): Promise<Program[]> => {
   try {
     const response = await fetch(
-      'http://localhost:3000/students/getUniquePrograms',
+      `http://${import.meta.env.VITE_HOST}/students/getUniquePrograms`,
       {
         method: 'GET'
       }
@@ -87,9 +91,12 @@ export const getUniquePrograms = async (): Promise<Program[]> => {
 
 export const getAllStudents = async (): Promise<Student[]> => {
   try {
-    const response = await fetch('http://localhost:3000/students/getAll', {
-      method: 'GET'
-    })
+    const response = await fetch(
+      `http://${import.meta.env.VITE_HOST}/students/getAll`,
+      {
+        method: 'GET'
+      }
+    )
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)

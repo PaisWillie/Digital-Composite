@@ -57,6 +57,7 @@ function CompositeViewPage() {
     setNames(updatedNames)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleAddName = () => {
     setNames([
       ...names,
@@ -80,8 +81,9 @@ function CompositeViewPage() {
     }
 
     try {
+      console.log(import.meta.env.VITE_HOST)
       const response = await fetch(
-        'http://localhost:3000/students/addStudent',
+        `http://${import.meta.env.VITE_HOST}/students/addStudent`,
         {
           method: 'PUT',
           headers: {
@@ -212,11 +214,11 @@ function CompositeViewPage() {
           ))}
         </div>
 
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <TextButton variant="secondary" onClick={handleAddName}>
             Add Name
           </TextButton>
-        </div>
+        </div> */}
       </div>
       <div className="mt-6 flex gap-4">
         <TextButton variant="primary" onClick={handleSave}>
