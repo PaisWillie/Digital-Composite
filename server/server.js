@@ -3,8 +3,15 @@ require("dotenv").config();
 const spawn = require('child_process').spawn;
 const express = require("express");
 const cors = require('cors')
+const https = require('https');
 const app = express();
 const PORT = process.env.PORT || 3306;
+
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/example.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/example.com/fullchain.pem'),
+};
+
 
 app.use(cors())
 
@@ -25,6 +32,6 @@ app.use("/composite", compositeRoutes); // for GET /year?program? and PUT /year/
 //app.use(errorHandler);
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Server is running on https://localhost:${PORT}`);
 });

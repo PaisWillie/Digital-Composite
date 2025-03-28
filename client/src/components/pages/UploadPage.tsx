@@ -31,7 +31,7 @@ function UploadPage() {
     const fetchComposites = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_HOST}/students/getUniquePrograms`,
+          `https://${import.meta.env.VITE_HOST}/students/getUniquePrograms`,
           {
             method: 'GET'
           }
