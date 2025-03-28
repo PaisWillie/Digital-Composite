@@ -16,7 +16,7 @@ export const getStudents = async (
 ): Promise<Student[]> => {
   try {
     const studentsResponse = await fetch(
-      `http://${
+      `https://${
         import.meta.env.VITE_HOST
       }/students/getStudentByYearProgram?program=${program}&year=${year}`,
       { method: 'GET' }
@@ -41,7 +41,7 @@ export const getCompositeImage = async (
 ): Promise<string> => {
   try {
     const response = await fetch(
-      `http://${
+      `https://${
         import.meta.env.VITE_HOST
       }/composite/getComposite?program=${program}&year=${year}`,
       { method: 'GET' }
