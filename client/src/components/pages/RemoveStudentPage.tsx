@@ -44,7 +44,7 @@ function RemoveStudentPage() {
       const fetchCompositeData = async () => {
         try {
           const response = await fetch(
-            `http://${
+            `https://${
               import.meta.env.VITE_HOST
             }/composite/getComposite?program=${program.value}&year=${
               year.value
@@ -61,7 +61,7 @@ function RemoveStudentPage() {
           setImageSrc(base64Flag + imageStr)
 
           const studentsResponse = await fetch(
-            `http://${
+            `https://${
               import.meta.env.VITE_HOST
             }/students/getStudentByYearProgram?program=${program.value}&year=${
               year.value
@@ -149,7 +149,7 @@ function RemoveStudentPage() {
 
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_HOST}/composite/blacklistStudent`,
+        `https://${import.meta.env.VITE_HOST}/composite/blacklistStudent`,
         {
           method: 'PUT',
           headers: {

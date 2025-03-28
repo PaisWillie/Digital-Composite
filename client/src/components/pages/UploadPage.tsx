@@ -102,7 +102,7 @@ function UploadPage() {
 
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_HOST}/composite/uploadComposite`,
+        `https://${import.meta.env.VITE_HOST}/composite/uploadComposite`,
         {
           method: 'POST',
           body: formData
