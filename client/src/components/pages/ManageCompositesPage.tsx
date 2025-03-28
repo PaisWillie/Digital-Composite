@@ -33,7 +33,7 @@ function ManageCompositesPage() {
   const fetchComposites = useCallback(async () => {
     try {
       const response = await fetch(
-        'http://localhost:3000/students/getUniquePrograms'
+        `http://${import.meta.env.HOST}/students/getUniquePrograms`
       ) // Fill in the API URL
       if (!response.ok) throw new Error('Failed to fetch composites')
 
@@ -77,7 +77,9 @@ function ManageCompositesPage() {
   const handleEdit = async (composite: Composite) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/composite/getComposite?year=${composite.year}&program=${composite.ogprogram}`
+        `http://${import.meta.env.HOST}/composite/getComposite?year=${
+          composite.year
+        }&program=${composite.ogprogram}`
       )
       if (!response.ok) throw new Error('Failed to fetch composite')
 
@@ -89,7 +91,9 @@ function ManageCompositesPage() {
       )
 
       const response2 = await fetch(
-        `http://localhost:3000/students/getStudentByYearProgram?year=${composite.year}&program=${composite.ogprogram}`
+        `http://${import.meta.env.HOST}/students/getStudentByYearProgram?year=${
+          composite.year
+        }&program=${composite.ogprogram}`
       )
       if (!response2.ok)
         throw new Error('Failed to fetch students for this composite')
@@ -117,7 +121,7 @@ function ManageCompositesPage() {
 
     try {
       const response = await fetch(
-        'http://localhost:3000/composite/deleteComposite',
+        `http://${import.meta.env.HOST}/composite/deleteComposite`,
         {
           method: 'POST',
           headers: {
