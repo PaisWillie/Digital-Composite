@@ -1,8 +1,9 @@
 const { spawn } = require("child_process");
+const pythonExecutable = "/home/ubuntu/gradsight/Digital-Composite/server/myenv/bin/python"
 
 const executePythonScript = (scriptPath, buffer, args = []) => {
     return new Promise((resolve, reject) => {
-        const pythonProcess = spawn("python", [scriptPath, ...args]);
+        const pythonProcess = spawn(pythonExecutable, [scriptPath, ...args]);
 
         let outputBuffer = Buffer.alloc(0);
 
