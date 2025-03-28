@@ -44,9 +44,11 @@ function RemoveStudentPage() {
       const fetchCompositeData = async () => {
         try {
           const response = await fetch(
-            `http://${import.meta.env.HOST}/composite/getComposite?program=${
-              program.value
-            }&year=${year.value}`,
+            `http://${
+              import.meta.env.VITE_HOST
+            }/composite/getComposite?program=${program.value}&year=${
+              year.value
+            }`,
             { method: 'GET' }
           )
           if (!response.ok) {
@@ -60,7 +62,7 @@ function RemoveStudentPage() {
 
           const studentsResponse = await fetch(
             `http://${
-              import.meta.env.HOST
+              import.meta.env.VITE_HOST
             }/students/getStudentByYearProgram?program=${program.value}&year=${
               year.value
             }`,
@@ -147,7 +149,7 @@ function RemoveStudentPage() {
 
     try {
       const response = await fetch(
-        `http://${import.meta.env.HOST}/composite/blacklistStudent`,
+        `http://${import.meta.env.VITE_HOST}/composite/blacklistStudent`,
         {
           method: 'PUT',
           headers: {

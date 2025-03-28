@@ -81,8 +81,9 @@ function CompositeViewPage() {
     }
 
     try {
+      console.log(import.meta.env.VITE_HOST)
       const response = await fetch(
-        `http://${import.meta.env.HOST}/students/addStudent`,
+        `http://${import.meta.env.VITE_HOST}/students/addStudent`,
         {
           method: 'PUT',
           headers: {

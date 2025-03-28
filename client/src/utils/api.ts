@@ -17,7 +17,7 @@ export const getStudents = async (
   try {
     const studentsResponse = await fetch(
       `http://${
-        import.meta.env.HOST
+        import.meta.env.VITE_HOST
       }/students/getStudentByYearProgram?program=${program}&year=${year}`,
       { method: 'GET' }
     )
@@ -42,7 +42,7 @@ export const getCompositeImage = async (
   try {
     const response = await fetch(
       `http://${
-        import.meta.env.HOST
+        import.meta.env.VITE_HOST
       }/composite/getComposite?program=${program}&year=${year}`,
       { method: 'GET' }
     )
@@ -64,7 +64,7 @@ export const getCompositeImage = async (
 export const getUniquePrograms = async (): Promise<Program[]> => {
   try {
     const response = await fetch(
-      `http://${import.meta.env.HOST}/students/getUniquePrograms`,
+      `http://${import.meta.env.VITE_HOST}/students/getUniquePrograms`,
       {
         method: 'GET'
       }
@@ -92,7 +92,7 @@ export const getUniquePrograms = async (): Promise<Program[]> => {
 export const getAllStudents = async (): Promise<Student[]> => {
   try {
     const response = await fetch(
-      `http://${import.meta.env.HOST}/students/getAll`,
+      `http://${import.meta.env.VITE_HOST}/students/getAll`,
       {
         method: 'GET'
       }
