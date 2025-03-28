@@ -104,16 +104,6 @@ The repository is organized as follows:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Developed By
-
-- [Willie Pai](https://github.com/PaisWillie)
-- [Wajdan Faheem](https://github.com/WajdanF)
-- [Henushan Balachandran](https://github.com/HenushanB)
-- [Hammad Pathan](https://github.com/hammadpathan)
-- [Zahin Hossain](https://github.com/ZahinH)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- GETTING STARTED -->
 
 ## Getting Started
