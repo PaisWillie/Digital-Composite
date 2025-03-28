@@ -2,9 +2,8 @@ const compositeService = require("../services/composite.service");
 const studentService = require("../services/students.service");
 const { executePythonScript } = require("../../util/pythonExecutor");
 const { spawn } = require("child_process");
-const path = require("path");
 
-const pythonExecutable = path.join(__dirname, "myenv/bin/python");
+const pythonExecutable = "/home/ubuntu/gradsight/Digital-Composite/server/myenv/bin/python"
 
 async function downloadImage(req, res, bucketname){
     try {
