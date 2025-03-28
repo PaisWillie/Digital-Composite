@@ -64,7 +64,7 @@ export const getCompositeImage = async (
 export const getUniquePrograms = async (): Promise<Program[]> => {
   try {
     const response = await fetch(
-      `http://${import.meta.env.VITE_HOST}/students/getUniquePrograms`,
+      `https://${import.meta.env.VITE_HOST}/students/getUniquePrograms`,
       {
         method: 'GET'
       }
@@ -92,7 +92,7 @@ export const getUniquePrograms = async (): Promise<Program[]> => {
 export const getAllStudents = async (): Promise<Student[]> => {
   try {
     const response = await fetch(
-      `http://${import.meta.env.VITE_HOST}/students/getAll`,
+      `https://${import.meta.env.VITE_HOST}/students/getAll`,
       {
         method: 'GET'
       }
