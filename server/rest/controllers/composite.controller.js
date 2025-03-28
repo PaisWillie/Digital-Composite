@@ -2,6 +2,9 @@ const compositeService = require("../services/composite.service");
 const studentService = require("../services/students.service");
 const { executePythonScript } = require("../../util/pythonExecutor");
 const { spawn } = require("child_process");
+const path = require("path");
+
+const pythonExecutable = path.join(__dirname, "myenv/bin/python");
 
 async function downloadImage(req, res, bucketname){
     try {
@@ -52,7 +55,7 @@ exports.uploadImageByYearAndProgram = async (req, res) => {
         await compositeService.saveImage({ bucketname, year, program, file: req.file });
 
         const ocrParsedData = await new Promise( (resolve, reject) => {
-            const pythonProcess = spawn("python", ["scripts/ovalNameDetection.py", `${year}-${program}`]);
+            const pythonProcess = spawn(pythonExecutable, ["scripts/ovalNameDetection.py", `${year}-${program}`]);
 
             let dataBuffer = "";
     
