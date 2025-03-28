@@ -9,8 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 3306;
 
 const options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/example.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/example.com/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/gradsight.click/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/gradsight.click/fullchain.pem'),
 };
 
 
