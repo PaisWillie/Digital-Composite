@@ -164,25 +164,25 @@ Several critical assumptions underpin this analysis. These assumptions will guid
 \hline
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Causes of Failure(s)} & \textbf{Effects of Failure(s)} & \textbf{Recommended Action(s)} & \textbf{SR} & \textbf{Ref.} \\
 \hline
-Authentication System & Unauthorized Data Access & Insufficient authentication or lack of access control & Compromised data integrity, and access to university systems & Enforce strict access control, maintain a detailed access log for user activities, and conduct routine access reviews. & SR-15.1, SR-15.4 & H1 \\
+Authentication System & Unauthorized Data Access & Insufficient authentication or lack of access control & Compromised data integrity, unauthorized access & Enforce strict RBAC, maintain audit logs, and conduct routine access reviews. & SEC-1, AUD-1, PRIV-3 & H1 \\
 \hline
-Touchscreen Display & System Outage & Mini-PC hardware failure, network disruption & Inaccessibility, potential user frustration & Schedule regular maintenance checks, and implement automatic system restart upon hardware disconnection or failure detection. & SR-15.5 & H2 \\
+Touchscreen Display & System Outage & Mini-PC hardware failure, network disruption & Inaccessibility, user frustration & Implement auto-restart, schedule hardware checks. & FR-11, NFR-17, SUP-1 & H2 \\
 \hline
-Image Retrieval System & Inaccurate Image Display & Improper database linking, data retrieval errors & Incorrect images or alumni information shown to users & Implement data validation protocols, use consistent database linking checks, include error-handling mechanisms, and schedule regular data consistency audits to verify linkage accuracy. & SR-15.5 & H3 \\
+Image Retrieval System & Inaccurate Image Display & Improper database linking, retrieval errors & Incorrect user info shown & Validate links, schedule audits, error handling. & FR-10, INT-1 & H3 \\
 \hline
-LifeTouch Data Integration & Privacy Breach (LifeTouch data) & Improper handling, lack of specific LifeTouch privacy compliance & Potential privacy violations, legal repercussions & Use LifeTouch-specific data protocols, ensure data masking or anonymization where possible, and document all data-handling processes to track compliance with LifeTouch’s guidelines. & SR-15.1 & H4 \\
+LifeTouch Data Integration & Privacy Breach (LifeTouch data) & Mishandling, noncompliance & Legal risks, privacy violations & Apply anonymization, follow protocols, log access. & PRIV-1, PRIV-2, LGL-1 & H4 \\
 \hline
-Server and Network & Slow System Response & Network latency, inadequate processing power & Reduced user engagement due to delayed responses & Optimize code, enhance data retrieval processes, utilize caching. & SR-15.5 & H5 \\
+Server and Network & Slow System Response & Latency, low processing power & Reduced engagement, delays & Optimize performance, use caching. & NFR-13, NFR-14, ADP-5 & H5 \\
 \hline
-Mini-PC and Display Connection & Hardware / Communication Failure & Intermittent connections, outdated firmware & Complete or partial loss of display functionality & Conduct regular hardware health and firmware update checks. & SR-15.5 & H6 \\
+Mini-PC and Display Connection & Communication Failure & Intermittent connection, outdated firmware & Partial or full loss of display & Firmware updates, hardware health checks. & SUP-1, ADP-3 & H6 \\
 \hline
-Image Processing and Display & Image Processing Error & Low memory capacity, software bugs in image handling & Partial or corrupted images displayed & Optimize image processing algorithms, increase memory allocation if necessary, run image data tests frequently, and use caching to reduce load. & SR-15.5 & H7 \\
+Image Processing and Display & Processing Error & Low memory, bugs in image handler & Corrupted/incomplete image display & Optimize memory usage, caching, validation. & FR-14, NFR-15, INT-1 & H7 \\
 \hline
-Data Synchronization & Failure to Update Records & Delay in syncing alumni data due to network issues & Outdated information displayed to users & Set up automated data sync alerts, add manual override for critical data sync issues, schedule regular sync intervals, and have a fallback update mechanism to handle urgent data updates when necessary. & SR-15.5 & H8 \\
+Data Synchronization & Failure to Update Records & Network sync delays & Outdated data shown & Schedule syncs, manual override, alerts. & FR-11, ADP-5, SUP-6 & H8 \\
 \hline
-Data Storage System & Data Loss from System Crash & Lack of adequate data backup measures & Permanent loss of important alumni data & Implement backups to both local and cloud-based storage, and ensure backup verification. & SR-15.5 & H9 \\
+Data Storage System & Data Loss from Crash & Lack of backup & Permanent loss of alumni data & Local/cloud backups with verification. & SUP-2, INT-2, NFR-20 & H9 \\
 \hline
-Compliance with Legal Standards & Legal Non-Compliance & Failure to adhere to LifeTouch and McMaster privacy standards & Risk of legal penalties or litigation & Consult McMaster’s legal advisors, document all processes involving data, and educate team members on compliance protocols, particularly with respect to handling third-party data. & SR-15.3 & H10 \\
+Compliance with Legal Standards & Legal Non-Compliance & Non-adherence to IP/privacy standards & Fines, institutional liability & Track licenses, follow GDPR, consult legal. & LGL-1, LGL-2, PRIV-1 & H10 \\
 \hline
 \end{tabular}
 \end{adjustbox}
@@ -191,52 +191,67 @@ Compliance with Legal Standards & Legal Non-Compliance & Failure to adhere to Li
 \restoregeometry
 
 
+
 \section{Safety and Security Requirements}
 
-To ensure system integrity and protect user data, we will implement the following safety and security measures:
+To ensure system integrity and protect user data, the following safety and security requirements shall be implemented:
 
 \begin{itemize}
-  \item \textbf{SR-1. Access Control:} Role-based access control will be used to restrict access to sensitive features. Students, alumni, and faculty will have different levels of access, ensuring that only authorized personnel can make changes to the composite data.
+  \item \textbf{SEC-1: Access Control} \\
+  The system shall implement \textit{role-based access control (RBAC)} to restrict access to sensitive features. Different user roles—students, alumni, faculty, and administrators—shall have distinct access levels to ensure that only authorized personnel can make changes to composite data.
 
-  \item \textbf{SR-2. Audit Logging:} The system must keep detailed logs of all user interactions, especially those involving access or modifications to sensitive data. These logs will help trace any security breaches and ensure accountability.
+  \item \textbf{AUD-1: Audit Logging} \\
+  The system shall maintain detailed logs of all user interactions, especially those involving access or modifications to sensitive data. These logs must be tamper-proof and stored securely, aiding in breach detection and ensuring accountability.
 
-  \item \textbf{SR-3. Downtime Resilience:} The system must be able to handle hardware downtime without significantly affecting functionality. This includes having backup service available and ensuring that the system can be quickly reset or replaced in the event of a failure.
+  \item \textbf{SUP-4: Downtime Resilience} \\
+  The system shall be resilient to hardware failures. It must include automated backup services and allow for rapid reset or replacement in the event of system failure, minimizing disruption to users.
 \end{itemize}
+
 
 
 \section{Roadmap}
 
-\subsection*{Phase 1: Foundation}
-\begin{enumerate}
-  \item \textbf{Role-Based Access Control (RBAC)} \\
-  \hspace*{1em} - Define distinct user roles, and restrict data access based on roles to prevent unauthorized modifications.
-  \item \textbf{Audit Logging} \\
-  \hspace*{1em} - Log user interactions related to access and modification of sensitive data.
-\end{enumerate}
+\subsection*{Phase 1: Requirements Gathering and System Design \hfill \textit{[Sept 23 – Oct 9]}}
 
-\subsection*{Phase 2: Reinforcement}
-\begin{enumerate}
-  \item \textbf{Data Backup and Recovery} \\
-  \hspace*{1em} - Set up automated backups with local/cloud-based storage.
-  \item \textbf{Hardware Security} \\
-  \hspace*{1em} - Secure physical touchscreen devices to prevent tampering.
-\end{enumerate}
+\begin{itemize}
+  \item Finalize user personas and stakeholder priorities \hfill \textit{[FR-1 to FR-3, CUL-1 to CUL-3]}
+  \item Create system architecture and context diagrams \hfill 
+  \item Define high-level constraints and design assumptions \hfill \textit{[NFR-1 to NFR-4, LGL-1 to LGL-2]}
+\end{itemize}
 
-\subsection*{Phase 3: Security Enhancement}
-\begin{enumerate}
-  \item \textbf{Continuous Vulnerability Scanning} \\
-  \hspace*{1em} - Set up automated vulnerability scans for software libraries and dependencies.
-  \item \textbf{Scalability and Load Balancing} \\
-  \hspace*{1em} - Optimize security to support increased traffic and data.
-\end{enumerate}
+\subsection*{Phase 2: Core System Development \hfill \textit{[Nov 1 – Jan 15]}}
 
-\subsection*{Phase 4: Long-Term Implementation}
-\begin{enumerate}
-  \item \textbf{Recovery Plan} \\
-  \hspace*{1em} - Implement protocols for major system failures, such as redundant servers/databases in case of unexpected outages (e.g., loss of internet).
-  \item \textbf{Scalable Security Infrastructure} \\
-  \hspace*{1em} - Expand security framework to accommodate future needs.
-\end{enumerate}
+\begin{itemize}
+  \item Build frontend UI and admin panel \hfill \textit{[FR-4 to FR-11, NFR-5 to NFR-15]}
+  \item Implement backend, database, and APIs \hfill \textit{[FR-12 to FR-14, PR-1 to PR-3]}
+  \item Integrate ML module for legacy composite parsing \hfill \textit{[FR-14, NFR-25]}
+  \item Ensure adaptability across devices and formats \hfill \textit{[ADP-1 to ADP-4]}
+\end{itemize}
+
+\subsection*{Phase 3: Security Compliance and System Hardening \hfill \textit{[Jan 15 – Feb 3]}}
+
+\begin{itemize}
+  \item Implement encryption, access control, audit logging \hfill \textit{[SEC-1 to SEC-6, AUD-1 to AUD-7]}
+  \item Run compliance checks (GDPR, ISO 25010) \hfill \textit{[LGL-3 to LGL-6, PRIV-1 to PRIV-7]}
+  \item Test data integrity and rollback mechanisms \hfill \textit{[INT-1, INT-2]}
+\end{itemize}
+
+\subsection*{Phase 4: User Testing and Feedback \hfill \textit{[Feb 3 – Feb 14]}}
+
+\begin{itemize}
+  \item Conduct usability testing and performance monitoring \hfill \textit{[NFR-16 to NFR-22]}
+  \item Collect accessibility and interaction feedback \hfill \textit{[FR-7 to FR-11]}
+  \item Finalize FAQ and documentation for support \hfill \textit{[SUP-6 to SUP-9]}
+\end{itemize}
+
+\subsection*{Phase 5: Final Deployment and Support \hfill \textit{[Mar 24 – Mar 30]}}
+
+\begin{itemize}
+  \item Final release to McMaster IT \hfill \textit{[RR-1 to RR-5]}
+  \item Deliver technical and user documentation \hfill \textit{[SUP-1 to SUP-5]}
+  \item Conduct final performance checks and monitoring setup \hfill \textit{[ADP-5, PR-4 to PR-5]}
+\end{itemize}
+
 
 \section{Reflection}
 
