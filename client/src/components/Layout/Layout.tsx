@@ -119,7 +119,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="py-4 bg-[#7A003C] text-white font-poppins font-medium flex flex-row justify-center border-b-[3px] border-[#FDBF57]">
+      <div className="py-4 bg-linkText text-white font-poppins font-medium flex flex-row justify-center border-b-[3px] border-[#FDBF57]">
         McMaster Engineering Class Composite Display
       </div>
       <div className="grid grid-cols-12 flex-1">
