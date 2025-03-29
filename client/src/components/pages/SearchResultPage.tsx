@@ -229,7 +229,7 @@ const SearchResultPage = () => {
             />
             <p className="flex w-full flex-row justify-center italic text-gray-500">
               Need your photo removed? Contact
-              <span className="ml-1 underline">alumni@mcmaster.ca</span>
+              <span className="ml-1 underline">engalum@mcmaster.ca</span>
             </p>
             <div className="max-w-fit">
               <TextButton
