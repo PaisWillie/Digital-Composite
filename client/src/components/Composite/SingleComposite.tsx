@@ -11,7 +11,9 @@ type SingleCompositeProps = {
     y1: number,
     x2: number,
     y2: number,
-    name: string
+    name: string,
+    program: string,
+    year: number
   ) => void
 }
 
@@ -68,7 +70,9 @@ const SingleComposite = ({
                 student.y1,
                 student.x2,
                 student.y2,
-                student.name
+                student.name,
+                student.program,
+                student.year
               )
             }}
           />

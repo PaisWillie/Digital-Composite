@@ -28,6 +28,8 @@ const twoColors: ProgressProps['strokeColor'] = {
 
 export type StudentCoordinate = {
   name: string
+  program: string
+  year: number
   x1: number
   y1: number
   x2: number

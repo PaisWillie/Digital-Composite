@@ -3,6 +3,13 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { Program, Student } from 'types/Types'
 import { getAllStudents, getCompositeImage, getUniquePrograms } from 'utils/api'
 
+function splitCamelCase(str: string): string {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1 $2') // space between lower and upper
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2') // space between multiple uppers and next lower
+    .trim()
+}
+
 export type SearchOption = {
   type: 'student' | 'program'
   program: Program
@@ -88,6 +95,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         if (composite) {
           composite.students.push({
             name: student.name,
+            program: splitCamelCase(student.image_id.split('#')[1]),
+            year: parseInt(student.image_id.split('#')[0], 10),
             x1: student.top_left[0],
             y1: student.top_left[1],
             x2: student.bottom_right[0],

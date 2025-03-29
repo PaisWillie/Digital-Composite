@@ -33,12 +33,19 @@ const CompositeCarousel = ({ composites }: CompositeCarouselProps) => {
     y1: number,
     x2: number,
     y2: number,
-    name: string
+    name: string,
+    program: string,
+    year: number
   ) => {
     setModalContent(
       <div className="flex flex-col items-center gap-y-2 text-center">
         <CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />
-        <p className="text-center font-poppins font-medium">{name}</p>
+        <p className="font-poppins text-center font-medium text-xl mt-2">
+          {name}
+        </p>
+        <p className="text-center font-poppins">
+          {program}, Class of {year}
+        </p>
       </div>
     )
     showModal()
