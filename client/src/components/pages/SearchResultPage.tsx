@@ -178,7 +178,7 @@ const SearchResultPage = () => {
               speed={1500}
               infinite={false}
               slidesPerRow={3}
-              rows={3}
+              rows={2}
             >
               {filteredComposites.map((composite, index) => (
                 <div
