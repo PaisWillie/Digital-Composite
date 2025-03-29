@@ -61,7 +61,7 @@ function App() {
           }
           return prev + 5
         })
-      }, 1) // Adjust the interval duration as needed
+      }, 100) // Adjust the interval duration as needed
     }
     return () => {
       if (interval) clearInterval(interval)
