@@ -1,7 +1,7 @@
 import { useData } from 'context/DataContext'
 import CompositeCarousel from './Composite/CompositeCarousel'
 import Layout from './Layout/Layout'
-import { Progress } from 'antd'
+import { Progress, ProgressProps } from 'antd'
 import { useEffect, useState } from 'react'
 
 // const composites = [
