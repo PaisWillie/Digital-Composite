@@ -146,7 +146,11 @@ const SearchModal = ({
             </TextButton>
           </div> */}
           <div className="mt-3 flex flex-col">
-            <p className="font-poppins text-xs">Recently viewed</p>
+            <p className="font-poppins text-xs">Suggestions</p>
+            <p className="mt-2 font-poppins text-xs italic text-gray-400">
+              Begin typing to search...
+            </p>
+            {/* <p className="font-poppins text-xs">Recently viewed</p>
             <TextButton
               onClick={() => {}}
               leadingIcon={<FaFile className="text-sm" />}
@@ -182,7 +186,7 @@ const SearchModal = ({
               variant="tertiary"
             >
               IBEHS, 2023
-            </TextButton>
+            </TextButton> */}
           </div>
         </>
       )}
