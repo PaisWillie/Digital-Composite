@@ -118,33 +118,38 @@ const Layout = ({ children }: LayoutProps) => {
   }
 
   return (
-    <div className="grid h-screen grid-cols-12">
-      <Navbar showModal={showModal} />
-      <Modal
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={null}
-        closeIcon={null}
-      >
-        <SearchModal
-          searchValue={searchValue}
-          onSearchFieldChange={handleSearchValueChange}
-          searchResults={searchResults}
-          handleSearchButtonClick={handleSearchButtonClick}
-        />
-      </Modal>
-      {isModalOpen && (
-        <div className="fixed bottom-0 left-1/2 z-[1500] flex w-full -translate-x-1/2 flex-row justify-center bg-white p-6">
-          <div className="w-full max-w-screen-md">
-            <OnScreenKeyboard onPress={onKeyPress} />
+    <div className="flex flex-col h-screen">
+      <div className="py-4 bg-[#7A003C] text-white font-poppins font-medium flex flex-row justify-center border-b-[3px] border-[#FDBF57]">
+        McMaster Engineering Class Composite Display
+      </div>
+      <div className="grid grid-cols-12 flex-1">
+        <Navbar showModal={showModal} />
+        <Modal
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
+          closeIcon={null}
+        >
+          <SearchModal
+            searchValue={searchValue}
+            onSearchFieldChange={handleSearchValueChange}
+            searchResults={searchResults}
+            handleSearchButtonClick={handleSearchButtonClick}
+          />
+        </Modal>
+        {isModalOpen && (
+          <div className="fixed bottom-0 left-1/2 z-[1500] flex w-full -translate-x-1/2 flex-row justify-center bg-white p-6">
+            <div className="w-full max-w-screen-md">
+              <OnScreenKeyboard onPress={onKeyPress} />
+            </div>
           </div>
-        </div>
-      )}
-      <main className="col-span-10 flex h-full flex-col justify-center">
-        {children}
-      </main>
-      <Navbar showModal={showModal} />
+        )}
+        <main className="col-span-10 flex h-full flex-col justify-center">
+          {children}
+        </main>
+        <Navbar showModal={showModal} />
+      </div>
     </div>
 
     // WIP: navbar on bottom
