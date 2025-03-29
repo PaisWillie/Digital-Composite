@@ -7,16 +7,23 @@ import { useEffect, useState } from 'react'
 import { FaBars, FaHouse, FaMagnifyingGlass, FaQuestion } from 'react-icons/fa6'
 import { useLocation, useNavigate } from 'react-router-dom'
 import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
+import { cn } from '@udecode/cn'
 
 type NavbarProps = {
   showModal: () => void
+  className?: string
 }
 
-const Navbar = ({ showModal }: NavbarProps) => {
+const Navbar = ({ showModal, className }: NavbarProps) => {
   const location = useLocation()
 
   return (
-    <nav className="flex flex-col items-center justify-center gap-y-4">
+    <nav
+      className={cn([
+        'flex flex-col items-center justify-center gap-y-4',
+        className
+      ])}
+    >
       <IconButton onClick={showModal} icon={<FaMagnifyingGlass />} />
       <IconButton href="/view-all" icon={<FaBars />} />
       {location.pathname !== '/' ? (
@@ -123,7 +130,7 @@ const Layout = ({ children }: LayoutProps) => {
         McMaster Engineering Class Composite Display
       </div>
       <div className="grid grid-cols-12 flex-1">
-        <Navbar showModal={showModal} />
+        <Navbar showModal={showModal} className="2xl:col-span-3" />
         <Modal
           open={isModalOpen}
           onOk={handleOk}
@@ -145,10 +152,10 @@ const Layout = ({ children }: LayoutProps) => {
             </div>
           </div>
         )}
-        <main className="col-span-10 flex h-full flex-col justify-center">
+        <main className="col-span-10 2xl:col-span-6 flex h-full flex-col justify-center">
           {children}
         </main>
-        <Navbar showModal={showModal} />
+        <Navbar showModal={showModal} className="2xl:col-span-3" />
       </div>
     </div>
 
