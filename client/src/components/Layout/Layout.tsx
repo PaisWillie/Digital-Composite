@@ -4,7 +4,7 @@ import SearchModal from 'components/Layout/SearchModal/SearchModal'
 import { SearchOption, useData } from 'context/DataContext'
 import Fuse from 'fuse.js'
 import { useEffect, useState } from 'react'
-import { FaBars, FaHouse, FaMagnifyingGlass } from 'react-icons/fa6'
+import { FaBars, FaHouse, FaMagnifyingGlass, FaQuestion } from 'react-icons/fa6'
 import { useLocation, useNavigate } from 'react-router-dom'
 import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
 
@@ -19,7 +19,11 @@ const Navbar = ({ showModal }: NavbarProps) => {
     <nav className="flex flex-col items-center justify-center gap-y-4">
       <IconButton onClick={showModal} icon={<FaMagnifyingGlass />} />
       <IconButton href="/view-all" icon={<FaBars />} />
-      {location.pathname !== '/' && <IconButton href="/" icon={<FaHouse />} />}
+      {location.pathname !== '/' ? (
+        <IconButton href="/" icon={<FaHouse />} />
+      ) : (
+        <IconButton href="/" icon={<FaQuestion />} />
+      )}
       {/* <IconButton
         href="/about"
         onClick={() => {}}

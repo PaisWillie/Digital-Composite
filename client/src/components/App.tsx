@@ -1,6 +1,8 @@
 import { useData } from 'context/DataContext'
 import CompositeCarousel from './Composite/CompositeCarousel'
 import Layout from './Layout/Layout'
+import { Progress } from 'antd'
+import { useEffect, useState } from 'react'
 
 // const composites = [
 //   {
@@ -19,6 +21,11 @@ import Layout from './Layout/Layout'
 //   }
 // ]
 
+const twoColors: ProgressProps['strokeColor'] = {
+  '0%': '#800000', // Maroon
+  '100%': '#b22222' // Firebrick
+}
+
 export type StudentCoordinate = {
   name: string
   x1: number
@@ -33,6 +40,7 @@ function App() {
   // >([])
 
   const { data, loading, error } = useData()
+  const [progress, setProgress] = useState(0) // Add state for progress
 
   // useEffect(() => {
   //   if (data) {
@@ -40,8 +48,35 @@ function App() {
   //   }
   // }, [data])
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null
+    if (loading) {
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 99) {
+            clearInterval(interval!)
+            return 99
+          }
+          return prev + 5
+        })
+      }, 1) // Adjust the interval duration as needed
+    }
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [loading]) // Run effect when loading changes
+
   if (loading) {
-    return <Layout>Loading...</Layout>
+    return (
+      <Layout>
+        <Progress
+          strokeColor={twoColors}
+          percent={progress}
+          showInfo={false}
+          className="opacity-25"
+        />
+      </Layout>
+    )
   }
 
   if (error) {

@@ -1,4 +1,4 @@
-import { Carousel, Modal } from 'antd'
+import { Carousel, Modal, Progress, ProgressProps } from 'antd'
 import TextButton from 'components/Button/TextButton'
 import SingleComposite from 'components/Composite/SingleComposite'
 import CroppedImage from 'components/CroppedImage/CroppedImage'
@@ -10,11 +10,17 @@ import { useSearchParams } from 'react-router-dom'
 import { parseProgram } from 'utils/parse'
 import Layout from '../Layout/Layout'
 
+const twoColors: ProgressProps['strokeColor'] = {
+  '0%': '#800000', // Maroon
+  '100%': '#b22222' // Firebrick
+}
+
 const SearchResultPage = () => {
   const [selectedCompositeId, setSelectedCompositeId] = useState(-1)
 
   const { data, loading, error } = useData()
 
+  const [progress, setProgress] = useState(0) // Add state for progress
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
 
@@ -81,6 +87,24 @@ const SearchResultPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProgram, selectedYear, data])
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null
+    if (loading) {
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 99) {
+            clearInterval(interval!)
+            return 99
+          }
+          return prev + 5
+        })
+      }, 1) // Adjust the interval duration as needed
+    }
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [loading]) // Run effect when loading changes
+
   const showModal = () => {
     setIsModalOpen(true)
   }
@@ -104,7 +128,7 @@ const SearchResultPage = () => {
     setModalContent(
       <div className="flex flex-col items-center gap-y-2 text-center">
         <CroppedImage src={src} x1={x1} y1={y1} x2={x2} y2={y2} />
-        <p className="text-center font-poppins font-medium">{name}</p>
+        <p className="font-poppins text-center font-medium">{name}</p>
       </div>
     )
     showModal()
@@ -114,7 +138,16 @@ const SearchResultPage = () => {
   // TODO: add (non-white) arrows to Carousel to make it more accessible
 
   if (loading) {
-    return <Layout>Loading...</Layout>
+    return (
+      <Layout>
+        <Progress
+          strokeColor={twoColors}
+          percent={progress}
+          showInfo={false}
+          className="opacity-25"
+        />
+      </Layout>
+    )
   }
 
   if (error) {
@@ -127,7 +160,7 @@ const SearchResultPage = () => {
         {selectedCompositeId === -1 ? (
           <>
             {searchQuery && (
-              <p className="text-start font-poppins text-lg font-medium">
+              <p className="font-poppins text-start text-lg font-medium">
                 Search results for:{' '}
                 <span className="font-normal">{searchQuery}</span>
               </p>
@@ -149,7 +182,7 @@ const SearchResultPage = () => {
                   className="flex flex-col items-center gap-y-2"
                 >
                   <img key={index} src={composite.src} />
-                  <p className="text-center font-poppins font-medium">
+                  <p className="font-poppins text-center font-medium">
                     {parseProgram(composite.program.program)}
                     {', '}
                     {composite.program.year}
