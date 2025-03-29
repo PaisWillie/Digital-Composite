@@ -24,6 +24,17 @@ export default {
       },
       gridTemplateColumns: {
         16: 'repeat(16, minmax(0, 1fr));'
+      },
+      screens: {
+        // Add custom breakpoints
+        // xs: '480px', // Extra small devices
+        // sm: '640px', // Small devices
+        // md: '768px', // Medium devices
+        // lg: '1025px', // Large devices
+        ipad: '1200px', // iPad devices
+        // xl: '1367px', // Extra large devices
+        // '2xl': '1536px', // 2x Extra large devices
+        '3xl': '1920px' // Custom breakpoint for very large screens
       }
     }
   },

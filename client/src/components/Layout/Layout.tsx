@@ -126,11 +126,17 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="py-4 bg-linkText text-white font-poppins font-medium flex flex-row justify-center border-b-[3px] border-[#FDBF57]">
-        McMaster Engineering Class Composite Display
+      <div className="py-3 bg-linkText text-white font-poppins font-medium flex flex-col items-center border-b-[3px] border-[#FDBF57]">
+        <h1>McMaster Engineering Class Composite Display</h1>
+        <h2 className="text-sm font-light italic">
+          Find yourself and your classmates!
+        </h2>
       </div>
       <div className="grid grid-cols-12 flex-1">
-        <Navbar showModal={showModal} className="2xl:col-span-3" />
+        <Navbar
+          showModal={showModal}
+          className="col-span-2 ipad:col-span-1 xl:col-span-3 2xl:col-span-4"
+        />
         <Modal
           open={isModalOpen}
           onOk={handleOk}
@@ -152,10 +158,13 @@ const Layout = ({ children }: LayoutProps) => {
             </div>
           </div>
         )}
-        <main className="col-span-10 2xl:col-span-6 flex h-full flex-col justify-center">
+        <main className="col-span-8 ipad:col-span-10 xl:col-span-6 2xl:col-span-4 flex h-full flex-col justify-center">
           {children}
         </main>
-        <Navbar showModal={showModal} className="2xl:col-span-3" />
+        <Navbar
+          showModal={showModal}
+          className="col-span-2 ipad:col-span-1 xl:col-span-3 2xl:col-span-4"
+        />
       </div>
     </div>
 
