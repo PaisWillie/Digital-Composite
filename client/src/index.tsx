@@ -18,6 +18,7 @@ import {
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'tailwindcss/tailwind.css'
+import 'styles/global.css'
 
 const container = document.getElementById('root') as HTMLDivElement
 const root = createRoot(container)

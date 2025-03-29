@@ -1,4 +1,4 @@
-import { Carousel, Modal } from 'antd'
+import { Carousel, ConfigProvider, Modal } from 'antd'
 import { StudentCoordinate } from 'components/App'
 import CroppedImage from 'components/CroppedImage/CroppedImage'
 import { useState } from 'react'
@@ -55,30 +55,33 @@ const CompositeCarousel = ({ composites }: CompositeCarouselProps) => {
       >
         <div className="flex flex-col items-center">{modalContent}</div>
       </Modal>
-      <Carousel
-        autoplay
-        infinite
-        autoplaySpeed={10000}
-        easing="ease-in"
-        speed={1500}
-      >
-        {/* <SingleComposite
+      <ConfigProvider theme={{}}>
+        <Carousel
+          autoplay
+          infinite
+          arrows
+          autoplaySpeed={10000}
+          easing="ease-in"
+          speed={1500}
+        >
+          {/* <SingleComposite
           src="/composites/test.jpg"
           // originalImageWidth={3667}
           // originalImageHeight={2713}
           onStudentClick={onStudentClick}
           students={[]}
         /> */}
-        {composites.map((composite, index) => (
-          <SingleComposite
-            index={index}
-            key={index}
-            src={composite.src}
-            students={composite.students}
-            onStudentClick={onStudentClick}
-          />
-        ))}
-      </Carousel>
+          {composites.map((composite, index) => (
+            <SingleComposite
+              index={index}
+              key={index}
+              src={composite.src}
+              students={composite.students}
+              onStudentClick={onStudentClick}
+            />
+          ))}
+        </Carousel>
+      </ConfigProvider>
     </>
   )
 }

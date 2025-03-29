@@ -166,9 +166,9 @@ const SearchResultPage = () => {
               </p>
             )}
             <Carousel
+              arrows
               easing="ease-in"
               speed={1500}
-              arrows
               infinite={false}
               slidesPerRow={3}
               rows={3}
