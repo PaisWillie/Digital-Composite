@@ -234,7 +234,7 @@ const SearchResultPage = () => {
               students={filteredComposites[selectedCompositeId].students || []}
               onStudentClick={onStudentClick}
             />
-            <div className="flex flex-row justify-evenly items-center">
+            <div className="flex flex-row justify-evenly items-end">
               <div className="max-w-fit">
                 <TextButton
                   onClick={() => {
@@ -246,7 +246,7 @@ const SearchResultPage = () => {
                   Back
                 </TextButton>
               </div>
-              <p className="flex w-full flex-row justify-center italic text-gray-500 font-poppins mb-4 xl:text-sm">
+              <p className="flex size-full flex-row justify-center ml-2 items-center italic text-gray-500 font-poppins xl:text-sm">
                 Need your photo removed? Contact
                 <span className="ml-1 underline">engalum@mcmaster.ca</span>
               </p>

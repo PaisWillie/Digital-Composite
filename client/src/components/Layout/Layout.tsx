@@ -62,8 +62,6 @@ const Layout = ({ children }: LayoutProps) => {
 
   const [fuse, setFuse] = useState<Fuse<SearchOption> | null>(null)
 
-  const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
-
   const navigate = useNavigate()
 
   useEffect(() => {
