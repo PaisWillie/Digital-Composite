@@ -34,7 +34,7 @@ function AdminPage() {
           View Dashboard Analytics
         </TextButton>
       </div> */}
-      <p className="font-poppins text-grey-600 pt-12">
+      <p className="font-poppins text-gray-600 pt-12">
         Select a task from the navigation bar above to get started.
       </p>
     </AdminLayout>

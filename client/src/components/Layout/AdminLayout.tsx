@@ -23,7 +23,7 @@ const AdminLayout = ({
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-100">
-      <div className="py-12 text-center bg-[#7A003C] w-screen text-white">
+      <div className="py-12 text-center bg-linkText w-screen text-white">
         <h1 className="font-poppins text-3xl font-bold">Admin Panel</h1>
         <h2 className="font-poppins text-sm font-medium">
           McMaster Engineering Class Composite Display
