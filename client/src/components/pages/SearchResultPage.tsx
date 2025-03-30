@@ -234,8 +234,8 @@ const SearchResultPage = () => {
               students={filteredComposites[selectedCompositeId].students || []}
               onStudentClick={onStudentClick}
             />
-            <div className="flex flex-row justify-evenly items-center -mt-4">
-              <div className="max-w-fit -mt-4">
+            <div className="flex flex-row justify-evenly items-center">
+              <div className="max-w-fit">
                 <TextButton
                   onClick={() => {
                     setSelectedCompositeId(-1)
