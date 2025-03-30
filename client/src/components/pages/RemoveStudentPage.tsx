@@ -296,15 +296,15 @@ function RemoveStudentPage() {
           </div>
         )}
 
-        <div className="mt-6 flex gap-4">
+        <div className="mt-6 flex gap-4 flex-row items-center">
+          <TextButton variant="secondary" onClick={handleBackToAdmin}>
+            Back to Admin
+          </TextButton>
           {selectedStudent && (
             <TextButton variant="primary" onClick={handleRemove}>
               Remove
             </TextButton>
           )}
-          <TextButton variant="secondary" onClick={handleBackToAdmin}>
-            Back to Admin
-          </TextButton>
         </div>
       </div>
     </div>
