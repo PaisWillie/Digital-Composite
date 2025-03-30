@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
 import TextField from 'components/TextField/TextField'
 import { FaTrash } from 'react-icons/fa'
+import AdminLayout from 'components/Layout/AdminLayout'
 
 type Student = {
   name: string
@@ -118,7 +119,7 @@ function CompositeViewPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
+    <AdminLayout currPageHref="/admin/manageCompositesPage">
       <h2 className="mb-6 text-2xl font-semibold">Edit Composite</h2>
       <div
         ref={containerRef}
@@ -221,7 +222,7 @@ function CompositeViewPage() {
           Save Composite
         </TextButton>
       </div>
-    </div>
+    </AdminLayout>
   )
 }
 
