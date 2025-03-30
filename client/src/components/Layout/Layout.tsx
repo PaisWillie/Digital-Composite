@@ -10,11 +10,16 @@ import OnScreenKeyboard from './OnScreenKeyboard/OnScreenKeyboard'
 import { cn } from '@udecode/cn'
 
 type NavbarProps = {
-  showModal: () => void
+  showSearchModal: () => void
+  showInstructionModal: () => void
   className?: string
 }
 
-const Navbar = ({ showModal, className }: NavbarProps) => {
+const Navbar = ({
+  showSearchModal,
+  showInstructionModal,
+  className
+}: NavbarProps) => {
   const location = useLocation()
 
   return (
@@ -24,12 +29,12 @@ const Navbar = ({ showModal, className }: NavbarProps) => {
         className
       ])}
     >
-      <IconButton onClick={showModal} icon={<FaMagnifyingGlass />} />
+      <IconButton onClick={showSearchModal} icon={<FaMagnifyingGlass />} />
       <IconButton href="/view-all" icon={<FaBars />} />
       {location.pathname !== '/' ? (
         <IconButton href="/" icon={<FaHouse />} />
       ) : (
-        <IconButton href="/" icon={<FaQuestion />} />
+        <IconButton onClick={showInstructionModal} icon={<FaQuestion />} />
       )}
       {/* <IconButton
         href="/about"
@@ -50,9 +55,14 @@ const Layout = ({ children }: LayoutProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+  const [isInstructionModalOpen, setIsInstructionModalOpen] = useState(false)
+
   const [searchResults, setSearchResults] = useState<SearchOption[]>([])
 
   const [fuse, setFuse] = useState<Fuse<SearchOption> | null>(null)
+
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
 
   const navigate = useNavigate()
 
@@ -88,10 +98,14 @@ const Layout = ({ children }: LayoutProps) => {
 
   const handleOk = () => {
     setIsModalOpen(false)
+    setIsSearchModalOpen(false)
+    setIsInstructionModalOpen(false)
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    setIsSearchModalOpen(false)
+    setIsInstructionModalOpen(false)
   }
 
   const handleSearchButtonClick = (year?: string, program?: string) => {
@@ -107,6 +121,16 @@ const Layout = ({ children }: LayoutProps) => {
 
     navigate(`/view-all?search=${searchValue}${url}`, { replace: true })
     navigate(0)
+  }
+
+  const showSearchModal = () => {
+    setIsSearchModalOpen(true)
+    showModal()
+  }
+
+  const showInstructionModal = () => {
+    setIsInstructionModalOpen(true)
+    showModal()
   }
 
   const onKeyPress = (keyPressed: string) => {
@@ -134,7 +158,8 @@ const Layout = ({ children }: LayoutProps) => {
       </div>
       <div className="grid grid-cols-12 flex-1">
         <Navbar
-          showModal={showModal}
+          showSearchModal={showSearchModal}
+          showInstructionModal={showInstructionModal}
           className="col-span-2 ipad:col-span-1 xl:col-span-3 2xl:col-span-4"
         />
         <Modal
@@ -142,16 +167,25 @@ const Layout = ({ children }: LayoutProps) => {
           onOk={handleOk}
           onCancel={handleCancel}
           footer={null}
-          closeIcon={null}
+          closeIcon={!isSearchModalOpen}
+          centered={!isSearchModalOpen}
+          width={!isSearchModalOpen ? 1000 : undefined}
         >
-          <SearchModal
-            searchValue={searchValue}
-            onSearchFieldChange={handleSearchValueChange}
-            searchResults={searchResults}
-            handleSearchButtonClick={handleSearchButtonClick}
-          />
+          {isSearchModalOpen && (
+            <SearchModal
+              searchValue={searchValue}
+              onSearchFieldChange={handleSearchValueChange}
+              searchResults={searchResults}
+              handleSearchButtonClick={handleSearchButtonClick}
+            />
+          )}
+          {isInstructionModalOpen && (
+            <div className="p-4">
+              <img src="/GradSight-Instructions.png" />
+            </div>
+          )}
         </Modal>
-        {isModalOpen && (
+        {isSearchModalOpen && (
           <div className="fixed bottom-0 left-1/2 z-[1500] flex w-full -translate-x-1/2 flex-row justify-center bg-white p-6">
             <div className="w-full max-w-screen-md">
               <OnScreenKeyboard onPress={onKeyPress} />
@@ -162,7 +196,8 @@ const Layout = ({ children }: LayoutProps) => {
           {children}
         </main>
         <Navbar
-          showModal={showModal}
+          showSearchModal={showSearchModal}
+          showInstructionModal={showInstructionModal}
           className="col-span-2 ipad:col-span-1 xl:col-span-3 2xl:col-span-4"
         />
       </div>
