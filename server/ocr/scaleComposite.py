@@ -2,13 +2,14 @@ from PIL import Image
 from io import BytesIO
 
 # Paths
-#composite_path = "./testcomposite/test.jpg"
+composite_path = "./testcomposite/test2021.jpg"
 output_folder = "output"
-program_year = "2024-Materials_Engineering"
+program_year = "2021-Engineering"
 
 def scaleComposite(composite_path, output_folder, program_year):
+    Image.MAX_IMAGE_PIXELS = None  # Remove the decompression bomb limit
     # Load an image from the specified path
-    img = Image.open(BytesIO(composite_path))
+    img = Image.open(composite_path)
 
 
     # Resize the image to 50% of its original size

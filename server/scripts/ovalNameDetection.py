@@ -18,33 +18,63 @@ allowed_chars = set(
 )
 
 # Adjust the contrast of the image
-def adjust_contrast(image, alpha=0.9, beta=0):
+def adjust_contrast(image, alpha=1.05, beta=5):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    adjusted = cv2.convertScaleAbs(gray, alpha=alpha, beta=beta)
+    window_name = "contrast"
+    #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)  # Allows manual resizing
+    #cv2.resizeWindow(window_name, 1600, 1400)
+    #cv2.imshow(window_name, adjusted)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
 
     # Create a mask for white regions
-    _, mask = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY)
+    _, mask = cv2.threshold(adjusted, 240, 255, cv2.THRESH_BINARY)
 
     # Create an output image, setting non-white areas to black
     output = np.zeros_like(image)
     output[mask == 255] = [255, 255, 255]  # Keep white areas as white
-    #cv2.imshow("Enhanced", output)
+    window_name = "output"
+    #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)  # Allows manual resizing
+    #cv2.resizeWindow(window_name, 1600, 1400)
+    #cv2.imshow(window_name, output)
     #cv2.waitKey(0)
-    #cv2.destroyAllWindows
+    #cv2.destroyAllWindows()
     return output
 
 # Detect edges in the image using the Canny edge detector
 def detect_edges(image):
-    return cv2.Canny(image, 100, 200)
+    edge = cv2.Canny(image, 100, 200)
+    # show the edges
+    window_name = "canny"
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)  # Allows manual resizing
+    cv2.resizeWindow(window_name, 1600, 1400)
+    cv2.imshow(window_name, edge)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    return edge
 
 # Apply morphological operations to close gaps in the edges
 def morphological_operations(edges):
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
     closed_edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
-    return cv2.dilate(closed_edges, kernel, iterations=1)
+    d = cv2.dilate(closed_edges, kernel, iterations=1)
+    # show the closed edges
+    window_name = "morph"
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)  # Allows manual resizing
+    cv2.resizeWindow(window_name, 1600, 1400)
+    cv2.imshow(window_name, d)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    return d
 
 # Find contours in the dilated edge image
-def find_contours(dilated_edges):
+def find_contours(dilated_edges, image):
+    if len(dilated_edges.shape) == 3:  # Check if it's a color image
+        dilated_edges = cv2.cvtColor(dilated_edges, cv2.COLOR_BGR2GRAY)
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    # display the contours
 
     while len(contours) < 10:
         contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -53,10 +83,18 @@ def find_contours(dilated_edges):
         else:
             cv2.drawContours(dilated_edges, contours[0], -1, 0, thickness=cv2.FILLED)
     contours, _ = cv2.findContours(dilated_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    window_name = "draw"
+    th = image.copy()
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)  # Allows manual resizing
+    cv2.resizeWindow(window_name, 1600, 1400)
+    cv2.drawContours(th, contours, -1, (0, 255, 0), 2)
+    cv2.imshow(window_name,th)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return contours
 
 # Filter contours to find potential student regions based on aspect ratio and size
-def filter_contours(contours):
+def filter_contours(contours, image):
     temp_student_regions = []
     areas = []
     contourareas = [cv2.contourArea(contour) for contour in contours]
@@ -64,6 +102,7 @@ def filter_contours(contours):
     tolerance = 0.35
     minarea = bigarea * (1 - tolerance)
     maxarea = bigarea * (1 + tolerance)
+    temp_save = []
 
     for contour in contours:
         if len(contour) >= 200:
@@ -71,6 +110,7 @@ def filter_contours(contours):
                 continue
             # Fit an ellipse to the contour
             ellipse = cv2.fitEllipse(contour)
+            save = contour
             center, axes, angle = ellipse
             aspect_ratio = float(axes[0]) / axes[1]
             # Check if the aspect ratio is within the desired range
@@ -79,6 +119,16 @@ def filter_contours(contours):
                 # Calculate the area of the ellipse
                 area = np.pi * axes[0] * axes[1] / 4
                 areas.append(area)
+                temp_save.append(save)
+    
+    window_name = "draw"
+    th = image.copy()
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)  # Allows manual resizing
+    cv2.resizeWindow(window_name, 1600, 1400)
+    cv2.drawContours(th, temp_save, -1, (0, 255, 0), 2)
+    cv2.imshow(window_name,th)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return temp_student_regions, areas
 
 # Filter student regions by area to remove outliers
@@ -130,6 +180,7 @@ def boundingEllipseRectangle(ellipse):
     box = cv2.boxPoints(ellipse)
     return box.astype(int).tolist()
 
+"""
 # Process each detected oval to extract and validate text
 def process_ovals(image, student_regions, program_year):
     data = []
@@ -182,6 +233,59 @@ def process_ovals(image, student_regions, program_year):
     og_data = [{"programYear": program_year,
                 "students": data}]
 
+    return og_data """
+def process_ovals(image, student_regions, program_year):
+    data = []
+    final_image = image.copy()
+    mapped_ovals = []
+
+    for idx, student in enumerate(student_regions):
+        center, axes, angle = student
+        roi, roi_left, roi_top, roi_right, roi_bottom = extract_text_roi(image, center, axes)
+        
+        if roi is None:
+            continue
+        
+        gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+        results = reader.readtext(gray_roi, detail=0)
+        extracted_text = "\n".join(results)
+        lines = extracted_text.strip().split("\n")
+        valid_lines = [line.strip() for line in lines if line.strip()][:2]
+
+        corners = boundingEllipseRectangle(student)
+
+        # Assign corners to variables
+        top_left = corners[1]
+        top_right = corners[2]
+        bottom_left = corners[0]
+        bottom_right = corners[3]
+
+        # Default name
+        name_text = "PLEASE CHECK NAME"
+
+        # Check if the extracted text is a valid name
+        if valid_lines and is_valid_name(" ".join(valid_lines)):
+            name_text = " ".join(valid_lines)
+
+        # Draw the ellipse and ROI on the final image
+        cv2.ellipse(final_image, student, (0, 255, 0), 2)
+        cv2.rectangle(final_image, (roi_left, roi_top), (roi_right, roi_bottom), (255, 0, 0), 2)
+        cv2.putText(final_image, name_text, (int(center[0] - 50), int(center[1] + axes[1] + 20)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+
+        # Add output to data as JSON
+        data.append({
+            "name": name_text,
+            "top_left": top_left,
+            "top_right": top_right,
+            "bottom_left": bottom_left,
+            "bottom_right": bottom_right,
+            "student_region": student
+        })
+
+    # Format data into final JSON
+    og_data = [{"programYear": program_year, "students": data}]
+
     return og_data
 
 # Main function to execute the steps
@@ -201,8 +305,8 @@ def main(image_data, program_year):
     contrast = adjust_contrast(image)
     edges = detect_edges(contrast)
     dilated_edges = morphological_operations(edges)
-    contours = find_contours(dilated_edges)
-    temp_student_regions, areas = filter_contours(contours)
+    contours = find_contours(dilated_edges, image)
+    temp_student_regions, areas = filter_contours(contours, image)
     student_regions = filter_by_area(temp_student_regions, areas)
     metadata = process_ovals(image, student_regions, program_year)
     return metadata

@@ -4,6 +4,8 @@ import numpy as np
 from io import BytesIO
 
 def main(image_data):
+    # Remove the decompression bomb limit
+    Image.MAX_IMAGE_PIXELS = None
     img = Image.open(BytesIO(image_data))
 
     # Resize the image to 50% of its original size
