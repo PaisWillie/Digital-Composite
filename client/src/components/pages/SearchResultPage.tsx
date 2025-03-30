@@ -188,7 +188,7 @@ const SearchResultPage = () => {
                   }}
                   className="flex flex-col items-center gap-y-2"
                 >
-                  <img key={index} src={composite.src} />
+                  <img key={index} src={composite.previewSrc} />
                   <p className="font-poppins text-center font-medium">
                     {parseProgram(composite.program.program)}
                     {', '}

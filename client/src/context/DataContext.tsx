@@ -1,7 +1,12 @@
 import { StudentCoordinate } from 'components/App'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Program, Student } from 'types/Types'
-import { getAllStudents, getCompositeImage, getUniquePrograms } from 'utils/api'
+import {
+  getAllStudents,
+  getCompositeImage,
+  getPreviewCompositeImage,
+  getUniquePrograms
+} from 'utils/api'
 
 function splitCamelCase(str: string): string {
   return str
@@ -20,6 +25,7 @@ interface DataType {
   students: Student[]
   composites: {
     src: string
+    previewSrc: string
     program: Program
     students: StudentCoordinate[]
   }[]
@@ -66,16 +72,27 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         })
       )
 
+      const previewComposites = await Promise.all(
+        programs.map(async (program) => {
+          return {
+            src: await getPreviewCompositeImage(program.program, program.year),
+            program: program
+          }
+        })
+      )
+
       // Map students to composites
       const tempComposites: {
         src: string
+        previewSrc: string
         program: Program
         students: StudentCoordinate[]
       }[] = []
 
-      composites.forEach((composite) => {
+      composites.forEach((composite, index) => {
         tempComposites.push({
           src: composite.src,
+          previewSrc: previewComposites[index].src,
           program: composite.program,
           students: []
         })

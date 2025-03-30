@@ -61,6 +61,32 @@ export const getCompositeImage = async (
   }
 }
 
+export const getPreviewCompositeImage = async (
+  program: string,
+  year: string | number
+): Promise<string> => {
+  try {
+    const response = await fetch(
+      `https://${
+        import.meta.env.VITE_HOST
+      }/composite/getCompositePreview?program=${program}&year=${year}`,
+      { method: 'GET' }
+    )
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const buffer = await response.arrayBuffer()
+    const base64Flag = 'data:image/jpeg;base64,'
+    const imageStr = arrayBufferToBase64(buffer)
+    return base64Flag + imageStr
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error(`Error fetching preview composite image: ${error.message}`)
+    return ''
+  }
+}
+
 export const getUniquePrograms = async (): Promise<Program[]> => {
   try {
     const response = await fetch(
