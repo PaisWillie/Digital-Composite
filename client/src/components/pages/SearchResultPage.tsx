@@ -177,7 +177,7 @@ const SearchResultPage = () => {
               easing="ease-in"
               speed={1500}
               infinite={false}
-              slidesPerRow={3}
+              slidesPerRow={2}
               rows={2}
             >
               {filteredComposites.map((composite, index) => (
