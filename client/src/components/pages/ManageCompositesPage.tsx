@@ -6,6 +6,7 @@ import Select from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
 import { programOptions, yearOptions } from 'utils/constants'
 import { showErrorToast, showSuccessToast } from 'components/Toasts/Toasts'
+import AdminLayout from 'components/Layout/AdminLayout'
 
 interface Composite {
   id: string
@@ -144,14 +145,8 @@ function ManageCompositesPage() {
     }
   }
 
-  const handleBackToAdmin = () => {
-    navigate('/admin')
-  }
-
   return (
-    <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6">
-      <h2 className="mb-6 text-2xl font-semibold">Manage Composites</h2>
-
+    <AdminLayout currPageHref="/admin/manageCompositesPage">
       <div className="mb-6 flex gap-4">
         <div className="mb-4">
           <label className="block pb-1 text-sm font-medium text-gray-700">
@@ -217,13 +212,7 @@ function ManageCompositesPage() {
           </tbody>
         </table>
       )}
-
-      <div className="mt-6">
-        <TextButton variant="secondary" onClick={handleBackToAdmin}>
-          Back to Admin
-        </TextButton>
-      </div>
-    </div>
+    </AdminLayout>
   )
 }
 

@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import TextButton from 'components/Button/TextButton'
+import AdminLayout from 'components/Layout/AdminLayout'
+import { showErrorToast, showSuccessToast } from 'components/Toasts/Toasts'
+import { useEffect, useRef, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
 import { programOptions, yearOptions } from 'utils/constants'
-import { showErrorToast, showSuccessToast } from 'components/Toasts/Toasts'
 
 type Student = {
   name: string
@@ -37,7 +37,6 @@ function RemoveStudentPage() {
 
   const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (program && year) {
@@ -129,10 +128,6 @@ function RemoveStudentPage() {
     }
   }
 
-  const handleBackToAdmin = () => {
-    navigate('/admin')
-  }
-
   const handleRemove = async () => {
     if (!program || !year || !selectedStudent) {
       showErrorToast('Please select a program, year, and student.')
@@ -186,9 +181,7 @@ function RemoveStudentPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-6">
-      <h2 className="mb-6 text-2xl font-semibold">Remove Student</h2>
-
+    <AdminLayout currPageHref="/admin/removeStudentPage">
       {/* Composite Image Container */}
       <div
         ref={containerRef}
@@ -297,9 +290,6 @@ function RemoveStudentPage() {
         )}
 
         <div className="mt-6 flex gap-4 flex-row items-center">
-          <TextButton variant="secondary" onClick={handleBackToAdmin}>
-            Back to Admin
-          </TextButton>
           {selectedStudent && (
             <TextButton variant="primary" onClick={handleRemove}>
               Remove
@@ -307,7 +297,7 @@ function RemoveStudentPage() {
           )}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   )
 }
 

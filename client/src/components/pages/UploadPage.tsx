@@ -12,6 +12,7 @@ import {
   updateToast
 } from 'components/Toasts/Toasts'
 import { programOptions, yearOptions } from 'utils/constants'
+import AdminLayout from 'components/Layout/AdminLayout'
 
 function UploadPage() {
   const [uploadFile, setUploadFile] = useState<File | null>(null)
@@ -137,10 +138,6 @@ function UploadPage() {
     }
   }
 
-  const handleBackToAdmin = () => {
-    navigate('/admin')
-  }
-
   const accept: Accept = {
     'image/*': []
   }
@@ -152,9 +149,7 @@ function UploadPage() {
   })
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-6">
-      <h2 className="mb-6 text-2xl font-semibold">Upload Composite</h2>
-
+    <AdminLayout currPageHref="/admin/uploadPage">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
         <div className="mb-4">
           <label className="block pb-1 text-sm font-medium text-gray-700">
@@ -205,12 +200,9 @@ function UploadPage() {
           <TextButton variant="primary" onClick={handleUpload}>
             Upload Composite
           </TextButton>
-          <TextButton variant="secondary" onClick={handleBackToAdmin}>
-            Back to Admin
-          </TextButton>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   )
 }
 

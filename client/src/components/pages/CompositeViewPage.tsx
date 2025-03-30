@@ -108,10 +108,6 @@ function CompositeViewPage() {
     }
   }
 
-  const handleBackToAdmin = () => {
-    navigate('/admin')
-  }
-
   let scaleX = 1
   let scaleY = 1
   if (imageRef.current && naturalSize.width > 0 && naturalSize.height > 0) {
@@ -223,9 +219,6 @@ function CompositeViewPage() {
       <div className="mt-6 flex gap-4">
         <TextButton variant="primary" onClick={handleSave}>
           Save Composite
-        </TextButton>
-        <TextButton variant="secondary" onClick={handleBackToAdmin}>
-          Back to Admin
         </TextButton>
       </div>
     </div>

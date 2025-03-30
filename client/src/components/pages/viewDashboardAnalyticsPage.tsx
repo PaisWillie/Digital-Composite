@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
-import { Line } from 'react-chartjs-2'
-import { ChartOptions, ChartData } from 'chart.js'
 import {
-  Chart as ChartJS,
   CategoryScale,
+  ChartData,
+  Chart as ChartJS,
+  ChartOptions,
+  Legend,
   LinearScale,
-  PointElement,
   LineElement,
+  PointElement,
   Title,
-  Tooltip,
-  Legend
+  Tooltip
 } from 'chart.js'
-import TextButton from 'components/Button/TextButton'
+import AdminLayout from 'components/Layout/AdminLayout'
 import { showErrorToast } from 'components/Toasts/Toasts'
+import { useEffect, useState } from 'react'
+import { Line } from 'react-chartjs-2'
+import { v4 as uuidv4 } from 'uuid'
 
 ChartJS.register(
   CategoryScale,
@@ -53,7 +53,6 @@ function ViewDashboardAnalyticsPage() {
   >([])
   const [totalViews, setTotalViews] = useState<number>(0)
   const [searchTrends, setSearchTrends] = useState<any[]>([])
-  const navigate = useNavigate()
 
   // Temporarily fake data for analytics
   const fetchAnalytics = async () => {
@@ -102,10 +101,6 @@ function ViewDashboardAnalyticsPage() {
     fetchAnalytics()
   }, [])
 
-  const handleBackToAdmin = () => {
-    navigate('/admin')
-  }
-
   // Prepare the chart data
   const lineChartData: ChartData<'line'> = {
     labels: searchTrends.map((trend) => trend.date),
@@ -152,7 +147,7 @@ function ViewDashboardAnalyticsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-6">
+    <AdminLayout currPageHref="/admin/viewDashboardAnalyticsPage">
       <h2 className="mb-6 text-2xl font-semibold">Dashboard Analytics</h2>
 
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -220,13 +215,7 @@ function ViewDashboardAnalyticsPage() {
         </h3>
         <Line data={lineChartData} options={lineChartOptions} />
       </div>
-
-      <div className="mt-6">
-        <TextButton variant="secondary" onClick={handleBackToAdmin}>
-          Back to Admin
-        </TextButton>
-      </div>
-    </div>
+    </AdminLayout>
   )
 }
 
