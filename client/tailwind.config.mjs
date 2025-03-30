@@ -32,7 +32,7 @@ export default {
         // md: '768px', // Medium devices
         // lg: '1025px', // Large devices
         ipad: '1200px', // iPad devices
-        // xl: '1367px', // Extra large devices
+        xl: '1367px', // Extra large devices
         // '2xl': '1536px', // 2x Extra large devices
         '3xl': '1920px' // Custom breakpoint for very large screens
       }
