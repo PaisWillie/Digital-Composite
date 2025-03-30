@@ -246,7 +246,7 @@ const SearchResultPage = () => {
                   Back
                 </TextButton>
               </div>
-              <p className="flex w-full flex-row justify-center italic text-gray-500 font-poppins mb-4">
+              <p className="flex w-full flex-row justify-center italic text-gray-500 font-poppins mb-4 xl:text-sm">
                 Need your photo removed? Contact
                 <span className="ml-1 underline">engalum@mcmaster.ca</span>
               </p>
