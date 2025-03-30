@@ -1,3 +1,5 @@
+import { cn } from '@udecode/cn'
+
 interface CroppedImageProps {
   src: string
   x1: number
@@ -11,7 +13,10 @@ const CroppedImage = ({ src, x1, y1, x2, y2 }: CroppedImageProps) => {
   const height = y2 - y1
 
   return (
-    <div className="relative overflow-hidden" style={{ width, height }}>
+    <div
+      className={cn(['relative overflow-hidden', height > 650 && 'scale-50'])}
+      style={{ width, height }}
+    >
       <img
         src={src}
         className="absolute size-auto max-h-none max-w-none"
