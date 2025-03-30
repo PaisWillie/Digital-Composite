@@ -29,7 +29,11 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const location = useLocation()
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div className="h-screen w-screen flex justify-center items-center font-poppins italic text-sm text-gray-300">
+        Loading...
+      </div>
+    )
   }
 
   if (!isAuthenticated) {
