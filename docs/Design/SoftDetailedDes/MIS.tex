@@ -63,7 +63,7 @@ January 17, 2025 & 1.0 & Rev 0\\
 
 See SRS Documentation at https://github.com/PaisWillie/Digital-Composite/blob/main/docs/SRS-Volere/SRS.pdf
 
-\wss{Also add any additional symbols, abbreviations or acronyms}
+
 
 \newpage
 
@@ -83,602 +83,701 @@ and Module Guide.  The full documentation and implementation can be
 found at https://github.com/PaisWillie/Digital-Composite/tree/main.
 
 \section{Notation}
+\label{SecNotation}
 
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
+The structure of the MIS for modules follows standard conventions from software engineering design, specifically based on information hiding principles and modular interface specifications. The templates used are adapted from classical software specification methods. The mathematical notation follows commonly accepted formal methods for data types, logical rules, and function semantics.
 
-The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
-with the addition that template modules have been adapted from
-\cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
-\citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
-multiple assignment statement and conditional rules follow the form $(c_1
-\Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
+For instance, the symbol \texttt{:=} is used to denote multiple assignment, and conditional expressions follow the structure:
+\[
+(c_1 \Rightarrow r_1 \mid c_2 \Rightarrow r_2 \mid \dots \mid c_n \Rightarrow r_n)
+\]
 
-The following table summarizes the primitive data types used by \progname. 
+\noindent
+The table below summarizes the primitive data types used throughout this specification:
 
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
-\noindent 
 \begin{tabular}{l l p{7.5cm}} 
 \toprule 
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
 \midrule
-character & char & a single symbol or digit\\
-integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
-natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
-real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+character & \texttt{char} & A single symbol or digit\\
+integer & $\mathbb{Z}$ & A whole number in $(-\infty, \infty)$ \\
+natural number & $\mathbb{N}$ & A positive integer in $[1, \infty)$ \\
+real number & $\mathbb{R}$ & Any real number in $(-\infty, \infty)$ \\
 \bottomrule
 \end{tabular} 
 \end{center}
 
 \noindent
-The specification of \progname \ uses some derived data types: sequences, strings, and
-tuples. Sequences are lists filled with elements of the same data type. Strings
-are sequences of characters. Tuples contain a list of values, potentially of
-different types. In addition, \progname \ uses functions, which
-are defined by the data types of their inputs and outputs. Local functions are
-described by giving their type signature followed by their specification.
+In addition to primitive types, the specification uses several derived data types:
+\begin{itemize}
+  \item \textbf{Sequences}: Ordered lists of elements of the same type
+  \item \textbf{Strings}: Sequences of characters
+  \item \textbf{Tuples}: Ordered collections of elements, potentially of different types
+\end{itemize}
 
-\section{Module Decomposition}
+\noindent
+Functions are described using their input and output types. Local functions are specified using a signature followed by their semantics in English or mathematical form.
 
-The following table is taken directly from the Module Guide document for this project.
 
-\begin{table}[h!]
+\section{Module Decomposition Table}
+\label{SecModDecomp}
+
+The modules for GradSight are organized according to the principles of information hiding and responsibility-driven design. The decomposition separates system infrastructure, processing logic, and presentation layers into three abstraction levels. Each module is labeled with an identifier (M1–M7) and follows the hierarchy introduced in the Module Guide (MG).
+
+\begin{table}[H]
 \centering
-\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Level 1} & \textbf{Level 2}\\
-\midrule
-
-{Hardware-Hiding} & ~ \\
-\midrule
-
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
-\midrule
-
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
-\bottomrule
-
+\caption{Revised Module Decomposition Table}
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Level 1} & \textbf{Level 2 (Modules)} \\
+\hline
+\textbf{Hardware-Hiding} &
+M1: Cloud — abstracts interaction with AWS S3, Lambda, and DynamoDB \\
+\hline
+\textbf{Behaviour-Hiding} &
+M2: Input — parses and validates uploaded files \\
+& M3: Upload — uploads images and metadata to cloud storage \\
+& M4: OCR — extracts names and coordinates from composite images \\
+& M5: Output — stores and queries parsed metadata from DynamoDB \\
+& M6: UI Parsing — handles fallback parsing and error display logic \\
+\hline
+\textbf{Software Decision} &
+M7: GUI — provides the touch-based interface for navigation and search \\
+\hline
 \end{tabular}
-\caption{Module Hierarchy}
-\label{TblMH}
 \end{table}
 
-\newpage
-~\newpage
+\section{Module M1 – Cloud}
+\label{SecM1}
 
-\section{MIS of Cloud Module} \label{Module}
+\subsection*{Module Responsibilities}
+This module abstracts the cloud infrastructure of the system. It handles all interaction with Amazon Web Services (AWS), including S3 for image storage, Lambda for triggering OCR pipelines, and DynamoDB for persistent metadata storage.
 
-\subsection{Module}
+\subsection*{Secrets}
+- The structure and credentials for accessing AWS services  
+- Cloud function triggers and permissions  
+- DynamoDB table and S3 bucket configuration  
 
-\subsection{Uses}
+\subsection*{Services}
+- Upload image files to S3  
+- Retrieve stored image files  
+- Store parsed OCR metadata in DynamoDB  
+- Fetch parsed metadata by user query  
 
+\subsection*{Information Hiding}
+This module hides the implementation details of AWS interaction, such as authentication, request handling, and region setup.
+
+\subsection*{Assumptions}
+- AWS credentials are stored securely in the environment  
+- DynamoDB, Lambda, and S3 services are already configured  
+- Lambda function expects a valid image path from S3
+
+\subsection*{State Variables}
 \begin{itemize}
-  \item Cloud Module
-  \item Data Upload Module
-  \item Output Storage Module
-  \item OCR Processing Module
+  \item \texttt{bucketName: String} — Identifier for the S3 bucket
+  \item \texttt{ddbTableName: String} — Name of the DynamoDB table used for storing parsed metadata
 \end{itemize}
 
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-manageCloud & Image & Success/Fail Call & InvalidImageFileServerIsDown \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-None
-
-\subsubsection{Environment Variables}
-
-None
-
-\subsubsection{Assumptions}
-
+\subsection*{Environment Variables}
 \begin{itemize}
-  \item Input data is provided in a client-approved format
-  \item AWS is running, cloud services are up
+  \item \texttt{AWS\_REGION: String} — Region where services are hosted
+  \item \texttt{AWS\_CREDENTIALS: JSON} — Keys and secret tokens for service access
 \end{itemize}
 
-\subsubsection{Access Routine Semantics}
+\subsection*{Uses}
+None (Cloud is the hardware-hiding module — other modules use it, but it does not call others directly.)
 
-\noindent manageCloud():
+\subsection*{Interface Syntax}
+
 \begin{itemize}
-\item transition: Takes a valid image from input format and processes in cloud.
-\item output: Returns a success or failure call based on the image processing, s3, and lambda function.
-\item exception: Throws InvalidImageException for non-compliant input data or ServerIsDown is the cloud is not running.
+  \item \texttt{uploadToS3(image: BinaryImage) → url: String}
+  \item \texttt{triggerOCRLambda(s3Url: String) → lambdaStatus: Integer}
+  \item \texttt{storeMetadata(data: JSON) → success: Boolean}
+  \item \texttt{fetchMetadataByQuery(query: JSON) → result: JSON[]}
 \end{itemize}
 
-\subsubsection{Local Functions}
+\subsection*{Semantics}
 
-None
+\textbf{uploadToS3}
+\begin{itemize}
+  \item \textbf{Transition:} Uploads the given image to the S3 bucket using a secure HTTP PUT request
+  \item \textbf{Output:} Returns the public URL of the uploaded image
+  \item \textbf{Exceptions:} S3UploadError if upload fails
+\end{itemize}
 
-\newpage
+\textbf{triggerOCRLambda}
+\begin{itemize}
+  \item \textbf{Transition:} Calls AWS Lambda to parse the image at the given S3 path
+  \item \textbf{Output:} Returns HTTP status code (200 = success)
+  \item \textbf{Exceptions:} LambdaInvocationError if function cannot be triggered
+\end{itemize}
+
+\textbf{storeMetadata}
+\begin{itemize}
+  \item \textbf{Transition:} Saves parsed data (name, program, coordinates, etc.) to DynamoDB
+  \item \textbf{Output:} Returns \texttt{true} if write is acknowledged
+  \item \textbf{Exceptions:} DDBWriteError if write fails
+\end{itemize}
+
+\textbf{fetchMetadataByQuery}
+\begin{itemize}
+  \item \textbf{Transition:} Queries the DynamoDB table for entries matching user query (e.g., year = 2024, name = Zahin)
+  \item \textbf{Output:} Returns an array of matching JSON objects (name, coordinates, etc.)
+  \item \textbf{Exceptions:} DDBReadError or MalformedQueryError
+\end{itemize}
+
+
 
 % MIS of Input Module
 
-\section{MIS of Input Module} \label{Module}
+\section{Module M2 – Input}
+\label{SecM2}
 
-\subsection{Module}
+\subsection*{Module Responsibilities}
+This module is responsible for validating the structure and format of composite images before they are uploaded. It ensures that the uploaded file meets size, resolution, and file-type constraints as outlined in the SRS.
 
-\subsection{Uses}
+\subsection*{Secrets}
+- Validation thresholds (e.g., max file size, supported file types)  
+- Image resolution rules specific to OCR accuracy requirements
 
+\subsection*{Services}
+- Accepts image files from the Admin UI (M6)
+- Performs pre-upload validation checks
+- Reports formatted validation results to the Upload module (M3)
+
+\subsection*{Information Hiding}
+This module hides the internal rules used to verify the image's acceptability for parsing and storage.
+
+\subsection*{Assumptions}
+- Input is a single image file in a supported format (.png or .jpeg)
+- File is not corrupted and can be decoded
+- File is being uploaded through the Admin interface
+
+\subsection*{State Variables}
 \begin{itemize}
-  \item Input module
-  \item UI parsing module
+  \item \texttt{acceptedTypes: List<String>} — Allowed file extensions (e.g., \texttt{[``png'', ``jpg'']})
+  \item \texttt{maxFileSize: Integer} — Maximum file size in bytes
+  \item \texttt{minResolution: Tuple<Integer, Integer>} — Minimum resolution (width, height)
 \end{itemize}
 
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-convertInput & Image & Metadata Formatted in JSON & InvalidImageFile \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-None
-
-\subsubsection{Environment Variables}
-
-None
-
-\subsubsection{Assumptions}
-
+\subsection*{Environment Variables}
 \begin{itemize}
-  \item Input data is provided in a client-approved format
-  \item Metadata keys and structure adhere to predefined standards
+  \item \texttt{MAX\_UPLOAD\_SIZE: Integer} — System-wide upper limit on uploads
 \end{itemize}
 
-\subsubsection{Access Routine Semantics}
+\subsection*{Uses}
+- M3: Upload Module (sends validated image forward)
 
-\noindent convertInput():
+\subsection*{Interface Syntax}
 \begin{itemize}
-\item transition: Validates and transforms the input data into the required format.
-\item output: Returns the formatted data suitable for S3 upload and Lambda processing.
-\item exception: Throws InvalidFormatException for non-compliant input data.
+  \item \texttt{validateImage(file: BinaryImage) → result: ValidationReport}
+  \item \texttt{getAcceptedTypes() → List<String>}
+  \item \texttt{getMaxFileSize() → Integer}
 \end{itemize}
 
-\subsubsection{Local Functions}
+\subsection*{Semantics}
 
-None
+\textbf{validateImage}
+\begin{itemize}
+  \item \textbf{Transition:} Verifies that the image meets file type, size, and resolution constraints
+  \item \textbf{Output:} Returns a \texttt{ValidationReport} object containing status, error messages (if any), and extracted metadata
+  \item \textbf{Exceptions:} FileFormatError, FileTooLargeError, ResolutionTooLowError
+\end{itemize}
 
-\newpage
+\textbf{getAcceptedTypes}
+\begin{itemize}
+  \item \textbf{Transition:} Returns a list of supported file extensions
+  \item \textbf{Output:} List of strings (e.g., [``png'', ``jpeg''])
+\end{itemize}
+
+\textbf{getMaxFileSize}
+\begin{itemize}
+  \item \textbf{Transition:} Fetches the current maximum file size threshold
+  \item \textbf{Output:} Integer value in bytes
+\end{itemize}
+
 
 % MIS of Data Upload Module
 
-\section{MIS of Data Upload Module} \label{Module}
+\section{Module M3 – Upload}
+\label{SecM3}
 
-\subsection{Module}
+\subsection*{Module Responsibilities}
+This module handles the secure upload of validated image files to the cloud storage system (S3) via M1. It ensures that data is correctly packaged and transferred, handles upload confirmations, and triggers cloud-side processing via Lambda.
 
-\subsection{Uses}
+\subsection*{Secrets}
+- The method of authentication used for upload  
+- Retry logic and error thresholds for failed transfers  
+- Upload buffering and compression strategy
 
+\subsection*{Services}
+- Accepts validated files from M2 (Input)  
+- Uploads images to M1 (Cloud)  
+- Initiates post-upload processes (e.g., OCR trigger)  
+- Returns upload status and error details (if any)
+
+\subsection*{Information Hiding}
+The module hides details about how images are encoded, compressed, and pushed to the cloud backend.
+
+\subsection*{Assumptions}
+- The image passed from M2 has already been validated  
+- M1 services (S3 + Lambda) are available and authorized  
+- This module is invoked only through the Admin path in the UI
+
+\subsection*{State Variables}
 \begin{itemize}
-  \item Data Upload Module
-  \item User Interface Parsing Module
+  \item \texttt{uploadBuffer: BinaryImage} — Holds the image during processing  
+  \item \texttt{lastUploadURL: String} — Cloud path returned by S3 after successful upload
 \end{itemize}
 
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-uploadData & Formatted Image & SuccessResponse & S3Exception, AccessDeniedException, TimeoutException \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-None
-
-\subsubsection{Environment Variables}
-
+\subsection*{Environment Variables}
 \begin{itemize}
-  \item Network connection with HTTPS support
-  \item Access to AWS S3 endpoints and SDK
+\item \texttt{UPLOAD\_TIMEOUT}: Integer -- Max allowable upload duration (ms)
+
+\item \texttt{RETRY\_COUNT: Integer} -- Number of times to retry a failed upload
 \end{itemize}
 
-\subsubsection{Assumptions}
+\subsection*{Uses}
+- M1: Cloud Module (for upload + OCR triggering)  
+- M2: Input Module (receives validated files)
 
+\subsection*{Interface Syntax}
 \begin{itemize}
-  \item AWS S3 credentials and configurations are valid and available.
-  \item The network connection is stable during the upload process.
+  \item \texttt{initiateUpload(file: BinaryImage) → status: UploadReport}  
+  \item \texttt{getLastUploadURL() → String}  
+  \item \texttt{retryUpload() → Boolean}
 \end{itemize}
 
-\subsubsection{Access Routine Semantics}
+\subsection*{Semantics}
 
-\noindent uploadData():
+\textbf{initiateUpload}
 \begin{itemize}
-\item transition: Sends formatted data to AWS S3 using SDK.
-\item output: Returns the status of the upload operation.
-\item exception: Throws exception for failed uploads or timeouts. specific exceptions mentioned above.
+  \item \textbf{Transition:} Sends image to M1 for upload to S3, then invokes Lambda OCR function
+  \item \textbf{Output:} Returns an \texttt{UploadReport} object with upload success/failure, timestamp, and S3 URL
+  \item \textbf{Exceptions:} UploadTimeoutError, InvalidCredentialsError, CloudServiceUnavailableError
 \end{itemize}
 
-\subsubsection{Local Functions}
+\textbf{getLastUploadURL}
+\begin{itemize}
+  \item \textbf{Transition:} Retrieves the cloud URL of the most recently uploaded file
+  \item \textbf{Output:} String (URL)
+\end{itemize}
 
-None
+\textbf{retryUpload}
+\begin{itemize}
+  \item \textbf{Transition:} Retries the last failed upload using the stored buffer
+  \item \textbf{Output:} Returns \texttt{true} if retry succeeded, \texttt{false} otherwise
+  \item \textbf{Exceptions:} MaxRetryExceededError
+\end{itemize}
 
-\newpage
 
 % MIS of OCR Processing Module
 
-\section{MIS of OCR Processing Module} \label{Module}
+\section{Module M4 – OCR}
+\label{SecM4}
 
-\subsection{Module}
+\subsection*{Module Responsibilities}
+This module performs OCR on the uploaded composite image and extracts student names along with their bounding box coordinates. It transforms visual data into structured metadata that can be stored in the database and rendered in the user interface.
 
-\subsection{Uses}
+\subsection*{Secrets}
+- OCR engine configuration (e.g., AWS Textract, Tesseract)  
+- Heuristics for bounding box filtering  
+- Preprocessing techniques for image enhancement
 
+\subsection*{Services}
+- Accepts an image URL from the Upload module (M3)  
+- Applies OCR to extract text and location data  
+- Returns results to the Output module (M5)  
+- Raises errors for unsupported image structures
+
+\subsection*{Information Hiding}
+This module hides the internal OCR pipeline and pre-processing steps such as image sharpening, binarization, and margin cropping.
+
+\subsection*{Assumptions}
+- The input image is accessible via a valid S3 URL  
+- The image contains rows/columns of names with consistent spacing  
+- Text is horizontally aligned for best OCR performance
+
+\subsection*{State Variables}
 \begin{itemize}
-  \item OCR Processing Module
+  \item \texttt{parsedMetadata: JSON} — Stores extracted text and position data from the latest OCR run
+  \item \texttt{imageURL: String} — Holds the current image being processed
 \end{itemize}
 
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-parseImage & Image from S3 & Metadata formatted in JSON & AccessDeniedException, DependencyException, ImageNotFoundException \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-None
-
-\subsubsection{Environment Variables}
-
+\subsection*{Environment Variables}
 \begin{itemize}
-  \item Access to AWS Lambda runtime environment
+  \item \texttt{OCR\_ENGINE: String} — Selected OCR tool (e.g., “textract” or “tesseract”)  
+  \item \texttt{MIN\_CONFIDENCE: Float} — Confidence threshold for valid text extraction
 \end{itemize}
 
-\subsubsection{Assumptions}
+\subsection*{Uses}
+- M1: Cloud Module (to retrieve image from S3)
+- M3: Upload Module (passes S3 URL to M4)
+- M5: Output Module (receives parsed metadata)
 
+\subsection*{Interface Syntax}
 \begin{itemize}
-  \item The uploaded image is of sufficient quality for OCR processing.
-  \item OCR tools and libraries (e.g., Tesseract) are correctly configured.
+  \item \texttt{runOCR(imageURL: String) → metadata: JSON}
+  \item \texttt{getParsedMetadata() → JSON}
+  \item \texttt{clearBuffer() → Boolean}
 \end{itemize}
 
-\subsubsection{Access Routine Semantics}
+\subsection*{Semantics}
 
-\noindent parseImage():
+\textbf{runOCR}
 \begin{itemize}
-\item transition: Analyzes the image to detect text and center points, invalid areas are skipped.
-\item output: Returns metadata (names and center points) extracted from the image.
-\item exception: Throws ProcessingException for unsupported image formats or errors during processing.
+  \item \textbf{Transition:} Downloads the image from S3 and applies OCR using the configured engine. Extracts names and coordinates and stores the result in \texttt{parsedMetadata}.
+  \item \textbf{Output:} JSON object in the format: \texttt{[ \{ "name": String, "x": Int, "y": Int \}, ... ]}
+  \item \textbf{Exceptions:} ImageNotFoundError, OCRFailureError, LowConfidenceWarning
 \end{itemize}
 
-\subsubsection{Local Functions}
+\textbf{getParsedMetadata}
+\begin{itemize}
+  \item \textbf{Transition:} Returns the latest parsed metadata
+  \item \textbf{Output:} JSON object with OCR results
+\end{itemize}
 
-None
+\textbf{clearBuffer}
+\begin{itemize}
+  \item \textbf{Transition:} Empties internal storage for parsedMetadata and imageURL
+  \item \textbf{Output:} \texttt{true} on success
+\end{itemize}
 
-\newpage
 
 % MIS of Output Storage Module
 
-\section{MIS of Output Storage Module} \label{Module}
+\section{Module M5 – Output}
+\label{SecM5}
 
-\subsection{Module}
+\subsection*{Module Responsibilities}
+This module handles persistent storage of parsed composite data and processes queries for retrieving student name information. It provides the backend functionality for the search and display features seen in the GUI (M7).
 
-\subsection{Uses}
+\subsection*{Secrets}
+- The database schema and indexing strategy  
+- Optimization strategies for filtering and querying  
+- Any redundancy or fallback keys in data storage
 
+\subsection*{Services}
+- Stores OCR results provided by M4  
+- Accepts user-defined queries from M6 (UI Parsing) or M7 (GUI)  
+- Retrieves relevant entries from the database  
+- Returns data in a structured, displayable format
+
+\subsection*{Information Hiding}
+This module hides the structure of the database, indexing techniques, and optimization details.
+
+\subsection*{Assumptions}
+- The database is pre-configured and connected  
+- Inputs passed from OCR and GUI are valid and in correct format  
+- The data schema is consistent with the metadata generated by OCR
+
+\subsection*{State Variables}
 \begin{itemize}
-  \item Output Storage Module
-  \item OCR Processing Module
+  \item \texttt{dbClient: DDBClient} — DynamoDB interface object  
+  \item \texttt{lastQueryResult: JSON[]} — Stores the most recent query output for caching
 \end{itemize}
 
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-storeData & Extracted metadata, Name and center point & Success/failure response & AccessDeniedException, ValidationException, RetrievalException \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-None
-
-\subsubsection{Environment Variables}
-
+\subsection*{Environment Variables}
 \begin{itemize}
-  \item Connection to dynamoDB (connection URI)
+  \item \texttt{DB\_TABLE\_NAME: String} — Target table for storing and retrieving OCR metadata  
+  \item \texttt{MAX\_QUERY\_LIMIT: Integer} — Cap on number of entries returned per query
 \end{itemize}
 
-\subsubsection{Assumptions}
+\subsection*{Uses}
+- M1: Cloud Module (interfaces with DynamoDB)
+- M4: OCR Module (receives parsed data)
+- M6: UI Parsing Module (fetches name data)
 
+\subsection*{Interface Syntax}
 \begin{itemize}
-  \item DynamoDB schema is correctly configured.
-  \item Data types and indexes align with the system’s query requirements.
+  \item \texttt{storeData(metadata: JSON) → success: Boolean}
+  \item \texttt{queryByField(field: String, value: String) → results: JSON[]}
+  \item \texttt{getLastQueryResult() → JSON[]}
 \end{itemize}
 
-\subsubsection{Access Routine Semantics}
+\subsection*{Semantics}
 
-\noindent storeData():
+\textbf{storeData}
 \begin{itemize}
-\item transition: Writes extracted data and metadata into DynamoDB.
-\item output: Returns the status of the storage operation.
-\item exception: Throws StorageException for failed write operations.
+  \item \textbf{Transition:} Inserts the provided JSON metadata (name, x/y position, year, program, etc.) into the DynamoDB table
+  \item \textbf{Output:} Returns \texttt{true} on successful write
+  \item \textbf{Exceptions:} WriteFailedError, SchemaMismatchError
 \end{itemize}
 
-\subsubsection{Local Functions}
+\textbf{queryByField}
+\begin{itemize}
+  \item \textbf{Transition:} Queries the database for records where \texttt{field = value}; stores the result in \texttt{lastQueryResult}
+  \item \textbf{Output:} Array of matching entries in JSON
+  \item \textbf{Exceptions:} FieldNotFoundError, QueryLimitExceededError
+\end{itemize}
 
-None
+\textbf{getLastQueryResult}
+\begin{itemize}
+  \item \textbf{Transition:} Retrieves the most recently stored query result
+  \item \textbf{Output:} JSON array of composite data
+\end{itemize}
 
-\newpage
 
 % MIS of UI Parsing Module
 
-\section{MIS of UI Parsing Module} \label{Module}
+\section{Module M6 – UI Parsing}
+\label{SecM6}
 
-\subsection{Module}
+\subsection*{Module Responsibilities}
+This module manages user interface-level parsing logic, including collecting manually entered names when OCR fails and formatting data for display. It serves as an intermediary between the backend data (from M5) and the visual components (in M7).
 
-\subsection{Uses}
+\subsection*{Secrets}
+- Admin input validation logic  
+- Fallback handling strategy and overwrite rules  
+- Mapping of metadata fields to UI labels
 
+\subsection*{Services}
+- Receives fallback name inputs from the Admin UI  
+- Combines OCR results with manually entered data  
+- Formats result sets for display in the GUI  
+- Sends structured data to M7 for rendering
+
+\subsection*{Information Hiding}
+Hides the logic used to reconcile OCR vs manual inputs, formatting rules, and display metadata preparation.
+
+\subsection*{Assumptions}
+- The OCR module may fail to parse certain names  
+- Admin input is assumed to be valid and minimal in volume  
+- The GUI expects fully structured metadata
+
+\subsection*{State Variables}
 \begin{itemize}
-  \item Back-End Logic
-  \item AWS Lambda
-  \item Database Module (if applicable for data storage or retrieval)
+  \item \texttt{fallbackEntries: JSON[]} — Stores admin-entered name/location data  
+  \item \texttt{mergedResults: JSON[]} — Combines fallback and OCR results
 \end{itemize}
 
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
+\subsection*{Environment Variables}
 \begin{itemize}
-  \item MAX\_FILE\_SIZE: Maximum allowable file size for uploads (integer, in MB)
-  \item SUPPORTED\_FORMATS: List of supported file formats (e.g., .png, .jpg, .jpeg)
+  \item \texttt{MAX\_FALLBACK\_ENTRIES: Integer} — Cap on number of names that can be manually added  
 \end{itemize}
 
-\subsubsection{Exported Access Programs}
+\subsection*{Uses}
+- M4: OCR Module (receives original parsed results)  
+- M5: Output Module (fetches DB entries)  
+- M7: GUI Module (sends formatted data for display)
 
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-uploadImage & imageFile (file) & uploadStatus (boolean) & FileSizeExceededError, InvalidFormatError \\
-\hline
-processImage & imageData (binary) & processedData (JSON) & ProcessingError \\
-\hline
-validateInput & imageFile (file) & isValid (boolean) & ValidationError \\
-\hline
-getFallbackData & errorContext (object) & fallbackResponse (JSON) & DataUnavailableError \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
+\subsection*{Interface Syntax}
 \begin{itemize}
-  \item uploadedImages: Stores metadata of images uploaded by users
-  \item processingQueue: Tracks images currently in processing
+  \item \texttt{submitFallbackEntry(data: JSON) → Boolean}  
+  \item \texttt{mergeAndFormatData(ocr: JSON[], fallback: JSON[]) → JSON[]}  
+  \item \texttt{getFormattedOutput() → JSON[]}
 \end{itemize}
 
-\subsubsection{Environment Variables}
+\subsection*{Semantics}
 
+\textbf{submitFallbackEntry}
 \begin{itemize}
-  \item File System: Used for temporary storage of uploaded files
-  \item Internet Connection: For AWS Lambda calls, if required
+  \item \textbf{Transition:} Adds a new fallback entry (name + coordinates) to \texttt{fallbackEntries}
+  \item \textbf{Output:} \texttt{true} if entry stored successfully  
+  \item \textbf{Exceptions:} FallbackLimitExceededError
 \end{itemize}
 
-\subsubsection{Assumptions}
-
+\textbf{mergeAndFormatData}
 \begin{itemize}
-  \item Input files are uploaded through a user interface that pre-validates file formats
-  \item AWS Lambda functions are available and operational during runtime
-  \item The file system can handle temporary file storage without interruptions
+  \item \textbf{Transition:} Combines \texttt{ocr} and \texttt{fallback} data into a unified list, resolving duplicate names if needed  
+  \item \textbf{Output:} Formatted JSON array ready for UI rendering  
 \end{itemize}
 
-\subsubsection{Access Routine Semantics}
-
-\noindent uploadImage():
+\textbf{getFormattedOutput}
 \begin{itemize}
-\item transition: Moves the file to a secure temporary storage location.
-\item output: Returns true if the upload succeeds, otherwise raises an exception.
-\item exception: Throws FileSizeExceededError if the file size exceeds the limit. Throws InvalidFormatError if the file format is unsupported.
+  \item \textbf{Transition:} Returns the final data array for GUI display  
+  \item \textbf{Output:} JSON array containing names, coordinates, and optional metadata
 \end{itemize}
 
-\noindent processImage():
-\begin{itemize}
-\item transition: Sends the image data for processing and updates the processedData variable.
-\item output: Returns structured JSON data containing extracted composite metadata.
-\item exception: Throws ProcessingError if the image cannot be processed
-\end{itemize}
-
-\noindent validateInput():
-\begin{itemize}
-\item transition: Performs checks on the input file (size, format).
-\item output: Returns true if the file is valid; otherwise, false.
-\item exception: Throws ValidationError if validation fails.
-\end{itemize}
-
-\noindent getFallbackData():
-\begin{itemize}
-\item transition: Generates or retrieves fallback data for a failed process.
-\item output: Returns a pre-defined or dynamically generated fallback JSON.
-\item exception: Throws DataUnavailableError if fallback data cannot be provided.
-\end{itemize}
-
-\subsubsection{Local Functions}
-
-\begin{itemize}
-  \item logError: Logs details about errors during upload or processing for debugging and auditing purposes
-  \item generateFallbackResponse: Creates a generic fallback response for failed processes
-\end{itemize}
-
-\newpage
 
 % MIS of Graphical User Interface Module
 
-\section{MIS of Graphical User Interface Module} \label{Module}
+\section{Module M7 – Graphical User Interface}
+\label{SecM7}
 
-\subsection{Module}
+\subsection*{Module}
 
-\subsection{Uses}
+Provides the interactive user interface for GradSight. Displays the Admin and User modes, handles navigation, and renders composite search and view results. Interfaces with backend modules to fetch and display information.
+
+\subsection*{Uses}
 
 \begin{itemize}
-  \item React Front-End
-  \item Input Processing Module (M12)
+  \item M5: Output Module (composite metadata)
+  \item M6: UI Parsing Module (fallback + formatted metadata)
 \end{itemize}
 
-\subsection{Syntax}
+\subsection*{Syntax}
 
-\subsubsection{Exported Constants}
+\subsubsection*{Exported Constants}
 
-nONE
+None
 
-\subsubsection{Exported Access Programs}
+\subsubsection*{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{tabular}{|p{3.5cm} | p{3.5cm} | p{3.5cm} | p{3.5cm}|}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-initializeUI & configurationSettings (object) & successMessage (string) & InvalidConfigurationError \\
-\hline
-handleUserInput & userInput (string) & processedData (object) & InputValidationError \\
-\hline
-renderUI & UIState (object) & renderStatus (boolean) & RenderFailureError \\
-\hline
-updateStyle & styleParameters (object) & updateConfirmation (string) & InvalidStyleParameterError \\
+renderHomeScreen & None & Void & RenderFailureError \\
+renderSearchResults & data: JSON[] & Void & DataFormatError \\
+getUserSelection & None & SelectionData & InputCaptureError \\
 \hline
 \end{tabular}
 \end{center}
 
-\subsection{Semantics}
+\subsection*{Semantics}
 
-\subsubsection{State Variables}
-
-\begin{itemize}
-  \item currentView: String - Tracks the current page/view displayed to the user.
-  \item userSessionData: Object - Stores temporary session data for the active user.
-\end{itemize}
-
-\subsubsection{Environment Variables}
+\subsubsection*{State Variables}
 
 \begin{itemize}
-  \item Screen: Used to render the graphical interface.
-  \item Input Devices: Handles mouse, keyboard, and touchscreen inputs.
+  \item currentView: String — Tracks the currently displayed screen (e.g., "home", "upload", "results")
+  \item displayedData: JSON[] — Data currently shown to the user
 \end{itemize}
 
-\subsubsection{Assumptions}
+\subsubsection*{Environment Variables}
 
 \begin{itemize}
-  \item React is functional and integrated with the back-end API.
-  \item User devices support modern browsers with JavaScript enabled.
+  \item SCREEN\_SIZE: Tuple<Integer, Integer> — Resolution of the touchscreen
+  \item INPUT\_MODE: String — Either ``admin'' or ``user''
 \end{itemize}
 
-\subsubsection{Access Routine Semantics}
-
-\noindent renderInterface():
-\begin{itemize}
-\item transition: Loads and displays the user interface components.
-\item output: None
-\item exception: Raises RenderingError for issues with loading components.
-\end{itemize}
-
-\noindent handleUserInput():
-\begin{itemize}
-\item transition: Processes the user event and triggers the appropriate action.
-\item output: Returns true if the event is processed successfully; false otherwise.
-\item exception: Raises InputError for invalid or unsupported inputs.
-\end{itemize}
-
-\subsubsection{Local Functions}
+\subsubsection*{Assumptions}
 
 \begin{itemize}
-  \item initializeReactComponents(): Sets up and initializes React components.
-  \item updateView(currentView): Updates the GUI view based on user interaction.
+  \item The GUI is deployed on a touchscreen device with a modern browser
+  \item Backend modules (M5, M6) return properly formatted JSON
 \end{itemize}
 
-\newpage
+\subsubsection*{Access Routine Semantics}
+
+\noindent \textbf{renderHomeScreen()}
+\begin{itemize}
+  \item \textbf{transition:} Switches currentView to "home" and renders mode selection buttons
+  \item \textbf{output:} None
+  \item \textbf{exception:} RenderFailureError if rendering fails
+\end{itemize}
+
+\noindent \textbf{renderSearchResults(data)}
+\begin{itemize}
+  \item \textbf{transition:} Sets currentView to "results", stores data in displayedData, and renders result list + highlights
+  \item \textbf{output:} None
+  \item \textbf{exception:} DataFormatError if data is missing required fields
+\end{itemize}
+
+\noindent \textbf{getUserSelection()}
+\begin{itemize}
+  \item \textbf{transition:} Waits for user tap input on the screen and returns interaction details
+  \item \textbf{output:} Object with coordinates and selected name/program
+  \item \textbf{exception:} InputCaptureError if input device is unresponsive
+\end{itemize}
+
+\subsubsection*{Local Functions}
+
+\begin{itemize}
+  \item navigateTo(view: String): Transitions the view and triggers re-render
+  \item highlightResult(result: JSON): Adds visual highlight to selected name on the composite
+\end{itemize}
+
+\section{Enough to Build}
+\label{SecEnoughToBuild}
+
+The GradSight system is structured so that each module (M1–M7) encapsulates a distinct responsibility and can be implemented independently by a developer with access to this specification, the SRS, and the module guide. The interfaces defined in this document include state variables, environment dependencies, typed inputs and outputs, exceptions, and well-scoped responsibilities. This ensures that an independent developer does not require informal knowledge or direct communication with the original design team to begin development.
+
+\subsection*{System Overview}
+GradSight is a modular web-based system designed to allow users to upload, parse, search, and view graduating student composite images. It includes a touch-enabled frontend (M7) and a cloud-integrated backend (M1–M6) with OCR, data processing, and fallback handling.
+
+\subsection*{Implementation Entry Point}
+A developer may begin building from any module:
+\begin{itemize}
+  \item \textbf{Frontend (M7)}: Requires M6 outputs to render UI. Can be built using sample data.
+  \item \textbf{Cloud (M1)}: Operates independently to upload/retrieve files and handle Lambda/DynamoDB.
+  \item \textbf{OCR (M4)}: Can be developed using any test image and outputs in JSON format.
+\end{itemize}
+
+\subsection*{Module Independence and Cohesion}
+Modules are organized by information hiding principles:
+\begin{itemize}
+  \item \textbf{M1 (Cloud)} handles all AWS interaction — no other module needs cloud credentials or SDK logic.
+  \item \textbf{M2–M3} are responsible for input validation and upload logic before cloud transfer.
+  \item \textbf{M4} performs parsing using OCR with documented JSON output format.
+  \item \textbf{M5} stores/query composite metadata, with full key-based search support.
+  \item \textbf{M6} formats fallback data + OCR results for M7 to render.
+  \item \textbf{M7} consumes only structured UI-ready data, rendering it without deep backend knowledge.
+\end{itemize}
+
+\subsection*{Data Formats and Contracts}
+All inter-module communication is done via defined JSON structures. Examples include:
+\begin{itemize}
+  \item \texttt{OCR Output:} \{ name: ``Zahin H'', x: 102, y: 220 \}
+  \item \texttt{Fallback Entry:} \{ name: ``Willie P'', location: [140, 330] \}
+  \item \texttt{Query Result:} JSON[] of name/location objects returned to GUI
+\end{itemize}
+
+\subsection*{Integration Readiness}
+Each module contains:
+\begin{itemize}
+  \item Clearly specified access routines with types and exceptions
+  \item Defined state/environment variables
+  \item Interface examples and transition semantics
+\end{itemize}
+
+This documentation enables new developers to build and test individual modules using mocks or provided formats, with no ambiguity about scope, responsibilities, or expected behavior.
+
+\section{Specification Formalization}
+\label{SecFormal}
+
+This section provides a formal specification of the \texttt{runOCR()} access program from the OCR Module (M4). The purpose is to clearly define the function’s behavior using a mathematical model that is precise and unambiguous.
+
+\subsection*{Formalized Function: runOCR(imageURL)}
+
+\subsubsection*{Inputs}
+Let:
+
+\begin{itemize}
+  \item $I \in \mathbb{S}$ be a valid S3 image URL such that the image is accessible and decodable
+  \item $OCR_{engine}: \mathbb{S} \rightarrow \mathcal{M}$ be the OCR function that maps a string (URL) to metadata
+\end{itemize}
+
+\subsubsection*{Output}
+Let the output $M \in \mathcal{M}$ be a set of metadata tuples:
+
+\[
+M = \{ (n_i, x_i, y_i) \mid n_i \in \texttt{String}, x_i, y_i \in \mathbb{N} \}
+\]
+
+Each tuple represents a name and its coordinates extracted from the image.
+
+\subsubsection*{Preconditions}
+\[
+\texttt{imageURL} \in \mathbb{S} \land \texttt{reachable(imageURL)} = \texttt{true}
+\]
+
+\subsubsection*{Postconditions}
+\[
+runOCR(I) = OCR_{engine}(I)
+\]
+
+\subsubsection*{Exceptions}
+\begin{itemize}
+  \item \texttt{OCRFailureError} if $OCR_{engine}(I)$ fails or returns an empty result
+  \item \texttt{ImageNotFoundError} if $\neg \texttt{reachable}(I)$
+\end{itemize}
+
 
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
 
 \newpage
 
-\section{Appendix} \label{Appendix}
-
-\wss{Extra information if required}
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741 projects}
+
 
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Problem Analysis and Design.
