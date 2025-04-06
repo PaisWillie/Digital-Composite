@@ -1,5 +1,7 @@
 \documentclass[12pt, titlepage]{article}
 
+\usepackage{tikz}
+
 \usepackage{fullpage}
 \usepackage[round]{natbib}
 \usepackage{multirow}
@@ -48,6 +50,7 @@
 \midrule
 January 13, 2025 & 1.0 & Initial Revision\\
 January 17, 2025 & 1.1 & Final changes made according to rubric\\
+March 31, 2025 & 1.2 & Updated Document with changes according to feedback\\
 \bottomrule
 \end{tabularx}
 
@@ -74,7 +77,7 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+
   \bottomrule
 \end{tabular}\\
 
@@ -91,55 +94,55 @@ This section records information for easy reference.
 \pagenumbering{arabic}
 
 \section{Introduction}
+\label{SecIntro}
 
 Decomposing a system into modules is a commonly accepted approach to developing
-software.  A module is a work assignment for a programmer or programming
-team~\citep{ParnasEtAl1984}.  We advocate a decomposition
-based on the principle of information hiding~\citep{Parnas1972a}.  This
+software. A module is a work assignment for a programmer or programming
+team (Parnas et al., 1984). We advocate a decomposition
+based on the principle of information hiding (Parnas, 1972). This
 principle supports design for change, because the ``secrets'' that each module
-hides represent likely future changes.  Design for change is valuable in SC,
+hides represent likely future changes. Design for change is valuable in scientific computing,
 where modifications are frequent, especially during initial development as the
 solution space is explored.  
 
-Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
+Our design follows the rules laid out by Parnas et al. (1984), as follows:
 \begin{itemize}
-\item System details that are likely to change independently should be the
+  \item System details that are likely to change independently should be the
   secrets of separate modules.
-\item Each data structure is implemented in only one module.
-\item Any other program that requires information stored in a module's data
+  \item Each data structure is implemented in only one module.
+  \item Any other program that requires information stored in a module's data
   structures must obtain it by calling access programs belonging to that module.
 \end{itemize}
 
 After completing the first stage of the design, the Software Requirements
-Specification (SRS), the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG
+Specification (SRS), the Module Guide (MG) is developed. The MG
 specifies the modular structure of the system and is intended to allow both
-designers and maintainers to easily identify the parts of the software.  The
+designers and maintainers to easily identify the parts of the software. The
 potential readers of this document are as follows:
 
 \begin{itemize}
-\item New project members: This document can be a guide for a new project member
+  \item \textbf{New project members}: This document can be a guide for a new project member
   to easily understand the overall structure and quickly find the
   relevant modules they are searching for.
-\item Maintainers: The hierarchical structure of the module guide improves the
+  \item \textbf{Maintainers}: The hierarchical structure of the module guide improves the
   maintainers' understanding when they need to make changes to the system. It is
   important for a maintainer to update the relevant sections of the document
   after changes have been made.
-\item Designers: Once the module guide has been written, it can be used to
+  \item \textbf{Designers}: Once the module guide has been written, it can be used to
   check for consistency, feasibility, and flexibility. Designers can verify the
   system in various ways, such as consistency among modules, feasibility of the
   decomposition, and flexibility of the design.
 \end{itemize}
 
-The rest of the document is organized as follows. Section
-\ref{SecChange} lists the anticipated and unlikely changes of the software
-requirements. Section \ref{SecMH} summarizes the module decomposition that
-was constructed according to the likely changes. Section \ref{SecConnection}
+The rest of the document is organized as follows. Section~\ref{SecChange} lists the anticipated and unlikely changes of the software
+requirements. Section~\ref{SecMH} summarizes the module decomposition that
+was constructed according to the likely changes. Section~\ref{SecConnection}
 specifies the connections between the software requirements and the
-modules. Section \ref{SecMD} gives a detailed description of the
-modules. Section \ref{SecTM} includes two traceability matrices. One checks
+modules. Section~\ref{SecMD} gives a detailed description of the
+modules. Section~\ref{SecTM} includes two traceability matrices. One checks
 the completeness of the design against the requirements provided in the SRS. The
-other shows the relation between anticipated changes and the modules. Section
-\ref{SecUse} describes the use relation between modules.
+other shows the relation between anticipated changes and the modules. Section~\ref{SecUse} describes the use relation between modules.
+
 
 \section{Anticipated and Unlikely Changes} \label{SecChange}
 
@@ -169,9 +172,6 @@ change.
   \item [\refstepcounter{acnum} \actheacnum \label{ac10}:] Adjusting backend processes to comply with updates to privacy policies, legal regulations, or internal university standards.
 \end{description}
 
-\wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
-at run-time, like the values of parameters.}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
@@ -195,245 +195,198 @@ decisions will be changed.
 
 \section{Module Hierarchy} \label{SecMH}
 
-This section provides an overview of the module design. Modules are summarized
-in a hierarchy decomposed by secrets in Table \ref{TblMH}. The modules listed
-below, which are leaves in the hierarchy tree, are the modules that will
-actually be implemented.
+The GradSight system is modularized based on the principle of \textit{information hiding} to ensure each module encapsulates specific responsibilities and secrets. The hierarchy is structured to support ease of development, future scalability, and independent module testing. The table below summarizes the system’s decomposition:
 
-\begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Cloud
-\item [\refstepcounter{mnum} \mthemnum \label{mIF}:] Input Format
-\item [\refstepcounter{mnum} \mthemnum \label{mDU}:] Data Upload
-\item [\refstepcounter{mnum} \mthemnum \label{mOCRP}:] OCR Processing
-\item [\refstepcounter{mnum} \mthemnum \label{mOS}:] Output Storage
-\item [\refstepcounter{mnum} \mthemnum \label{mUIP}:] UI Parsing
-\item [\refstepcounter{mnum} \mthemnum \label{mGUI}:] Graphical User Interface
-\end{description}
-
-
-\begin{table}[h!]
+\begin{table}[H]
 \centering
-\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Level 1} & \textbf{Level 2}\\
-\midrule
-
-{Hardware-Hiding Module} & Cloud \\
-\midrule
-
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Input Format\\
-& Data Upload\\
-& OCR Processing\\
-& Output Storage\\
-\midrule
-
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {UI Parsing}\\
-& Graphical User Interface\\
-\bottomrule
-
-\end{tabular}
 \caption{Module Hierarchy}
-\label{TblMH}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Level 1} & \textbf{Level 2} \\
+\hline
+Hardware-Hiding & M1: Cloud Module \\
+\hline
+Behaviour-Hiding & M2: Input Module \newline
+                 & M3: Data Upload Module \newline
+                 & M4: OCR Processing Module \newline
+                 & M5: Output Storage Module \\
+\hline
+Software Decision & M6: UI Parsing Module \newline
+                  & M7: Graphical User Interface Module \\
+\hline
+\end{tabular}
 \end{table}
 
-\section{Connection Between Requirements and Design} \label{SecConnection}
-
-The design of the system is intended to satisfy the requirements developed in
-the SRS. In this stage, the system is decomposed into modules. The connection
-between requirements and modules is listed in Table~\ref{TblRT}.
-
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.}
-
-\section{Module Decomposition} \label{SecMD}
-
-Modules are decomposed according to the principle of ``information hiding''
-proposed by \citet{ParnasEtAl1984}. The \emph{Secrets} field in a module
-decomposition is a brief statement of the design decision hidden by the
-module. The \emph{Services} field specifies \emph{what} the module will do
-without documenting \emph{how} to do it. For each module, a suggestion for the
-implementing software is given under the \emph{Implemented By} title. If the
-entry is \emph{OS}, this means that the module is provided by the operating
-system or by standard programming language libraries.  \emph{\progname{}} means the
-module will be implemented by the \progname{} software.
-
-Only the leaf modules in the hierarchy have to be implemented. If a dash
-(\emph{--}) is shown, this means that the module is not a leaf and will not have
-to be implemented.
-
-\subsection{Hardware Hiding Modules}
-
-\begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
-  system. This module provides the interface between the hardware and the
-  software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
-\end{description}
-
-\subsubsection{Cloud Module (\mref{mHH})}
-
-\begin{description}
-\item[Secrets:]The SDKs, APIs, and configurations used to interact with AWS (S3, Lambda, and DynamoDB), including details of network protocols, security settings, and hardware infrastructure.
-\item[Services:]Provides a virtual hardware layer by abstracting cloud storage (Amazon S3), serverless compute (AWS Lambda), and database operations (Amazon DynamoDB). Allows the system to upload and retrieve data, execute image processing logic, and store processed metadata seamlessly without exposing hardware details.
-\item[Implemented By:] AWS Services and SDKs
-\item[Type of Module:] Abstract Object
-\end{description}
-
-\subsection{Behaviour-Hiding Module}
-
-\begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
-\end{description}
-
-\subsubsection{Input Module (\mref{mIF})}
-
-\begin{description}
-\item[Secrets:]The structure of the image and metadata provided by the client (admin). Includes details such as accepted file formats, metadata keys, and expected payload structure.
-\item[Services:]Converts client-provided data (composite image) into a format suitable for uploading to S3 and processing by Lambda. Ensures compliance with predefined input standards.
-\item[Implemented By:] Back-End Entity
-\item[Type of Module:] Library
-\end{description}
-
-\subsubsection{Data Upload Module (\mref{mDU})}
-
-\begin{description}
-\item[Secrets:]The configuration of API endpoints, security mechanisms (e.g., HTTPS, authentication), and retry logic for uploads.
-\item[Services:]Handles the transfer of input data (image) to Amazon S3. Encapsulates the logic for SDK interactions, upload retries, and error handling.
-\item[Implemented By:] Back-End Entity and AWS S3 Entity
-\item[Type of Module:] Abstract Object
-\end{description}
-
-\subsubsection{OCR Processing Module (\mref{mOCRP})}
-
-\begin{description}
-\item[Secrets:]The OCR algorithm and processing logic for extracting names and center points of individuals from composite images.
-\item[Services:]Processes the uploaded images to extract required metadata (e.g., individual names and center points). Transforms the processed data into a format ready for storage in DynamoDB.
-\item[Implemented By:] AWS Lambda
-\item[Type of Module:] Library
-\end{description}
-
-\subsubsection{Output Storage Module (\mref{mOS})}
-
-\begin{description}
-\item[Secrets:]The schema for DynamoDB, including primary keys, data types, and indexing strategies.
-\item[Services:]Stores extracted data and metadata in DynamoDB for later retrieval. Abstracts database operations such as creating, reading, updating, and deleting records.
-\item[Implemented By:] DynamoDB Entity
-\item[Type of Module:] Abstract Data Type
-\end{description}
-
-\subsection{Software Decision Module}
-
-\begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
-\end{description}
-
-\subsubsection{UI Parsing Module (\mref{mUIP})}
-
-\begin{description}
-\item[Secrets:]The implementation logic for uploading images and viewing composite images through user interface and interactions.
-\item[Services:]Implements rules for managing workflows, such as fallback mechanisms for failed uploads or processing. Encodes data transformation rules for formatting outputs.
-\item[Implemented By:] Back-End Logic and AWS Lambda
-\item[Type of Module:] Library
-\end{description}
-
-\subsubsection{Graphical User Interface Module (\mref{mGUI})}
-
-\begin{description}
-\item[Secrets:]User interaction event handling, user input controls, states, The methods to imple- ment data formats (such as text-boxes, buttons, file dialogs), visual layout and styling (eg. colours or sizing) for user interaction.
-\item[Services:]Provides methods for building a visual interface for the user to see and interact with.
-\item[Implemented By:] React
-\item[Type of Module:] Library
-\end{description}
+This hierarchy supports a \textit{layered design} where each module at a higher level may depend on the services of lower-level modules. For example, the UI Parsing module (M6) depends on the Upload (M3), OCR (M4), and Output Storage (M5) modules to function correctly. The Cloud Module (M1) hides low-level cloud interaction details from all others.
 
 
-\section{Traceability Matrix} \label{SecTM}
+\section{Connection Between Requirements and Design}
+\label{SecConnection}
 
-This section shows two traceability matrices: between the modules and the
-requirements and between the modules and the anticipated changes.
+The design of GradSight ensures that every requirement identified in the Software Requirements Specification (SRS) is addressed by one or more modules in the system. Each requirement category has been mapped to modules based on their responsibilities and interactions. This section provides a brief overview of how the major functional and nonfunctional requirements are supported by the system design.
 
-% the table should use mref, the requirements should be named, use something
-% like fref
+\begin{itemize}
+  \item \textbf{Functional Requirements (FR-1 to FR-5):} 
+  These requirements involve uploading, parsing, storing, and viewing composite data. Modules M2 (Input), M3 (Upload), M4 (OCR), M5 (Output), M6 (UI Parsing), and M7 (GUI) collectively fulfill these tasks. For example, M3 handles the file upload, M4 extracts text and position data, and M7 provides the user interface to search and view composites.
+
+  \item \textbf{Nonfunctional Requirements (NFR-1 to NFR-3):}
+  These are addressed through efficient cloud operations and performance optimization in modules M1 (Cloud), M4 (OCR), and M5 (Output). For instance, fast image parsing is ensured through optimized OCR and AWS Lambda functions (M4), and concurrent access is handled via scalable database storage in M5.
+
+  \item \textbf{Security and Privacy (SEC, PRIV):}
+  Input validation (M2, M6), secure data handling (M1, M5), and access control via the admin interface (M6, M7) ensure the system is GDPR-compliant and secure against unauthorized access. Logging of failed attempts and fallback mechanisms are also integrated.
+
+  \item \textbf{Adaptability and Maintainability (ADP-1, SUP-1):}
+  Modular decomposition was performed with future changes in mind. For example, M5 is designed to support new metadata fields without affecting other modules, and M1 allows new composite files to be added without downtime. Support documentation and system logs are provided through M6 and M1.
+
+  \item \textbf{Traceability:} 
+  A full traceability matrix is presented in Section~\ref{SecTM}, which explicitly maps each requirement to its responsible module(s). Anticipated and unlikely changes are listed in Section~\ref{SecChange}, showing how likely evolution points were considered during decomposition.
+\end{itemize}
+
+
+
+\section{Module Decomposition}
+\label{SecMD}
+Modules are decomposed according to the principle of information hiding. The Secrets field highlights the design decisions encapsulated by the module. The Services field summarizes the visible functionality provided. The Implemented By field explains what technology or component is responsible for implementing the module. The table in Section 5 provides a high-level overview of how modules are grouped.
+
+\subsection{7.1 Hardware-Hiding Modules}
+
+\subsubsection{ Cloud Module (M1)}
+\textbf{Secrets:} The SDKs, APIs, and configurations used to interact with AWS services (S3, Lambda, DynamoDB), including authentication, network protocols, and security settings. \\
+\textbf{Services:} Abstracts cloud infrastructure, enabling the system to upload files, run serverless functions, and store metadata. \\
+\textbf{Implemented By:} AWS SDK and Services \\
+\textbf{Type of Module:} Abstract Object
+
+\subsection{7.2 Behaviour-Hiding Modules}
+
+\subsubsection{Input Module (M2)}
+\textbf{Secrets:} Format expectations for the uploaded image and metadata (e.g., JSON keys, file types). \\
+\textbf{Services:} Converts uploaded data into a standardized format suitable for processing and storage. \\
+\textbf{Implemented By:} Back-End Logic \\
+\textbf{Type of Module:} Library
+
+\subsubsection{Data Upload Module (M3)}
+\textbf{Secrets:} Details of the file upload logic, AWS S3 SDK usage, error handling and retries. \\
+\textbf{Services:} Uploads validated image files and metadata to the cloud. \\
+\textbf{Implemented By:} AWS S3 and Back-End Entity \\
+\textbf{Type of Module:} Abstract Object
+
+\subsubsection{OCR Processing Module (M4)}
+\textbf{Secrets:} OCR library configuration (e.g., Tesseract or AWS Textract) and preprocessing rules. \\
+\textbf{Services:} Extracts text and coordinates (e.g., names and center points) from uploaded images. \\
+\textbf{Implemented By:} AWS Lambda \\
+\textbf{Type of Module:} Library
+
+\subsubsection{Output Storage Module (M5)}
+\textbf{Secrets:} Schema design for metadata storage (e.g., keys, indexes, data types in DynamoDB). \\
+\textbf{Services:} Stores parsed data in DynamoDB for later querying by the frontend or admin. \\
+\textbf{Implemented By:} AWS DynamoDB \\
+\textbf{Type of Module:} Abstract Data Type
+
+\subsection{Software Decision Modules}
+
+\subsubsection{UI Parsing Module (M6)}
+\textbf{Secrets:} Logic for upload flow, fallback behavior, and file validation via the frontend. \\
+\textbf{Services:} Validates, logs, and sends files for processing. Generates fallback data if needed. \\
+\textbf{Implemented By:} Back-End Logic and AWS Lambda \\
+\textbf{Type of Module:} Library
+
+\subsubsection{Graphical User Interface Module (M7)}
+\textbf{Secrets:} Visual layout rules, user interaction events, view state management. \\
+\textbf{Services:} Provides a touch-based interface to view composites and search for student data. \\
+\textbf{Implemented By:} React \\
+\textbf{Type of Module:} Library
+
+\section{Traceability Matrix}
+\label{SecTM}
+This section provides traceability between the system’s requirements and the corresponding modules in the design. It also identifies how anticipated changes may impact the modular structure of the system. This traceability is critical for ensuring design alignment with stakeholder needs, system safety, and future scalability.
+
+\subsection{8.1 Trace Between Requirements and Modules}
+
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Req.} & \textbf{Modules}\\
-\midrule
-R1 & \mref{mIF}, \mref{mDU}, \mref{mUIP}, \mref{mGUI}\\
-R2 & \mref{mHH}, \mref{mIF}, \mref{mDU}, \mref{mOCRP}, \mref{mOS}, \mref{mUIP}\\
-R3 & \mref{mIF}, \mref{mGUI}\\
-R4 & \mref{mOS}, \mref{mGUI}\\
-R5 & \mref{mHH}, \mref{mOS}, \mref{mGUI}\\
-R6 & \mref{mHH}, \mref{mIF}\\
-
-\bottomrule
-\end{tabular}
 \caption{Trace Between Requirements and Modules}
-\label{TblRT}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Requirement ID} & \textbf{Modules} \\
+\hline
+FR-1: Admin uploads composite image via UI & M2, M3, M6, M7 \\
+FR-2: System parses composite image using OCR & M1, M4 \\
+FR-3: System stores metadata and position data & M1, M5 \\
+FR-4: User browses composite by year/program & M5, M6, M7 \\
+FR-5: User searches by name (OCR-based) & M4, M5, M7 \\
+NFR-1: System uptime ≥ 99\% during business hours & M1 \\
+NFR-2: Image parsing takes ≤ 3 seconds per composite & M4, M5 \\
+NFR-3: System supports multiple concurrent viewers & M1, M5, M7 \\
+SEC-1: Unauthorized users cannot upload or modify composites & M2, M6 \\
+SEC-2: System logs failed uploads and parsing attempts & M6 \\
+PRIV-1: Personal data stored securely and compliant with GDPR & M1, M5 \\
+ADP-1: System supports addition of future composites without downtime & M1, M5 \\
+RR-1: Admin access panel available for data updates & M6, M7 \\
+SUP-1: System includes documentation for admin and IT support & M1, M6 \\
+\hline
+\end{tabular}
 \end{table}
+
+\vspace{1em}
+
+\subsection{8.2 Trace Between Anticipated Changes and Modules}
 
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{AC} & \textbf{Modules}\\
-\midrule
-\acref{ac1} & \mref{mGUI}\\
-\acref{ac2} & \mref{mIF}\\
-\acref{ac3} & \mref{mOCRP}\\
-\acref{ac4} & \mref{mHH}, \mref{mOS}\\
-\acref{ac5} & \mref{mOCRP}\\
-\acref{ac6} & \mref{mIF}, \mref{mGUI}\\
-\acref{ac7} & \mref{mGUI}\\
-\acref{ac8} & \mref{mOS}\\
-\acref{ac9} & \mref{mHH}\\
-\acref{ac10} & \mref{mHH}, \mref{mIF}\\
-\bottomrule
-\end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
-\label{TblACT}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Anticipated Change (AC)} & \textbf{Modules Affected} \\
+\hline
+AC1: Support for new display hardware (e.g., tablets) & M7 \\
+AC2: Change in composite image structure or metadata & M2 \\
+AC3: OCR model enhancement or replacement & M4 \\
+AC4: Adding additional faculties/programs & M1, M5 \\
+AC5: High-resolution image support for better accuracy & M4 \\
+AC6: New user roles and permissions & M2, M6, M7 \\
+AC7: UI updates based on accessibility feedback & M7 \\
+AC8: New metadata fields (e.g., awards, clubs) & M5 \\
+AC9: Integration with McMaster's alumni/event systems & M1 \\
+AC10: Privacy/legal policy updates (GDPR, ISO) & M1, M2, M5 \\
+\hline
+\end{tabular}
 \end{table}
 
-\section{Use Hierarchy Between Modules} \label{SecUse}
+\section{Use Hierarchy Between Modules}
+\label{SecUse}
+This section describes the \textit{use} relationship between modules. Module A \textbf{uses} Module B if the correct operation of A depends on services provided by B. This relationship implies a direct dependency in implementation, such as function calls or API usage.
 
-In this section, the uses hierarchy between modules is
-provided. \citet{Parnas1978} said of two programs A and B that A {\em uses} B if
-correct execution of B may be necessary for A to complete the task described in
-its specification. That is, A {\em uses} B if there exist situations in which
-the correct functioning of A depends upon the availability of a correct
-implementation of B.  Figure \ref{FigUH} illustrates the use relation between
-the modules. It can be seen that the graph is a directed acyclic graph
-(DAG). Each level of the hierarchy offers a testable and usable subset of the
-system, and modules in the higher level of the hierarchy are essentially simpler
-because they use modules from the lower levels.
+Figure~\ref{fig:usehierarchy} illustrates the directed acyclic graph (DAG) of use relationships among modules. The design ensures that upper-layer modules are simpler and rely on well-encapsulated lower layers.
 
-\wss{The uses relation is not a data flow diagram.  In the code there will often
-be an import statement in module A when it directly uses module B.  Module B
-provides the services that module A needs.  The code for module A needs to be
-able to see these services (hence the import statement).  Since the uses
-relation is transitive, there is a use relation without an import, but the
-arrows in the diagram typically correspond to the presence of import statement.}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',auto,node distance=2.5cm, semithick]
+\tikzstyle{every node}=[draw=black, fill=white!20, rectangle, minimum height=1.2em]
 
-\wss{If module A uses module B, the arrow is directed from A to B.}
+\node (M1) {M1: Cloud};
+\node (M2) [right of=M1, xshift=4cm] {M2: Input};
+\node (M3) [below of=M2] {M3: Upload};
+\node (M4) [below of=M3] {M4: OCR};
+\node (M5) [below of=M4] {M5: Output};
+\node (M6) [below of=M5] {M6: UI Parsing};
+\node (M7) [below of=M6] {M7: GUI};
+
+\path
+(M2) edge (M6)
+(M3) edge (M6)
+(M4) edge (M6)
+(M5) edge (M6)
+(M5) edge (M7)
+(M6) edge (M7)
+(M1) edge (M3)
+(M1) edge (M4)
+(M1) edge (M5);
+
+\end{tikzpicture}
+\caption{Use Hierarchy Among Modules}
+\label{fig:usehierarchy}
+\end{figure}
+
 
 \begin{figure}[H]
 \centering
@@ -445,128 +398,125 @@ arrows in the diagram typically correspond to the presence of import statement.}
 %\section*{References}
 
 \section{User Interfaces}
+\label{SecUI}
 
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
+This section presents the graphical user interfaces (GUIs) designed for GradSight. The system is built for a touchscreen display, enabling users to upload, search, and view composite images interactively. The interfaces are powered primarily by Modules M6 (UI Parsing) and M7 (GUI), with support from backend modules for data retrieval and processing.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{IMG_0067.png}
-\caption{User Interface Design}
-\label{FigUH}
+\caption{Home Page Interface — The user is presented with an initial menu to choose between Admin and User modes. This screen is managed by M7 (GUI) and determines system flow depending on user role.}
+\label{FigUIHome}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{IMG_0069.png}
-\caption{User Interface Design}
-\label{FigUH}
+\caption{Admin Upload Interface — Admins can upload composite images through this interface. M6 handles file parsing, while M2 and M3 handle input validation and upload logic.}
+\label{FigUIUpload}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{IMG_0070.png}
-\caption{User Interface Design}
-\label{FigUH}
+\caption{Composite Search Interface — Users can search for individuals by name, program, or year. M7 handles the interactive UI and form input, while M5 retrieves matching data.}
+\label{FigUISearch}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{IMG_0071.png}
-\caption{User Interface Design}
-\label{FigUH}
+\caption{Composite Viewer Interface — The selected composite is displayed with highlights for identified names. This view is rendered by M7 and populated by data from M4 (OCR) and M5 (Output).}
+\label{FigUIView}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{ocr-arch_1.png}
-\caption{Interface Software Architecture Design}
-\label{FigUH}
+\caption{Interface Software Architecture — This diagram outlines how the UI interacts with backend services. M6 connects with M2–M5, and M7 manages the front-facing display and user flow.}
+\label{FigUIArch}
 \end{figure}
 
-\section{Design of Communication Protocols}
-
-\wss{NA}
 
 \section{Timeline}
+\label{SecTimeline}
 
-\wss{Schedule of tasks and who is responsible }
-\wss{You can point to GitHub if this information is included there}
+The development of the GradSight system follows a structured, phase-based schedule designed to ensure a reliable Rev 0 implementation by March. Each phase includes specific deliverables, personnel assignments, and dates. The design emphasizes modular parallelism so team members can develop and test individual components without bottlenecks. Testing is embedded in each phase where appropriate to support early validation.
 
-\subsection{Phase: Requirements Gathering and System Design}
-\textbf{Dates:} Sept 23 – Oct 9 \\
-\textbf{Tasks:}
-\begin{itemize}
-  \item Define functional and nonfunctional requirements
-  \item Create high-level system architecture
-\end{itemize}
-\textbf{Responsible:}
-\begin{itemize}
-  \item All team members collaboratively
-  \item Project Lead oversees progress
-\end{itemize}
+\subsection{Requirements Gathering and System Design}
+\label{SecReq}
 
-
-\subsection{Phase: Front-End and Back-End Development}
-\textbf{Dates:} Oct 9 – Nov 22 \\
-\textbf{Tasks:}
 \begin{itemize}
-  \item Develop front-end interface using React
-  \item Implement back-end logic for data processing and storage
-  \item Integrate APIs for OCR and composite data retrieval
-\end{itemize}
-\textbf{Responsible:}
-\begin{itemize}
-  \item Front-End: Willie, Henushan
-  \item Back-End: Zahin, Wajdan, Henushan, Hammad
+  \item \textbf{Sept 23 – Oct 9:} Finalization of software requirements (SRS), hazard analysis, and preliminary architecture planning.
+  \item \textbf{Tasks:}
+  \begin{itemize}
+    \item Define FRs, NFRs, and design constraints.
+    \item Complete FMEA and anticipated change table.
+    \item Identify modules and interfaces.
+  \end{itemize}
+  \item \textbf{Leads:} Wajdan (System), Zahin (Hazards), Willie (Comms)
 \end{itemize}
 
-\subsection{Phase: Proof of Concept and Testing}
-\textbf{Dates:} Nov 22 – Feb 3 \\
-\textbf{Tasks:}
+\subsection{Front-End and Back-End Development}
+\label{SecDev}
+
+Each developer is assigned one or more modules to implement in parallel. Cloud services, OCR pipelines, and database schema are set up early to unblock downstream modules. User interface work starts once the backend API is ready.
+
+\begin{table}[H]
+\centering
+\caption{Module-Level Development Timeline and Responsibilities}
+\label{tab:moduletimeline}
+\begin{tabular}{|l|l|l|p{6cm}|}
+\hline
+\textbf{Module} & \textbf{Developer(s)} & \textbf{Timeline} & \textbf{Responsibility} \\
+\hline
+M1: Cloud & Henushan & Oct 9--14 & Set up S3, Lambda functions, and DynamoDB with API integration \\
+\hline
+M2: Input & Wajdan & Oct 12--16 & Validate file structure and convert raw upload into standardized input format \\
+\hline
+M3: Upload & Zahin, Henushan & Oct 14--18 & Implement frontend upload logic and S3 upload pipeline with error handling \\
+\hline
+M4: OCR & Hammad, Wajdan & Oct 18--22 & Integrate OCR engine (e.g., Tesseract or Textract) to extract names/coordinates \\
+\hline
+M5: Output & Henushan & Oct 22--26 & Design database schema and write DynamoDB interface for storing parsed results \\
+\hline
+M6: UI Parsing & Willie, Hammad & Oct 26--31 & Implement fallback name collection and integrate OCR and database results \\
+\hline
+M7: GUI & Willie, Zahin & Nov 1--10 & Develop touchscreen interface to navigate and search composite data \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Proof of Concept and Testing}
+\label{SecTest}
+
 \begin{itemize}
-  \item Deploy proof-of-concept prototype
-  \item Perform unit, integration, and usability testing
-  \item Address security and privacy compliance
-\end{itemize}
-\textbf{Responsible:}
-\begin{itemize}
-  \item Testing Lead: Hammad
-  \item All members participate in debugging and verification
+  \item \textbf{Nov 22 – Feb 3:} Internal testing of core system features. Each module is tested with mock data and then integrated with upstream/downstream modules.
+  \item \textbf{Tasks:}
+  \begin{itemize}
+    \item Unit testing (M2–M5): Hammad
+    \item UI testing (M6–M7): Willie
+    \item OCR and cloud validation: Zahin
+  \end{itemize}
+  \item Integration testing begins once the full data pipeline is connected end-to-end.
 \end{itemize}
 
-\subsection{Phase: Final Deployment and Demonstrations}
-\textbf{Dates:} Feb 3 – Mar 30 \\
-\textbf{Tasks:}
+\subsection{Final Deployment and Demonstration}
+\label{SecDeploy}
+
 \begin{itemize}
-  \item Complete final system deployment on McMaster servers
-  \item Conduct usability testing and refine interface
-  \item Prepare for final demonstration and Expo presentation
-\end{itemize}
-\textbf{Responsible:}
-\begin{itemize}
-  \item All members
-  \item Final Presentation Lead: Willie
+  \item \textbf{Feb 3 – Mar 20:} Final feature polishing, performance improvements, and deployment to production environment.
+  \item \textbf{Mar 21 – Mar 30:} Capstone demo preparation, walkthrough testing, UI/UX feedback, poster creation, and video submission.
 \end{itemize}
 
-\subsection{Phase: Post-Deployment Support and Documentation}
-\textbf{Dates:} Mar 30 – Apr 2 \\
-\textbf{Tasks:}
+\subsection{Post-Deployment Support and Documentation}
+\label{SecSupport}
+
 \begin{itemize}
-  \item Ensure system maintenance procedures are documented
-  \item Provide user and administrator guides
-\end{itemize}
-\textbf{Responsible:}
-\begin{itemize}
-  \item Zahin, Hammad
+  \item \textbf{Mar 30 – Apr 2:} Admin onboarding guide, system support documentation, and user-facing instructions.
+  \item \textbf{Primary Author:} Hammad (Support), reviewed by Zahin and Willie
 \end{itemize}
 
-\subsection{Task Tracking}
-\textbf{Description:} Real-time task management and updates \\
-\textbf{GitHub Repository:} \url{https://github.com/PaisWillie/Digital-Composite}
-
-\bibliographystyle {plainnat}
-\bibliography{../../../refs/References}
 
 \newpage{}
 

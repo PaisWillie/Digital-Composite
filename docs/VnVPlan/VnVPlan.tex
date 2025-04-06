@@ -1,5 +1,6 @@
 \documentclass[12pt, titlepage]{article}
-
+\usepackage{amssymb} 
+\usepackage{longtable} % Include in preamble
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -30,501 +31,1092 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Nov 4, 2024 & 1.0 & Initial Document\\
+March 31 2025& 1.1 & Updated to meet rubric feedback\\
 \bottomrule
 \end{tabularx}
 
 ~\\
-\wss{The intention of the VnV plan is to increase confidence in the software.
-However, this does not mean listing every verification and validation technique
-that has ever been devised.  The VnV plan should also be a \textbf{feasible}
-plan. Execution of the plan should be possible with the time and team available.
-If the full plan cannot be completed during the time available, it can either be
-modified to ``fake it'', or a better solution is to add a section describing
-what work has been completed and what work is still planned for the future.}
 
-\wss{The VnV plan is typically started after the requirements stage, but before
-the design stage.  This means that the sections related to unit testing cannot
-initially be completed.  The sections will be filled in after the design stage
-is complete.  the final version of the VnV plan should have all sections filled
-in.}
 
 \newpage
 
 \tableofcontents
 
 \listoftables
-\wss{Remove this section if it isn't needed}
 
-\listoffigures
-\wss{Remove this section if it isn't needed}
 
-\newpage
 
-\section{Symbols, Abbreviations, and Acronyms}
-
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  T & Test\\
-  \bottomrule
-\end{tabular}\\
-
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
 
 \newpage
 
-\pagenumbering{arabic}
-
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
 
 \section{General Information}
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+GradSight is designed as a user-friendly, digital platform for interacting with graduation composites, modernizing what has traditionally been a static, physical display. This platform enables users to search and filter through alumni composites by year, program, and individual names, providing a richer, more accessible experience. By replacing physical displays with a digital interface, GradSight allows broader access, enhanced usability, and the preservation of alumni records in a format more suited to future integration and scalability.
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The key objectives of this Verification and Validation (VnV) Plan focus on ensuring GradSight’s functionality, security, usability, and reliability. The prioritized objectives are as follows:
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
+\begin{itemize}
+    \item \textbf{Build Confidence in Software Correctness:} Verify that core functionalities, including data retrieval, user search, and profile interaction, are functioning as specified.
+    \item \textbf{Demonstrate Usability:} Validate that GradSight’s interface is intuitive, allowing users to efficiently navigate, search, and interact with alumni composites.
+    \item \textbf{Verify Data Security Compliance:} Confirm that GradSight’s data management aligns with McMaster’s privacy and security standards, focusing on role-based access control, data encryption, and secure data transmission protocols to protect sensitive information.
+\end{itemize}
 
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+Out-of-scope objectives due to resource limitations:
+
+\begin{itemize}
+    \item \textbf{Extensive Validation of External Libraries:} Since GradSight relies on TensorFlow for OCR functionality, this plan assumes that the library has been rigorously tested by its developers. Our testing will focus on how GradSight integrates with TensorFlow, without delving into TensorFlow’s internal operations.
+\end{itemize}
+
+By prioritizing these objectives, the VnV Plan ensures that the most critical qualities of GradSight receive focused attention, balancing rigorous validation with awareness of resource constraints.
 
 \subsection{Challenge Level and Extras}
 
-\wss{State the challenge level (advanced, general, basic) for your project.
-Your challenge level should exactly match what is included in your problem
-statement.  This should be the challenge level agreed on between you and the
-course instructor.  You can use a pull request to update your challenge level
-(in TeamComposition.csv or Repos.csv) if your plan changes as a result of the
-VnV planning exercise.}
+The project is classified as a general level challenge.
 
-\wss{Summarize the extras (if any) that were tackled by this project.  Extras
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  Extras should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your extras (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+Additional extras include enhanced accessibility features all aimed at meeting Web Content Accessibility Guidelines (WCAG).
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
+This VnV plan is supported by key project documents that provide foundational information and context:
 
-\citet{SRS}
+\begin{itemize}
+    \item \textbf{Software Requirements Specification (SRS):} The SRS offers a detailed breakdown of GradSight’s functional and nonfunctional requirements (Wajdan et al. 2024).
+    \item \textbf{Hazard Analysis:} This document identifies potential risks to system security, privacy, and data integrity, highlighting areas that need rigorous testing and validation (Wajdan et al. 2024).
+    \item \textbf{Development Plan:} The Development Plan describes the project’s timeline, team roles, and workflow structure (Wajdan et al. 2024).
+    \item \textbf{Problem Statement:} The Problem Statement outlines the motivation behind GradSight’s development, detailing the limitations of the current physical composites and the anticipated advantages of a digital solution (Wajdan et al. 2024).
+\end{itemize}
 
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+Each of these documents underpins the VnV plan by providing specific requirements and design considerations that guide test case development and validation activities.
+
+
+
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+This section outlines the strategy our team will use to verify and validate the project’s requirements, design, and implementation to ensure quality and alignment with our objectives. The following sections detail our verification and validation team, our approach to verifying the Software Requirements Specification (SRS), and our design verification plan.
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+The verification and validation team comprises six members, including our supervisor, with each member bringing specific areas of expertise to ensure thorough project verification. All members, excluding the supervisor, will be responsible for creating and executing tests in their specific areas. Those who are comfortable with other areas can swap roles after completing their verifications to re-assess other verifications for full coverage.
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Team Member} & \textbf{Role} \\
+\hline
+Hammad Pathan & Verify documentation accuracy and consistency, including checklists and procedures for SRS and design reviews. \\
+Wajdan Faheem & Oversee system architecture design and ensure components are working together. \\
+Willie Pai & Coordinate all verification activities and development of components. \\
+Henushan Balachandran & Ensure security and privacy measures are in place and sound. \\
+Zahin Hossain & Lead technical validation and ensure requirements are feasible for implementation. \\
+Meggie MacDougall & Provide feedback on SRS and design documents, validating alignment with the project’s overall objectives. \\
+\hline
+\end{tabular}
+\caption{Verification and Validation Team Roles}
+\end{table}
+
+%%
 \subsection{SRS Verification Plan}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
+For our Software Requirements Specification (SRS) verification, we will use a combination of structured reviews with our supervisor, peer feedback, TA feedback, and checklist verification.
 
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
+\textbf{Structured Review Meeting with Supervisor:} \\
+We will organize a meeting with our supervisor to go over the SRS document in detail. During this meeting, we will present the main requirements, focusing on the most important areas.
 
-\wss{Maybe create an SRS checklist?}
+\begin{itemize}
+    \item \textbf{Pre-meeting Preparation:} Prior to the meeting, we will provide our supervisor with a list of key requirements, questions to address potential unclear aspects, and any known issues.
+    \item \textbf{Task-based Inspection:} Our supervisor will be given a checklist for reviewing the SRS. This checklist will guide her in examining key aspects like completeness, feasibility, and clarity of requirements.
+    \item \textbf{Follow-up Actions:} After the meeting, we will document any feedback and issues in our project’s issue tracker for action and further discussion.
+\end{itemize}
+
+\textbf{Peer Review and TA feedback:} \\
+We will also have classmates and other teams review the SRS for additional input, focusing on areas like requirement clarity, usability, and potential technical risks. In addition, we will create notes on all feedback given to us by our TA from our in person meetings, and the deliverables marked online.
+
+\textbf{SRS Verification Checklist:} \\
+A structured checklist will be used to verify that the SRS meets all necessary criteria.
+
+
+\begin{longtable}{|p{1cm}|p{5.5cm}|p{8.5cm}|}
+\caption{SRS Verification Checklist} \\
+\hline
+\textbf{Check} & \textbf{Criteria} & \textbf{Description} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Check} & \textbf{Criteria} & \textbf{Description} \\
+\hline
+\endhead
+
+\multicolumn{3}{|c|}{\textbf{1. Completeness and Clarity}} \\
+\hline
+1.1 & Requirements are complete & All functional and non-functional requirements are included. \\
+\hline
+1.2 & Requirements are specific and unambiguous & No vague language; each requirement is clear and understandable. \\
+\hline
+1.3 & Requirements are concise & Each requirement is necessary, and redundancy is minimized. \\
+\hline
+1.4 & User needs are accurately captured & The requirements reflect the intended user experience and interface expectations. \\
+\hline
+1.5 & External dependencies are defined & Any dependencies (e.g., third-party data or resources) are documented and included. \\
+\hline
+
+\multicolumn{3}{|c|}{\textbf{2. Functional and Non-Functional Requirements}} \\
+\hline
+2.1 & Functional requirements are well-defined & Each required function is fully described, including expected behavior and constraints. \\
+\hline
+2.2 & Non-functional requirements are detailed & Non-functional needs like performance, security, and usability are clearly stated. \\
+\hline
+2.3 & Prioritization of requirements is clear & High-priority and low-priority requirements are identified. \\
+\hline
+2.4 & Requirements are measurable and testable & All requirements are phrased in a way that allows for straightforward testing and verification. \\
+\hline
+2.5 & Requirements are feasible & All requirements are realistic within the scope and resources of the project. \\
+\hline
+
+\multicolumn{3}{|c|}{\textbf{3. Legal and Compliance Considerations}} \\
+\hline
+3.1 & Legal obligations are considered & Requirements address copyright, intellectual property, and user privacy as per relevant regulations. \\
+\hline
+3.2 & Data protection standards & Requirements include necessary steps to comply with data protection laws and university policies. \\
+\hline
+3.3 & Permissions for third-party data & If external data (e.g., alumni photos) is used, permissions and licensing requirements are documented. \\
+\hline
+
+\multicolumn{3}{|c|}{\textbf{4. Traceability}} \\
+\hline
+4.1 & Traceability matrix included & A traceability matrix is present to map each requirement to the specific SRS sections and design components. \\
+\hline
+4.2 & Clear labeling of requirements & Each requirement has a unique identifier for easy referencing in future documentation. \\
+\hline
+4.3 & Linkage to project objectives & Each requirement is linked back to the overarching project goals and objectives. \\
+\hline
+
+\end{longtable}
+
+%%
 
 \subsection{Design Verification Plan}
 
-\wss{Plans for design verification}
+For our Design verification, we will use a checklist verification, peer reviews and a structured review meeting with Michael Curwin, Associate Director of Information Technology and Services.
 
-\wss{The review will include reviews by your classmates}
+\textbf{Structured Meeting with Associate Director of Information Technology and Services:} \\
+We will organize a meeting with Michael Curwin to go over the Design in detail. During this meeting, we will present the main system design.
 
-\wss{Create a checklists?}
+\begin{itemize}
+  \item \textbf{Pre-meeting Preparation:} Prior to the meeting, we will provide Michael with a list of key design ideas, questions to address potential unclear aspects, and any known issues.
+  \item \textbf{Task-based Inspection:} Michael will be given a checklist for reviewing the design. This checklist will guide him in examining key aspects like compatibility, security, feasibility and scalability.
+  \item \textbf{Follow-up Actions:} After the meeting, we will document any feedback and issues in our project’s issue tracker for action and further discussion.
+\end{itemize}
+
+\textbf{Peer Review:} \\
+We will also have classmates and other teams review the design for additional input. We will take notes on their feedback and work to implement improvements to our design.
+
+\textbf{Design Verification Checklist:} \\
+A structured checklist will be used to verify that the design meets all requirements, is feasible and follows best practices under McMaster’s IT department.
+
+\begin{longtable}{|p{1cm}|p{6cm}|p{8cm}|}
+\caption{Design Verification Checklist} \\
+\hline
+\textbf{Check} & \textbf{Criteria} & \textbf{Description} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Check} & \textbf{Criteria} & \textbf{Description} \\
+\hline
+\endhead
+
+\multicolumn{3}{|c|}{\textbf{1. Completeness and Consistency}} \\
+\hline
+1.1 & Design completeness & All modules, components, and their interactions are described in detail, covering all key functionalities. \\
+\hline
+1.2 & Consistency with SRS & Each design component aligns with the SRS requirements; any discrepancies are documented and resolved. \\
+\hline
+1.3 & Modular design structure & The system is broken down into distinct, modular components for clarity and maintainability. \\
+\hline
+
+\multicolumn{3}{|c|}{\textbf{2. Traceability and Documentation}} \\
+\hline
+2.1 & Traceability matrix updated & Each design element is mapped to corresponding requirements in the SRS traceability matrix. \\
+\hline
+2.2 & Detailed component diagrams & Clear diagrams, such as flowcharts, sequence diagrams, and data flow diagrams, are included to illustrate component interactions. \\
+\hline
+2.3 & Documentation up to date & Design documentation is thorough, with explanations for decisions, assumptions, and alternatives considered. \\
+\hline
+
+\multicolumn{3}{|c|}{\textbf{3. Security Requirements}} \\
+\hline
+3.1 & Authentication mechanisms & Design includes secure authentication methods (e.g., role-based access control) that align with the project’s security requirements. \\
+\hline
+3.2 & User data protection & The design accounts for privacy and data protection, ensuring minimal data access based on user roles. \\
+\hline
+
+\multicolumn{3}{|c|}{\textbf{4. Version Control Management}} \\
+\hline
+4.1 & Version control strategy defined & A clear version control workflow (e.g., Git branching strategy) is outlined to ensure smooth collaboration and tracking. \\
+\hline
+4.2 & Commit guidelines & All team members follow commit message guidelines to maintain a clear history of changes. \\
+\hline
+4.3 & Versioning of design documents & Design documents are version-controlled, with clear labeling for each major update or change. \\
+\hline
+
+\multicolumn{3}{|c|}{\textbf{5. Usability and Performance}} \\
+\hline
+5.1 & Usability considerations & User interface design aligns with usability best practices, with an emphasis on simplicity, responsiveness, and accessibility. \\
+\hline
+5.2 & Performance benchmarks set & Key performance indicators (e.g., load time, responsiveness) are defined and accounted for in the design. \\
+\hline
+5.3 & User flow consistency & The user flow is logical, with clear navigation paths that align with the SRS-defined user scenarios. \\
+\hline
+
+\end{longtable}
+
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+The verification and validation (V\&V) process for GradSight explicitly encompasses both dynamic and non-dynamic testing methodologies to ensure thorough assessment and quality assurance.
 
-\wss{The review will include reviews by your classmates}
+\subsubsection*{Dynamic Testing}
+Dynamic testing will involve systematic execution of tests including:
+\begin{itemize}
+    \item Unit tests (Section 4)
+    \item Integration tests (Section 3.1)
+    \item System and acceptance tests (Section 3.1, 3.2)
+\end{itemize}
 
-\wss{Create a checklists?}
+Each dynamic test will explicitly follow documented test cases, providing clear inputs, expected outputs, and pass criteria.
+
+\subsubsection*{Non-dynamic (Static) Testing}
+Static testing methodologies will be rigorously conducted through structured code reviews, inspections, and document walkthroughs. The detailed approach for non-dynamic testing is outlined explicitly below:
+
+\textbf{Code Reviews and Inspections} \\
+Each pull request (PR) will undergo formal code reviews, adhering strictly to the following checklist:
+\begin{itemize}
+    \item Reviews will be documented explicitly through GitHub PR comments and tracked within project management tools.
+\end{itemize}
+
+\textbf{Document Walkthroughs} \\
+Periodic walkthroughs will be performed for essential documents (e.g., SRS, MIS, MG, Hazard Analysis, VnV Plan) to confirm clarity, accuracy, and consistency:
+\begin{itemize}
+    \item Walkthrough outcomes and identified improvements will be explicitly logged and tracked through versioned documents.
+\end{itemize}
+
+\textbf{Static Analysis Tools} \\
+Static analysis tools will continuously be integrated into the development process to detect potential errors early:
+\begin{itemize}
+    \item ESLint: Enforce JavaScript coding standards and detect potential runtime issues
+    \item Prettier: Ensure consistent code formatting
+    \item PyLint: Maintain coding quality in Python modules
+\end{itemize}
+
+Static analysis tool outputs will explicitly be included in automated GitHub Actions CI/CD pipelines, ensuring continuous compliance and immediate feedback to developers.
 
 \subsection{Implementation Verification Plan}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+This section outlines the approach for verifying that each module of GradSight is implemented correctly according to its design specification (MIS), and adheres to the requirements outlined in the SRS and MG documents. Both dynamic and static testing techniques will be applied.
 
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
+\subsubsection*{Module-Level Verification Overview}
 
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+\begin{longtable}{|p{4cm}|p{4.5cm}|p{3.5cm}|p{4cm}|}
+\hline
+\textbf{Module Name} & \textbf{Verification Method} & \textbf{Responsible Team Member(s)} & \textbf{Evidence Collected} \\
+\hline
+User Auth (M01) & Manual testing, Code review & Hammad Pathan & Login test logs, screenshots, code inspection checklist \\
+\hline
+Composite Upload (M02) & Functional testing, Static inspection & Wajdan Faheem & Uploaded files, metadata JSON, inspection notes \\
+\hline
+Search \& Filter (M03) & Automated UI test, API response validation & Zahin Hossain & Console logs, response time reports \\
+\hline
+OCR Integration (M04) & Dynamic test w/ test image set & Willie Pai & Extracted names, OCR logs, error messages \\
+\hline
+Logging \& Audit (M05) & Static analysis, Log trace validation & Henushan Balachandran & Log file samples, encryption metadata, data access patterns \\
+\hline
+Composite Viewer UI (M06) & UI usability tests, Responsiveness tests & All team members & User feedback forms, mobile/desktop screenshots \\
+\hline
+Admin Tools (M07) & Role-based access test, Input validation & Zahin Hossain & Access logs, incorrect-input test report \\
+\hline
+\end{longtable}
+
+\subsubsection*{Test Data and Inputs}
+
+\begin{itemize}
+  \item \textbf{User Credentials:} Valid, invalid (non-McMaster), blank, and malformed inputs
+  \item \textbf{Composite Files:} Various resolutions, file types, and naming conventions
+  \item \textbf{Search Terms:} Edge cases (empty search, partial year, invalid program names)
+  \item \textbf{Touch Interaction:} Simulated gesture inputs (swipe, pinch, tap)
+  \item \textbf{OCR Inputs:} Blurry and clear composite samples for name extraction
+\end{itemize}
+
+\subsubsection*{Verification Activities}
+
+\begin{itemize}
+  \item \textbf{Code Review Checklists:} Used to inspect adherence to modular structure, error handling, and data validation
+  \item \textbf{Static Analysis:} Verifies absence of code smells and enforces naming/formatting conventions
+  \item \textbf{Manual Testing:} Includes walkthroughs for login, upload, search, and view features
+  \item \textbf{Dynamic UI Testing:} Real-time validation of zoom, filter, navigation, and responsiveness
+  \item \textbf{API Testing:} Ensure backend endpoints return expected data formats and handle errors gracefully
+\end{itemize}
+
+\subsubsection*{Pass/Fail Criteria}
+
+\begin{itemize}
+  \item Each module must pass all its defined test cases in Section 3.1 or 3.2
+  \item No critical errors or crashes observed under normal conditions
+  \item All user flows must return the expected output or error messages
+  \item Static review must yield zero high-priority defects
+  \item UI tests must meet accessibility and consistency standards
+\end{itemize}
+
+\subsubsection*{Documentation of Evidence}
+
+\begin{itemize}
+  \item All test outcomes, screenshots, API logs, user feedback, and walkthrough notes will be archived under the GradSight VnV folder
+  \item Each defect or failure will be recorded in the team issue tracker (GitHub) and linked to its associated module and test ID
+\end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+To ensure thorough and efficient verification of GradSight, the following automated testing tools and verification strategies will be utilized. These tools have been explicitly selected based on the implementation technologies used.
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+\subsubsection*{Unit Testing Tools}
+\begin{itemize}
+  \item \textbf{Jest:} Unit testing of JavaScript and React components\\
+  Modules: M2 (Input Validation), M3 (Upload Handling), M6 (UI Parsing)
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+  \item \textbf{React Testing Library:} Testing user interactions and DOM updates\\
+  Modules: M7 (GUI)
+
+  \item \textbf{PyTest:} Python-based unit testing\\
+  Modules: M4 (OCR Module)
+\end{itemize}
+
+\subsubsection*{System and Integration Testing Tools}
+\begin{itemize}
+  \item \textbf{Playwright:} End-to-end testing of user interfaces and interactions\\
+  Modules: M3, M5, M6, M7
+
+  \item \textbf{Postman:} Testing API endpoints and backend integration\\
+  Modules: M1 (Cloud Module), M5 (Output Module)
+
+  \item \textbf{Mockaroo / Fixture Scripts:} Generate mock data for testing OCR outputs and UI fallback entries\\
+  Modules: M4 (OCR Module), M6 (UI Parsing)
+\end{itemize}
+
+\subsubsection*{Static and Non-dynamic Testing Tools}
+\begin{itemize}
+  \item \textbf{ESLint:} Enforce JavaScript and TypeScript coding standards
+  \item \textbf{Prettier:} Code formatting consistency
+  \item \textbf{VS Code Extensions:} Real-time linting and formatting checks during development
+  \item \textbf{Manual Review Checklist:} Structured peer reviews focusing on logic correctness, code quality, and security concerns
+\end{itemize}
+
+\subsubsection*{Continuous Integration and Automation}
+\begin{itemize}
+  \item \textbf{GitHub Actions:}
+  \begin{itemize}
+    \item Automated unit tests executed on each pull request
+    \item Linting and formatting automatically validated
+    \item Optional integration testing (Playwright) executed headlessly
+  \end{itemize}
+\end{itemize}
 
 \subsection{Software Validation Plan}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+The purpose of validation is to ensure that the GradSight system fulfills the needs of its stakeholders, including faculty, students, and administrative staff, and satisfies all system-level requirements described in the SRS. Validation focuses on checking that the right product was built, not just whether it was built correctly.
 
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
+\subsubsection*{Validation Objectives}
+\begin{itemize}
+    \item Confirm that all user goals (e.g., uploading, viewing, and searching composites) can be achieved with minimal training.
+    \item Ensure that only authorized users can access restricted features.
+    \item Validate usability under real-world constraints like touchscreen kiosks and limited lighting.
+    \item Confirm that system behavior aligns with expectations derived from the SRS and Hazard Analysis.
+\end{itemize}
 
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
+\subsubsection*{Stakeholders Involved}
 
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Stakeholder} & \textbf{Role in Validation} \\
+\hline
+Faculty members & Upload composites and verify proper role-based access \\
+\hline
+Students & Search and view composites; provide feedback on usability \\
+\hline
+Admins (project team) & Simulate kiosk environment and conduct technical walkthroughs \\
+\hline
+Reviewers (TA/instructor) & Confirm alignment with SRS and hazard controls \\
+\hline
+\end{longtable}
 
-\wss{This section might reference back to the SRS verification section.}
+\subsubsection*{Validation Activities}
+
+\begin{longtable}{|p{4cm}|p{8cm}|p{4cm}|}
+\hline
+\textbf{Activity} & \textbf{Description} & \textbf{When} \\
+\hline
+Scenario-based walkthroughs & Stakeholders follow predefined tasks (e.g., upload, search, zoom, tap profile) to simulate real usage & After implementation of each milestone \\
+\hline
+User feedback survey & Users rate ease of use, clarity, and accessibility (Likert scale + open-ended questions) & During usability testing \\
+\hline
+Acceptance tests & Functional tests run from the user's perspective to confirm system meets acceptance criteria & Final phase of development \\
+\hline
+SRS compliance review & Map each FR/NFR from the SRS to actual working features and validate coverage & Midway and end of implementation \\
+\hline
+Kiosk simulation & Full interaction tested on touchscreen setup under various lighting conditions & Prior to deployment \\
+\hline
+\end{longtable}
+
+\subsubsection*{Validation Inputs}
+\begin{itemize}
+    \item Composite images of various qualities
+    \item Pre-filled metadata for testing upload accuracy
+    \item Non-McMaster and malformed emails for validation testing
+    \item Simulated real user tasks from the Hazard Analysis doc (e.g., touching sensitive areas, zoom overflow)
+\end{itemize}
+
+\subsubsection*{Success Criteria}
+\begin{itemize}
+    \item All core tasks can be completed by a new user within 2 minutes
+    \item No task requires more than 2 taps/clicks to locate critical functionality
+    \item At least 80\% user satisfaction in usability survey
+    \item All validation tasks yield expected results with no critical system errors
+    \item All validation logs, screenshots, and feedback stored in GradSight evidence repository
+\end{itemize}
+
+
+
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
+This section provides detailed system tests that cover all requirements specified in Software Requirements Specification (SRS) for the GradSight project. The tests are designed to ensure that the system functions correctly, and meets the needs of its users.
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+The following test cases are organized according to the functional requirements outlined in the SRS. It covers all aspects of the system’s functionality, from user authentication to composite uploads and viewings. The test cases are detailed to allow precise testing of the system once built completely.
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
+\subsubsection{User Registration and Authentication}
 
-\subsubsection{Area of Testing1}
+\paragraph{Test Case: Student Registration}
+\textbf{Requirement ID:} FR-UR-01 (User Registration) \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} User ``Jane Smith'' does not exist in the database. \\
+\textbf{Input:}
+\begin{itemize}
+    \item Navigate to registration page (/register)
+    \item Enter the following:
+    \begin{itemize}
+        \item First Name: Jane
+        \item Last Name: Smith
+        \item Email: jane.smith@mcmaster.ca
+        \item Password: SecurePass123!
+    \end{itemize}
+    \item Click ``Register''
+\end{itemize}
+\textbf{Expected Output:}
+\begin{itemize}
+    \item ``Registration successful! Please check your email to confirm your account.'' displayed
+    \item User account created in database (with email confirmation status: pending)
+\end{itemize}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Navigate manually to /register
+    \item Enter provided details
+    \item Click ``Register''
+    \item Verify confirmation message
+    \item Check database for new user
+\end{itemize}
 
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
-		
-\paragraph{Title for Test}
+\paragraph{Test Case: Successful Login}
+\textbf{Requirement ID:} FR-UR-01 (User Login) \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} User exists:
+\begin{itemize}
+    \item Email: john.doe@mcmaster.ca
+    \item Password: Password123!
+\end{itemize}
+\textbf{Input:}
+\begin{itemize}
+    \item Navigate to login page (/login)
+    \item Enter credentials above
+    \item Click ``Login''
+\end{itemize}
+\textbf{Expected Output:}
+\begin{itemize}
+    \item Redirected to Dashboard (/dashboard)
+    \item ``Welcome, John Doe'' message displayed
+\end{itemize}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Manually enter credentials
+    \item Click ``Login''
+    \item Confirm dashboard redirection
+\end{itemize}
 
-\begin{enumerate}
+\paragraph{Test Case: Invalid Login Attempts}
+\textbf{Requirement ID:} FR-UR-01 (Login Error Handling) \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} System operational, valid user: john.doe@mcmaster.ca
 
-\item{test-id1\\}
+\textbf{Inputs and Expected Outputs:}
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
+\begin{longtable}{|c|c|c|p{6cm}|}
+\hline
+\textbf{Scenario} & \textbf{Email Input} & \textbf{Password Input} & \textbf{Expected Output} \\
+\hline
+A & nonmcmaster@gmail.com & randompass & ``Invalid email or password'' \\
+\hline
+B & abc123 & wrongpass & ``Invalid email or password'' \\
+\hline
+C & john.doe@mcmaster.ca & WrongPass123 & ``Invalid email or password'' \\
+\hline
+\end{longtable}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Enter each scenario manually
+    \item Attempt login
+    \item Confirm error message matches exactly
+\end{itemize}
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+\paragraph{Test Case: Unauthorized Access}
+\textbf{Requirement ID:} FR-AC-01 (Access Control) \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} User logged in as student (student@mcmaster.ca) \\
+\textbf{Input:} Attempt to visit admin-only URL (/admin/upload) \\
+\textbf{Expected Output:}
+\begin{itemize}
+    \item Error message: ``You do not have permission to access this page''
+    \item User redirected to the dashboard or login page
+\end{itemize}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Manually navigate to restricted URL
+    \item Confirm appropriate error message and redirection
+\end{itemize}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\subsubsection{Uploading Graduation Composites}
 
-How test will be performed: 
+\paragraph{Test Case: Composite Upload}
+\textbf{Requirement ID:} FR-UP-01 (Composite Upload) \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} User logged in as admin (admin@mcmaster.ca) \\
+\textbf{Input:}
+\begin{itemize}
+    \item File: Composite2025.jpg (JPEG, 1920x1080, <500KB)
+    \item Year: 2025
+    \item Program: Software Engineering
+\end{itemize}
+\textbf{Expected Output:}
+\begin{itemize}
+    \item Message: ``Composite for Software Engineering 2025 uploaded successfully.''
+    \item Composite stored in AWS S3 at /composites/2025/SoftwareEngineering/
+    \item Database entry added in DynamoDB with correct metadata
+\end{itemize}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Navigate to /admin/upload
+    \item Enter provided details
+    \item Upload file
+    \item Verify confirmation message and storage/database entries
+\end{itemize}
 
-\end{enumerate}
+\paragraph{Test Case: Metadata Retrieval}
+\textbf{Requirement ID:} FR-MD-01 (Metadata Storage) \\
+\textbf{Control:} Automated (Postman or Curl) \\
+\textbf{Initial State:} Composite (Composite2025.jpg) previously uploaded \\
+\textbf{Input:} GET request to /api/composite?id=Composite2025 \\
+\textbf{Expected Output:} JSON response:
+\begin{verbatim}
+{
+  "file": "Composite2025.jpg",
+  "year": "2025",
+  "program": "Software Engineering"
+}
+\end{verbatim}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Send GET request
+    \item Verify response content matches exactly
+\end{itemize}
 
-\subsubsection{Area of Testing2}
+\subsubsection{OCR and Manual Corrections}
 
-...
+\paragraph{Test Case: OCR Name Parsing}
+\textbf{Requirement ID:} FR-OCR-01 \\
+\textbf{Control:} Automated (Unit test) \\
+\textbf{Initial State:} OCR module active \\
+\textbf{Input:} Upload \texttt{test\_composite\_ocr.jpg} (contains clearly readable names) \\
+\textbf{Expected Output:} OCR response: JSON array of name-coordinate pairs \\
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Upload test image
+    \item Confirm OCR output against expected test data
+\end{itemize}
+
+\paragraph{Test Case: Manual Name Fallback Entry}
+\textbf{Requirement ID:} FR-UP-04 \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} OCR failed parsing certain names \\
+\textbf{Input:}
+\begin{itemize}
+    \item Manually enter:
+    \begin{itemize}
+        \item Name: Bob Patel
+        \item Coordinates: X=450, Y=300
+    \end{itemize}
+\end{itemize}
+\textbf{Expected Output:}
+\begin{itemize}
+    \item Name and coordinates saved successfully
+    \item Appears on composite UI upon user interaction
+\end{itemize}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Enter data through UI
+    \item Click composite to confirm visibility
+\end{itemize}
+
+\subsubsection{Viewing and Searching Composites}
+
+\paragraph{Test Case: Composite Viewing and Interaction}
+\textbf{Requirement ID:} FR-VI-01 \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} Composite2025.jpg uploaded with metadata \\
+\textbf{Input:}
+\begin{itemize}
+    \item Filter:
+    \begin{itemize}
+        \item Year: 2025
+        \item Program: Software Engineering
+    \end{itemize}
+    \item Interactions:
+    \begin{itemize}
+        \item Zoom
+        \item Pan
+        \item Click profile: Alice Smith
+    \end{itemize}
+\end{itemize}
+\textbf{Expected Output:}
+\begin{itemize}
+    \item Composite image displays smoothly
+    \item Popup displays correct profile information (Alice Smith, Software Engineering)
+\end{itemize}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Manually perform interactions
+    \item Confirm visual and functional correctness
+\end{itemize}
+
+\paragraph{Test Case: Composite Search}
+\textbf{Requirement ID:} FR-SR-01 \\
+\textbf{Control:} Manual \\
+\textbf{Initial State:} Composites exist for various years and programs \\
+\textbf{Input:}
+\begin{itemize}
+    \item Year: 2025
+    \item Program: Software Engineering
+    \item Click ``Search''
+\end{itemize}
+\textbf{Expected Output:}
+\begin{itemize}
+    \item Composite2025.jpg listed clearly
+    \item Only relevant results shown
+\end{itemize}
+\textbf{Test Steps:}
+\begin{itemize}
+    \item Enter criteria and search
+    \item Verify correct results listed
+\end{itemize}
+
+
+
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
+The nonfunctional aspects of reliability, data accuracy, usability, and code quality require extensive testing of the GradSight digital composite display system. This section gives our structured approach toward the assessment of such non-functional requirements. Each of the test cases described in this section will support the quality of GradSight regarding the standards of the project and the norms for data security and usability at McMaster University.
 
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
+\subsubsection{Look and Feel Requirements}
 
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
+\paragraph{Test Case: Display Quality (NFR-LF-01)}
+\begin{itemize}
+    \item Images load in high resolution (minimum 1080p)
+    \item No pixelation or distortion visible at normal viewing distance
+    \item Images consistent across multiple devices
+\end{itemize}
 
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
+\paragraph{Test Case: Consistent Screen Layout (NFR-LF-02)}
+\begin{itemize}
+    \item All primary screens share the same layout structure
+    \item Navigation menus identical on all pages
+    \item Element positioning consistent with the design mockups
+\end{itemize}
 
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
+\subsubsection{Usability and Humanity Requirements}
 
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
+\paragraph{Test Case: Touch Sensitivity (NFR-UH-01)}
+\begin{itemize}
+    \item Touch interactions respond within 200 milliseconds
+    \item Swipe gestures smoothly recognized
+    \item Pinch-to-zoom gestures responsive without jitter or delay
+\end{itemize}
 
-\begin{enumerate}
+\paragraph{Test Case: Minimal Learning Curve (NFR-UH-02)}
+\begin{itemize}
+    \item Users successfully complete key tasks (search, upload, view composites) unassisted
+    \item All essential tasks completed within 5 minutes
+    \item Users report confidence in independently using the application again
+\end{itemize}
+\textbf{Survey:}
+\begin{itemize}
+    \item Rate ease of task completion (1--5 scale)
+    \item Rate confidence in future app use (1--5 scale)
+\end{itemize}
 
-\item{test-id1\\}
+\paragraph{Test Case: On-Screen Guidance (NFR-UH-03)}
+\begin{itemize}
+    \item Tooltips available and correctly displayed on hover
+    \item First-time users see instructional overlays clearly
+    \item Help icons effectively provide concise guidance
+\end{itemize}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+\paragraph{Test Case: Clarity of Instructions (NFR-UH-04)}
+\begin{itemize}
+    \item Instructions clearly visible on every relevant screen
+    \item Instructions free of technical jargon
+    \item Text instructions concise and grammatically correct
+\end{itemize}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+\paragraph{Test Case: Politeness in Error Messages (NFR-UH-05)}
+\begin{itemize}
+    \item Error messages clearly indicate what went wrong
+    \item Provide clear guidance on resolving the issue
+    \item Tone remains polite and helpful throughout
+\end{itemize}
 
-\end{enumerate}
+\subsubsection{Performance Requirements}
 
-\subsubsection{Area of Testing2}
+\paragraph{Test Case: Search Speed (NFR-PR-01)}
+\begin{itemize}
+    \item Search returns results within 2 seconds under typical conditions
+    \item Search returns results within 5 seconds under simulated high-load conditions
+\end{itemize}
 
-...
+\paragraph{Test Case: Page Load Time (NFR-PR-02)}
+\begin{itemize}
+    \item Page load time does not exceed 2 seconds in normal operation
+    \item Page load time does not exceed 4 seconds under peak simulated usage
+\end{itemize}
+
+\subsubsection{Reliability Requirements}
+
+\paragraph{Test Case: System Uptime and Crash Recovery (NFR-RB-01)}
+\begin{itemize}
+    \item Simulated system crash automatically recovers without manual intervention
+    \item No loss of data occurs after crash recovery
+    \item System maintains an uptime of at least 99.5\% over one-week testing period
+\end{itemize}
+
+\subsubsection{Maintainability and Support Requirements}
+
+\paragraph{Test Case: Adaptability (NFR-MS-02)}
+\begin{itemize}
+    \item UI elements scale properly on screen sizes from 10” tablets to 27” monitors
+    \item Interface remains fully usable at 150\% and 200\% browser zoom settings
+    \item Layout adjusts proportionally for 1080p and 4K screen resolutions
+\end{itemize}
+
+\subsubsection{Security Requirements}
+
+\paragraph{Test Case: Data Security (NFR-SC-01)}
+\begin{itemize}
+    \item Data encrypted at rest using AES-256 standard
+    \item Data encrypted during transmission using TLS
+    \item Unauthorized access attempts properly logged and alerted
+\end{itemize}
+
+\paragraph{Test Case: Access Controls (NFR-SC-01)}
+\begin{itemize}
+    \item Verify role-based permissions (Student, Faculty, Admin)
+    \item Unauthorized access attempts effectively denied and logged
+\end{itemize}
+
+\paragraph{Test Case: Audit Log Integrity (NFR-SC-04)}
+\begin{itemize}
+    \item Logs record accurate timestamps, user IDs, and detailed actions
+    \item Logs are protected from unauthorized modifications or deletions
+\end{itemize}
+
+\subsubsection{Compliance Requirements}
+
+\paragraph{Test Case: Legal and Standards Compliance (NFR-CO-01, NFR-CO-02)}
+\begin{itemize}
+    \item Application adheres to applicable intellectual property and privacy laws
+    \item Fully complies with Web Content Accessibility Guidelines (WCAG)
+    \item Meets McMaster University's data governance and compliance standards
+\end{itemize}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+The following table shows the relationship between the system's requirements and the corresponding test cases defined in Sections 3.1 (Functional) and 3.2 (Nonfunctional). This mapping ensures completeness, traceability, and test coverage. All requirement identifiers follow the format and numbering from the SRS document.
+
+\begin{longtable}{|p{3cm}|p{7cm}|p{4cm}|}
+\hline
+\textbf{Requirement ID} & \textbf{Requirement Description} & \textbf{Test Case(s)} \\
+\hline
+FR-UR-01 & Student registration and login & TC-UR-01, TC-UR-02, TC-UR-03 \\
+FR-UR-02 & Faculty registration and login & TC-UR-04, TC-UR-05 \\
+FR-AC-01 & Unauthorized access control & TC-AC-01 \\
+FR-UP-01 & Faculty uploads graduation composites & TC-UP-01 \\
+FR-MD-01 & Metadata stored with composites & TC-UP-02 \\
+FR-VZ-01 & View, zoom, and interact with composites & TC-VZ-01 \\
+FR-SR-01 & Search composites by year/program & TC-SR-01 \\
+FR-LG-01 & Log user actions like login and uploads & TC-LG-01 \\
+NFR-LF-01 & High-resolution composite display & TC-LF-01 \\
+NFR-LF-02 & Consistent interface layout & TC-LF-02 \\
+NFR-LF-03 & Non-distracting color scheme & TC-LF-03 \\
+NFR-LF-04 & Legible, scalable fonts & TC-LF-04 \\
+NFR-LF-05 & Intuitive icons and labels & TC-LF-05 \\
+NFR-LF-06 & Consistency across UI elements & TC-LF-06 \\
+NFR-UH-01 & Touchscreen support & TC-UH-01 \\
+NFR-UH-02 & Minimal learning curve & TC-UH-02 \\
+NFR-UH-03 & On-screen guidance for users & TC-UH-03 \\
+NFR-UH-04 & Clear instructions & TC-UH-04 \\
+NFR-UH-05 & Polite and informative error messages & TC-UH-05 \\
+NFR-AC-01 & Accessibility (large buttons, fonts) & TC-AC-01 \\
+NFR-PR-01 & Fast search response (under 2s) & TC-PR-01 \\
+NFR-PR-02 & Page load time under 2s & TC-PR-02 \\
+NFR-PR-03 & Smooth screen transitions & TC-PR-03 \\
+NFR-SC-01 & Secure data storage and encryption & TC-SC-01 \\
+NFR-SC-02 & Input validation and data integrity & TC-SC-02 \\
+NFR-SC-03 & GDPR and privacy compliance & TC-SC-03 \\
+NFR-SC-04 & Secure audit logging & TC-SC-04 \\
+NFR-SC-05 & Protection from cyber threats & TC-SC-05 \\
+NFR-CR-01 & Support for multiple concurrent users & TC-CR-01 \\
+NFR-SE-01 & Scales with added composite data & TC-SE-01 \\
+NFR-SE-02 & Supports future extensibility & TC-SE-02 \\
+NFR-LR-01 & Easy to maintain (modular, documented) & TC-LR-01 \\
+NFR-OE-01 & Durable indoor placement & TC-OE-01 \\
+NFR-OE-02 & Display readable in various lighting & TC-OE-02 \\
+NFR-OE-03 & Compatible with building infra & TC-OE-03 \\
+NFR-MS-01 & Logging and diagnostics support & TC-MS-01 \\
+NFR-MS-02 & Adaptable to different screens/devices & TC-MS-02 \\
+NFR-CU-01 & Unicode support for names & TC-CU-01 \\
+NFR-CO-01 & Compliance with copyright/IP law & TC-CO-01 \\
+NFR-CO-02 & ISO/IEC 25010 + GDPR compliance & TC-CO-02 \\
+\hline
+\caption{Requirements-to-Test Case Mapping}
+\end{longtable}
 
 \section{Unit Test Description}
 
-\wss{This section should not be filled in until after the MIS (detailed design
-  document) has been completed.}
-
-\wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}  
-
-\wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
-can explain how tests will be selected for each module.  For instance, your test building 
-approach could be test cases for each access program, including one test for normal behaviour 
-and as many tests as needed for edge cases.  Rather than create the details of the input 
-and output here, you could point to the unit testing code.  For this to work, you code 
-needs to be well-documented, with meaningful names for all of the tests.}
+This section outlines the comprehensive set of unit tests designed to verify individual modules in the GradSight system. These tests focus on ensuring both functional correctness and nonfunctional behavior (e.g., performance and maintainability) based on the MIS (Modular Interface Specification) design document.
 
 \subsection{Unit Testing Scope}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+All core GradSight modules will undergo unit testing. No modules are considered out-of-scope, although modules with simple utility roles or minimal logic may have fewer test cases due to their lower complexity.
+
+Modules are prioritized as follows:
+\begin{itemize}
+  \item \textbf{High Priority:} User Authentication (M01), Composite Upload (M02), Search \\ Filter (M03), OCR Integration (M04)
+  \item \textbf{Medium Priority:} Logging \\ Audit (M05), Composite Viewer UI (M06)
+  \item \textbf{Lower Priority:} Admin Tools (M07)
+\end{itemize}
+
+The rationale is based on the complexity and criticality of each module as defined in the MIS. Higher-priority modules involve sensitive operations, external integrations, or key user workflows.
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+Most unit tests will be automated using Jest, PyTest, or React Testing Library depending on the module's technology. Black-box and white-box strategies will be employed.
 
-\subsubsection{Module 1}
-
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+\subsubsection{Module 1: User Authentication (M01)}
+Responsible for login, logout, and role-based access.
 
 \begin{enumerate}
+  \item{UT-M01-01\\}
+  Type: Functional, Dynamic, Automatic\\
+  Initial State: User not logged in\\
+  Input: Valid login credentials\\
+  Output: Login success, session created\\
+  Test Case Derivation: Verifies that correct user credentials allow access\\
+  How test will be performed: Automated test with Jest using mock API
 
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
-\item{...\\}
-    
+  \item{UT-M01-02\\}
+  Type: Functional, Dynamic, Automatic\\
+  Initial State: User not logged in\\
+  Input: Invalid password\\
+  Output: Login failure message\\
+  Test Case Derivation: Checks failure on incorrect input\\
+  How test will be performed: Use React Testing Library to simulate input and assert response
 \end{enumerate}
 
-\subsubsection{Module 2}
+\subsubsection{Module 2: Composite Upload (M02)}
+Handles file uploads, year/program metadata.
 
-...
+\begin{enumerate}
+  \item{UT-M02-01\\}
+  Type: Functional, Dynamic, Automatic\\
+  Initial State: Admin logged in\\
+  Input: Valid JPEG file, metadata\\
+  Output: Upload success message\\
+  Test Case Derivation: Normal behavior with valid inputs\\
+  How test will be performed: Playwright test for form submission
+\end{enumerate}
+
+\subsubsection{Module 3: Search and Filter (M03)}
+Searches based on year, name, or program.
+
+\begin{enumerate}
+  \item{UT-M03-01\\}
+  Type: Functional, Dynamic, Automatic\\
+  Initial State: Composite data seeded\\
+  Input: Year = 2025\\
+  Output: Correct list of results\\
+  Test Case Derivation: Tests accuracy of filtering\\
+  How test will be performed: Jest and mock API calls
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
+\subsubsection{Module 4: OCR Integration (M04)}
+Assesses name parsing reliability and timing.
 
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
-
-\subsubsection{Module ?}
-		
 \begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
-
+  \item{UT-M04-01\\}
+  Type: Nonfunctional, Dynamic, Automatic\\
+  Initial State: OCR module ready\\
+  Input/Condition: Blurry input image\\
+  Output/Result: Proper error handling or partial results\\
+  How test will be performed: Python test using PyTest with preloaded test image
 \end{enumerate}
 
-\subsubsection{Module ?}
+\subsubsection{Module 5: Composite Viewer UI (M06)}
+Tests usability and responsiveness.
 
-...
+\begin{enumerate}
+  \item{UT-M06-01\\}
+  Type: Nonfunctional, Dynamic, Automatic\\
+  Initial State: App running\\
+  Input: Touch gesture (zoom/pan)\\
+  Output: Responsive animation and layout\\
+  How test will be performed: Playwright test on emulated touchscreen browser
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Modules}
 
-\wss{Provide evidence that all of the modules have been considered.}
+\begin{itemize}
+  \item \textbf{M01 - User Authentication:} UT-M01-01, UT-M01-02
+  \item \textbf{M02 - Composite Upload:} UT-M02-01
+  \item \textbf{M03 - Search \\ Filter:} UT-M03-01
+  \item \textbf{M04 - OCR Integration:} UT-M04-01
+  \item \textbf{M06 - Composite Viewer UI:} UT-M06-01
+\end{itemize}
+
+All modules in the MIS are covered with at least one unit test. Nonfunctional tests also validate performance and usability for mission-critical components.
 				
 \bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
 
 \newpage
 
-\section{Appendix}
+\begin{thebibliography}{9}
 
-This is where you can place additional information.
+\bibitem{SRS}
+Hammad Pathan, Zahin Hossain, Willie Pai, Henushan Balachandran, Wajdan Faheem, 
+\textit{Software Requirements Specification (SRS)}, 2024. \\
+\url{https://github.com/PaisWillie/Digital-Composite/blob/main/docs/SRS-Volere/SRS.pdf}
 
-\subsection{Symbolic Parameters}
+\bibitem{Hazard}
+Hammad Pathan, Zahin Hossain, Willie Pai, Henushan Balachandran, Wajdan Faheem, 
+\textit{Hazard Analysis}, 2024. \\
+\url{https://github.com/PaisWillie/Digital-Composite/blob/main/docs/HazardAnalysis/HazardAnalysis.pdf}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+\bibitem{DevPlan}
+Hammad Pathan, Zahin Hossain, Willie Pai, Henushan Balachandran, Wajdan Faheem, 
+\textit{Development Plan}, 2024. \\
+\url{https://github.com/PaisWillie/Digital-Composite/blob/main/docs/DevelopmentPlan/DevelopmentPlan.pdf}
 
-\subsection{Usability Survey Questions?}
+\bibitem{ProblemStatement}
+Hammad Pathan, Zahin Hossain, Willie Pai, Henushan Balachandran, Wajdan Faheem, 
+\textit{Problem Statement and Goals}, 2024. \\
+\url{https://github.com/PaisWillie/Digital-Composite/blob/main/docs/ProblemStatementAndGoals/ProblemStatement.pdf}
 
-\wss{This is a section that would be appropriate for some projects.}
+\end{thebibliography}
+
+
 
 \newpage{}
-\section*{Appendix --- Reflection}
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
+
+
 
 \newpage{}
-\section*{Appendix --- Reflection}
 
-\wss{This section is not required for CAS 741}
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  Please answer the following questions:
+\appendix
+\section*{Appendix — Reflection}
 
-\begin{enumerate}
-  \item What knowledge and skills will the team collectively need to acquire to
-  successfully complete the verification and validation of your project?
-  Examples of possible knowledge and skills include dynamic testing knowledge,
-  static testing knowledge, specific tool usage etc.  You should look to
-  identify at least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
-  question, what are at least two approaches to acquiring the knowledge or
-  mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
-\end{enumerate}
+\subsection*{What went well while writing this deliverable?}
+
+Things that went well while writing this deliverable was the team’s clear role distribution and effective communication. Each member had specific responsibilities, which streamlined the document creation process, and helped refine objectives and requirements, ensuring we met all necessary criteria. Moreover, the team was on the same page when it came to how the project should be structured, so coming to decisions on certain topics did not take long. This helped move the progress on this document as it had a lot of decisions along the way that needed to be addressed.
+
+\subsection*{What pain points did you experience during this deliverable, and how did you resolve them?}
+
+We faced challenges in defining and categorizing test cases, especially for nonfunctional requirements like usability and accessibility, which require subjective evaluation. Moreover, we still have a lot of unknowns in the project when it comes to LifeTouch and the technology we will be using. To avoid issues with this, we decided to stick to certain guidelines and stay on the same page, so there aren't any inconsistencies in the document.
+
+\subsection*{What knowledge and skills will the team collectively need to acquire to successfully complete the verification and validation of your project?}
+
+\begin{itemize}
+    \item \textbf{Hammad} — Learning how to use Jest and set up automated tests.
+    \item \textbf{Wajdan} — Understanding system architecture validation to ensure component-level compatibility.
+    \item \textbf{Zahin} — Developing Dynamic Testing Knowledge to conduct runtime tests effectively.
+    \item \textbf{Henushan} — Gaining skills in security testing and vulnerability assessment.
+    \item \textbf{Willie} — Learning to work with PyTest and develop backend tests.
+\end{itemize}
+
+\subsection*{For each knowledge area, what are two approaches to mastering it? Which one will be pursued and why?}
+
+\begin{itemize}
+    \item \textbf{Hammad:} 
+    \begin{itemize}
+        \item Watch YouTube tutorials and read documentation on Jest.
+        \item Ask friends/acquaintances for help and hands-on guidance. \\
+        \textit{Chosen:} Second approach — direct visuals and guidance provide faster learning.
+    \end{itemize}
+    
+    \item \textbf{Zahin:}
+    \begin{itemize}
+        \item Follow online courses and tutorial videos on dynamic testing.
+        \item Practice dynamic testing on small sample applications. \\
+        \textit{Chosen:} First approach — structured tutorials ensure thorough understanding.
+    \end{itemize}
+
+    \item \textbf{Wajdan:}
+    \begin{itemize}
+        \item Enroll in formal online courses (e.g., Coursera).
+        \item Read system design blogs and crash courses. \\
+        \textit{Chosen:} Second approach — better suited to team members' time constraints.
+    \end{itemize}
+
+    \item \textbf{Henushan:}
+    \begin{itemize}
+        \item Take a security fundamentals course or certification.
+        \item Use gamified platforms to learn through hands-on exercises. \\
+        \textit{Chosen:} Second approach — more engaging and time-efficient.
+    \end{itemize}
+
+    \item \textbf{Willie:}
+    \begin{itemize}
+        \item Research online resources, documentation, and video tutorials on PyTest.
+        \item Learn through building tests for small-scale personal backends. \\
+        \textit{Chosen:} First approach — ensures foundational knowledge before applying it to project.
+    \end{itemize}
+\end{itemize}
+
 
 \end{document}

@@ -3,6 +3,13 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{float}
+\usepackage{pdflscape} % For landscape pages
+\usepackage{adjustbox} % For table scaling
+\usepackage{geometry}
+
+
+
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -51,51 +58,218 @@ Date2 & Name(s) & Description of changes\\
 
 \pagenumbering{arabic}
 
-\wss{You are free to modify this template.}
 
 \section{Introduction}
 
-\wss{You can include your definition of what a hazard is here.}
+The word "hazard," in this context, means any latent condition or fault that can interact in a way
+that is threatening safety, functionality, or even data integrity or user privacy. It means either
+software failures, security vulnerabilities, faulty hardware components, or even poor user-induced
+errors that may threaten the entirety of system performance or even disclose private data.
+\newline
+\newline
+Current risk analysis searches for potential hazards that may exist within the given system
+boundary, considering further software and hardware components that threaten the digital composite display system. Because this is a system intended for a public environment on campus, one may make valid assumptions about substantive requirements for data protection, security
+access, and reliability operations about the touchscreens. This includes research in both the
+interface digital interface and data management protocols to confirm the McMaster University
+Security and Privacy Regulations.
+\newline
+\newline
+A structured approach to identification, classification, and mitigation using FMEA will be applied
+for deep analysis in each and every mode of failure that could potentially occur. The review will
+aim at minimum risk by adopting effective mitigation measures so as to guarantee safety,
+dependability, and security for all users of the system.
+
 
 \section{Scope and Purpose of Hazard Analysis}
 
-\wss{You should say what \textbf{loss} could be incurred because of the
-hazards.}
+This hazard analysis is supposed to find, evaluate, and alleviate all types of risks associated with the GradSight digital composite interface project. In this document, the word 'hazards' will refer to every potential threat with regard to user privacy, data security, system functionality, and overall user satisfaction. As the GradSight system will be dealing with sensitive material in the form of
+images and profiles of students and alumni, one would want to attach great importance to data
+integrity and security. This includes a hazard analysis for software and hardware problems that
+focuses on such failures in which the system will not work within expected parameters due to
+software bugs, breaches in data security, or breakdown in the communication of hardware.
+\newline
+\newline
+This would involve security gaps concerning custom software components making up the backend
+and database and hardware components making up touchscreen displays and mini-PC's. As much
+of the system's data is currently within the public domain, the addition of the LifeTouch images
+requires particular attention being given to the issues of privacy and ensuring that this system is
+compatible with McMaster University's security policies and its standards for the protection of
+data.
+\newline
+\newline
+This analysis will consider the various configurations that could be deployed and the associated
+risk with each configuration. This may include things like risks regarding hardware communications
+failure, data privacy due to unauthorized access, and or limitations from the use of public
+third-party libraries. For example, if the addition of data from LifeTouch was to be added, the
+system should use privacy policies prescribed by LifeTouch itself. If more technologies were to be
+used, such as machine learning for image processing, the assessment would depend on the
+security features of the manufacturer, such as documentation of TensorFlow.
+\newline
+\newline
+It also involves the roadmap for different phases of project development where implementation
+stages have been planned for features of privacy, security, and system robustness. Otherwise,
+placeholder data alternatives or system interaction modifications would also be in consideration
+depending on the availability of data from LifeTouch during such a scenario when the intended
+integration of LifeTouch data is not possible. Keeping all the factors in consideration, the GradSight
+system will still be secure and reliable with compliance for the alumni, students, and other
+members of the McMaster University campus community.
+
 
 \section{System Boundaries and Components}
-
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
+Hardware Component: The system will either use a large touchscreen display provided by
+McMaster University or Raspberry Pi as an alternative. Additionally, with the usage of multiple
+displays, the devices can be scattered throughout campus and will allow students and alumni
+faculty to browse the composites. With that being said, the hardware is susceptible to physical
+damage and network failures from time to time.
+\newline
+\newline
+Software Component: The software based system will be hosted on McMaster University’s
+internal servers, which already contains secure communication between applications. A
+component of the system will provide composite data such as photos and metadata. Additionally,
+the functional system will allow users to search, zoom in on composites, and interact with
+individual profiles. Software should contain boundaries regarding availability and accessibility. The
+system should have uptime of 98\% while the rest accounts for network failures and shortages.
+\newline
+\newline
+External Systems: The system shall integrate with external systems and data, such as Lifetouch.
+Lifetouch provides the graduation photos for the university’s faculty. With the addition of external
+systems, security and privacy should be a large factor when communicating between these
+systems. With lifetouch holding proprietary rights over these images, we need to comply with
+their usage terms. This could be resolution limitations or watermarking.
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+Several critical assumptions underpin this analysis. These assumptions will guide the development and mitigation strategies:
 
+\begin{itemize}
+  \item \textbf{LifeTouch’s Privacy and Data Handling:} LifeTouch, the external provider of graduation photos, is responsible for ensuring that their images meet all necessary privacy standards. Our system will not need to revalidate these standards, but we are responsible for protecting these images once they are integrated into our database.
+
+  \item \textbf{McMaster’s IT Security Infrastructure:} McMaster University’s servers, which will host the system, are assumed to have robust security measures in place. Our role is to ensure that our custom back-end components (e.g., the database and user management system) follow McMaster’s security protocols.
+
+  \item \textbf{Final Hardware Selection:} The final hardware for the system has not yet been chosen. We assume that all hardware options, including Raspberry Pi, will meet the system’s needs. However, we must account for potential issues like overheating, connectivity problems, and hardware incompatibility.
+
+  \item \textbf{Existing Libraries:} If we use TensorFlow for Optical Character Recognition (OCR), we assume that its developers have already addressed any potential privacy issues. We will not need to validate TensorFlow ourselves, but we must ensure that our implementation does not introduce any new risks.
+\end{itemize}
+
+
+\newgeometry{top=1.5cm, bottom=2cm, left=2cm, right=2cm} % temporary narrower margins
+\begin{landscape}
 \section{Failure Mode and Effect Analysis}
+\begin{table}[H]
+\centering
+\caption{Table 5.1: Failure Mode and Effect Analysis (FMEA)}
+\renewcommand{\arraystretch}{1}
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{|p{4cm}|p{3.8cm}|p{4cm}|p{4cm}|p{6cm}|c|c|}
+\hline
+\textbf{Component} & \textbf{Failure Mode} & \textbf{Causes of Failure(s)} & \textbf{Effects of Failure(s)} & \textbf{Recommended Action(s)} & \textbf{SR} & \textbf{Ref.} \\
+\hline
+Authentication System & Unauthorized Data Access & Insufficient authentication or lack of access control & Compromised data integrity, unauthorized access & Enforce strict RBAC, maintain audit logs, and conduct routine access reviews. & SEC-1, AUD-1, PRIV-3 & H1 \\
+\hline
+Touchscreen Display & System Outage & Mini-PC hardware failure, network disruption & Inaccessibility, user frustration & Implement auto-restart, schedule hardware checks. & FR-11, NFR-17, SUP-1 & H2 \\
+\hline
+Image Retrieval System & Inaccurate Image Display & Improper database linking, retrieval errors & Incorrect user info shown & Validate links, schedule audits, error handling. & FR-10, INT-1 & H3 \\
+\hline
+LifeTouch Data Integration & Privacy Breach (LifeTouch data) & Mishandling, noncompliance & Legal risks, privacy violations & Apply anonymization, follow protocols, log access. & PRIV-1, PRIV-2, LGL-1 & H4 \\
+\hline
+Server and Network & Slow System Response & Latency, low processing power & Reduced engagement, delays & Optimize performance, use caching. & NFR-13, NFR-14, ADP-5 & H5 \\
+\hline
+Mini-PC and Display Connection & Communication Failure & Intermittent connection, outdated firmware & Partial or full loss of display & Firmware updates, hardware health checks. & SUP-1, ADP-3 & H6 \\
+\hline
+Image Processing and Display & Processing Error & Low memory, bugs in image handler & Corrupted/incomplete image display & Optimize memory usage, caching, validation. & FR-14, NFR-15, INT-1 & H7 \\
+\hline
+Data Synchronization & Failure to Update Records & Network sync delays & Outdated data shown & Schedule syncs, manual override, alerts. & FR-11, ADP-5, SUP-6 & H8 \\
+\hline
+Data Storage System & Data Loss from Crash & Lack of backup & Permanent loss of alumni data & Local/cloud backups with verification. & SUP-2, INT-2, NFR-20 & H9 \\
+\hline
+Compliance with Legal Standards & Legal Non-Compliance & Non-adherence to IP/privacy standards & Fines, institutional liability & Track licenses, follow GDPR, consult legal. & LGL-1, LGL-2, PRIV-1 & H10 \\
+\hline
+\end{tabular}
+\end{adjustbox}
+\end{table}
+\end{landscape}
+\restoregeometry
 
-\wss{Include your FMEA table here. This is the most important part of this document.}
-\wss{The safety requirements in the table do not have to have the prefix SR.
-The most important thing is to show traceability to your SRS. You might trace to
-requirements you have already written, or you might need to add new
-requirements.}
-\wss{If no safety requirement can be devised, other mitigation strategies can be
-entered in the table, including strategies involving providing additional
-documentation, and/or test cases.}
+
 
 \section{Safety and Security Requirements}
 
-\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
-rationale design process how and why to fake it.)}
+To ensure system integrity and protect user data, the following safety and security requirements shall be implemented:
+
+\begin{itemize}
+  \item \textbf{SEC-1: Access Control} \\
+  The system shall implement \textit{role-based access control (RBAC)} to restrict access to sensitive features. Different user roles—students, alumni, faculty, and administrators—shall have distinct access levels to ensure that only authorized personnel can make changes to composite data.
+
+  \item \textbf{AUD-1: Audit Logging} \\
+  The system shall maintain detailed logs of all user interactions, especially those involving access or modifications to sensitive data. These logs must be tamper-proof and stored securely, aiding in breach detection and ensuring accountability.
+
+  \item \textbf{SUP-4: Downtime Resilience} \\
+  The system shall be resilient to hardware failures. It must include automated backup services and allow for rapid reset or replacement in the event of system failure, minimizing disruption to users.
+\end{itemize}
+
+
 
 \section{Roadmap}
 
-\wss{Which safety requirements will be implemented as part of the capstone timeline?
-Which requirements will be implemented in the future?}
+\subsection*{Phase 1: Requirements Gathering and System Design \hfill \textit{[Sept 23 – Oct 9]}}
+
+\begin{itemize}
+  \item Finalize user personas and stakeholder priorities \hfill \textit{[FR-1 to FR-3, CUL-1 to CUL-3]}
+  \item Create system architecture and context diagrams \hfill 
+  \item Define high-level constraints and design assumptions \hfill \textit{[NFR-1 to NFR-4, LGL-1 to LGL-2]}
+\end{itemize}
+
+\subsection*{Phase 2: Core System Development \hfill \textit{[Nov 1 – Jan 15]}}
+
+\begin{itemize}
+  \item Build frontend UI and admin panel \hfill \textit{[FR-4 to FR-11, NFR-5 to NFR-15]}
+  \item Implement backend, database, and APIs \hfill \textit{[FR-12 to FR-14, PR-1 to PR-3]}
+  \item Integrate ML module for legacy composite parsing \hfill \textit{[FR-14, NFR-25]}
+  \item Ensure adaptability across devices and formats \hfill \textit{[ADP-1 to ADP-4]}
+\end{itemize}
+
+\subsection*{Phase 3: Security Compliance and System Hardening \hfill \textit{[Jan 15 – Feb 3]}}
+
+\begin{itemize}
+  \item Implement encryption, access control, audit logging \hfill \textit{[SEC-1 to SEC-6, AUD-1 to AUD-7]}
+  \item Run compliance checks (GDPR, ISO 25010) \hfill \textit{[LGL-3 to LGL-6, PRIV-1 to PRIV-7]}
+  \item Test data integrity and rollback mechanisms \hfill \textit{[INT-1, INT-2]}
+\end{itemize}
+
+\subsection*{Phase 4: User Testing and Feedback \hfill \textit{[Feb 3 – Feb 14]}}
+
+\begin{itemize}
+  \item Conduct usability testing and performance monitoring \hfill \textit{[NFR-16 to NFR-22]}
+  \item Collect accessibility and interaction feedback \hfill \textit{[FR-7 to FR-11]}
+  \item Finalize FAQ and documentation for support \hfill \textit{[SUP-6 to SUP-9]}
+\end{itemize}
+
+\subsection*{Phase 5: Final Deployment and Support \hfill \textit{[Mar 24 – Mar 30]}}
+
+\begin{itemize}
+  \item Final release to McMaster IT \hfill \textit{[RR-1 to RR-5]}
+  \item Deliver technical and user documentation \hfill \textit{[SUP-1 to SUP-5]}
+  \item Conduct final performance checks and monitoring setup \hfill \textit{[ADP-5, PR-4 to PR-5]}
+\end{itemize}
+
+
+\section{Reflection}
+
+\begin{enumerate}
+  \item \textbf{What went well while writing this deliverable?} \\
+  During the writing of this deliverable, one of the key aspects that went well was our team’s ability to collaboratively identify and address potential hazards. Our use of version control and regular meetings helped streamline the process of gathering and organizing the information necessary for the hazard analysis. Each team member took ownership of specific sections, which allowed us to efficiently complete the analysis while ensuring thoroughness across different areas such as data privacy, hardware, and system scalability. Additionally, the team’s early focus on security allowed us to integrate key safety features, such as role-based access control, without having to revisit foundational aspects of the project later on.
+  
+  \item \textbf{What pain points did you experience during this deliverable, and how did you resolve them?} \\
+  One of the main pain points we encountered was uncertainty around the hardware we would be using, especially when it came to potential communication failures or hardware malfunctions. Initially, we didn’t have a clear idea of which touchscreen devices or mini-PCs (like Raspberry Pi) would be available for the project, so we couldn’t accurately assess potential hazards tied to the hardware’s reliability. We resolved this by considering multiple configurations and creating alternative plans, which helped us avoid delays and allowed us to proceed with the hazard analysis while still accounting for possible hardware-related risks.
+
+  \item \textbf{Which of your listed risks had your team thought of before this deliverable, and which did you think of while doing this deliverable? For the latter ones (ones you thought of while doing the Hazard Analysis), how did they come about?} \\
+  Before writing this deliverable, our team had already identified several key risks, particularly around data privacy and the potential for unauthorized access. Given that we would be working with alumni photos and personal information, we knew from the outset that encryption, access control, and audit logging would be essential to mitigate security risks. However, while working on this deliverable, we realized additional risks related to data synchronization and system responsiveness. Specifically, the risk of displaying outdated information due to a network failure or delayed sync emerged during the hazard analysis. This risk came to light as we considered scenarios in which the system might lose connection with the server, leading us to propose backup solutions and regular sync intervals to minimize this issue.
+
+  \item \textbf{Other than the risk of physical harm (some projects may not have any appreciable risks of this form), list at least 2 other types of risk in software products. Why are they important to consider?} \\
+  One significant risk in software products is data security because the potential risk for sensitive data (such as alumni photos and personal information) leaking can lead to breaches that damage user trust and result in legal ramifications. Ensuring that encryption and access control measures are robust is crucial to protecting this data and maintaining compliance with privacy regulations. \\
+  Another important risk is system downtime or unavailability because if the system goes offline or becomes unresponsive—whether due to hardware failure, network issues, or software bugs—it can lead to user frustration and disrupt service delivery. Downtime also risks data loss if backups are not properly maintained, so building resilience into the system through redundancy, regular maintenance, and recovery protocols is essential for ensuring reliable and uninterrupted service.
+\end{enumerate}
+
+
 
 \end{document}
